@@ -15,7 +15,7 @@ gem "turbo-rails"
 # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
 gem "stimulus-rails"
 # Use Tailwind CSS [https://github.com/rails/tailwindcss-rails]
-gem "tailwindcss-rails"
+# gem "tailwindcss-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
 # Use Redis adapter to run Action Cable in production
@@ -56,8 +56,8 @@ group :test do
 end
 gem "web-console"
 
-gem "sprockets-rails", "~> 3.5"
-
 gem "solidus", "~> 4.7"
 gem "solidus_auth_devise", "~> 2.6"
 gem "solidus_i18n", "~> 2.2"
+
+gem "sprockets-rails", "~> 3.5"
