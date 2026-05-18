@@ -65,7 +65,7 @@ FROM base
 # Run and own only the runtime files as a non-root user for security
 RUN groupadd --system --gid 1000 rails && \
     useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash
-RUN ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+# RUN ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 USER 1000:1000
 
 # Copy built artifacts: gems, application

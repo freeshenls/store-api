@@ -47,7 +47,7 @@ module StoreApi
     # config.eager_load_paths << Rails.root.join("extras")
 
     config.hosts = nil
-    config.time_zone = 'Beijing'
+    # config.time_zone = 'Beijing'
     config.generators.helper = nil
     config.generators.test_framework = nil
     config.active_record.schema_format = :ruby
