@@ -57,3 +57,7 @@ end
 gem "web-console"
 
 gem "sprockets-rails", "~> 3.5"
+
+gem "solidus", "~> 4.7"
+gem "solidus_auth_devise", "~> 2.6"
+gem "solidus_i18n", "~> 2.2"
