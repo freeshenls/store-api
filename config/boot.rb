@@ -1,4 +1,4 @@
-ENV["RAILS_MASTER_KEY"] = "cd5e5e3f25862cc3d2a15aa3b4d734b5"
+ENV["RAILS_MASTER_KEY"] = "1cff755112c35ce7026cb8b86f9030fa"
 ENV["BUNDLE_GEMFILE"] ||= File.expand_path("../Gemfile", __dir__)
 
 require "bundler/setup" # Set up gems listed in the Gemfile.

@@ -54,13 +54,13 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+gem "foreman"
 gem "web-console"
+
+gem "sprockets-rails", "~> 3.5"
 
 gem "solidus", "~> 4.7"
 gem "solidus_auth_devise", "~> 2.6"
-gem "solidus_i18n", "~> 2.2"
-
-gem "sprockets-rails", "~> 3.5"
 gem "responders"
 gem "solidus_support", ">= 0.12.0"
 gem "view_component", "~> 3.0"
@@ -85,5 +85,3 @@ group :development, :test do
 end
 
 gem "solidus_admin", ">= 0.2"
-
-gem "foreman", "~> 0.90.0"

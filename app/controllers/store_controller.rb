@@ -14,8 +14,11 @@ class StoreController < Spree::BaseController
   end
 
   def cart_link
-    render partial: 'shared/cart/link_to_cart'
     fresh_when(etag: current_order, template: 'shared/cart/_link_to_cart')
+    
+    return if performed?
+
+    render partial: 'shared/cart/link_to_cart'
   end
 
   private
