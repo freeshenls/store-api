@@ -14,7 +14,8 @@ local:
   region: <%= ENV.fetch('R2_REGION') %>
   bucket: <%= ENV.fetch('R2_BUCKET') %>
   endpoint: <%= ENV.fetch('R2_ENDPOINT') %>
-  force_path_style: false
+  compute_checksums: false
+  force_path_style: true
 
 # Remember not to checkin your GCS keyfile to a repository
 # google:

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Devise.secret_key = '79ef04956a859412e2a3dc14cb058d2a69e43b935250f5ba980919ebf2c6dd62db47f5eaf72fbd4a1ef04838213bcfb91d4981bbc73d492995f09fc6766f6a24'
+Devise.secret_key = 'a54dfb4d7d02a695c56ab9c815884a880908c72627e1fa619fe3433c5bf254ec599fdd34892b1a47ed5ef9e5eece739d91213450be40e2f9dcacb982400661e1'
 Devise.email_regexp = Spree::Config[:default_email_regexp]
 Devise.setup do |config|
   config.parent_controller = 'StoreDeviseController'
