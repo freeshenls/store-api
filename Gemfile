@@ -85,3 +85,5 @@ group :development, :test do
 end
 
 gem "solidus_admin", ">= 0.2"
+
+gem "aws-sdk-s3", "~> 1.223"
