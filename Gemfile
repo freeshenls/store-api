@@ -62,7 +62,7 @@ gem "sprockets-rails", "~> 3.5"
 gem "solidus", "~> 4.7"
 gem "solidus_auth_devise", "~> 2.6"
 
-gem "aws-sdk-s3", "~> 1.223"
+gem "aws-sdk-s3", "~> 1.224"
 gem "responders"
 gem "solidus_support", ">= 0.12.0"
 gem "view_component", "~> 3.0"
