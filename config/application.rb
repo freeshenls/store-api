@@ -60,5 +60,10 @@ module StoreApi
     config.action_cable.disable_request_forgery_protection = true
     config.active_record.schema_migrations_table_name = "store_api.schema_migrations"
     config.active_record.internal_metadata_table_name = "store_api.ar_internal_metadata"
+
+    # Ignore solidus_volume_pricing gem's overrides directory in Zeitwerk autoloading to prevent NameError
+    if defined?(SolidusVolumePricing::Engine)
+      Rails.autoloaders.main.ignore(SolidusVolumePricing::Engine.root.join('app', 'overrides'))
+    end
   end
 end

@@ -29,3 +29,5 @@
 
 en:
   hello: "Hello world"
+  spree:
+    bulk_discount: "Pricing"

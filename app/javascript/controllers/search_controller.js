@@ -40,8 +40,12 @@ export default class extends Controller {
     }
   }
 
-  openResult() {
-    this.resultTargets[this.currentResultIndex].firstElementChild.click();
+  openResult(event) {
+    if (this.resultTargets.length > 0 && this.resultTargets[this.currentResultIndex]) {
+      this.resultTargets[this.currentResultIndex].firstElementChild.click();
+    } else if (this.keywords.trim().length > 0) {
+      window.location.href = `/products?keywords=${encodeURIComponent(this.keywords)}`;
+    }
   }
 
   focusOut(event) {

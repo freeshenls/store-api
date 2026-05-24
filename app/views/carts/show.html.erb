@@ -1,6 +1,8 @@
 <% @body_id = 'cart' %>
 
-<article class="cart-page wrapper grid-container h-auto my-7 lg:my-14" data-controller="cart-page">
+<article class="cart-page wrapper grid-container h-auto my-7 lg:my-14"
+         data-controller="cart-page"
+         data-action="cart-item:updated->cart-page#handleItemUpdated">
   <% if @order.line_items.empty? %>
     <%= render 'carts/cart_empty' %>
   <% else %>

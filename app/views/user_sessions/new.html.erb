@@ -1,13 +1,13 @@
 <% @body_id = 'login' %>
 
 <article class="wrapper grid-container py-12" id="existing-customer">
-  <div class="col-span-full md:col-start-5 md:col-span-4">
-    <h1 class="font-serif text-h4 md:text-h3"><%= I18n.t('spree.login_as_existing') %></h1>
-    <div class="mt-6">
-      <%= I18n.t("spree.or") %> <%= link_to I18n.t("spree.create_a_new_account"), signup_path, class:"transition-all duration-300 text-black hover:!text-red-500 dark:text-sand underline" %>
+  <div class="col-span-full md:col-start-5 md:col-span-4 bg-white border border-hairline-light rounded-xl p-8 sm:p-10 shadow-halos mt-8">
+    <h1 class="text-heading-xl text-black font-medium tracking-wide uppercase"><%= I18n.t('spree.login_as_existing') %></h1>
+    <div class="mt-4 text-shade-60 text-sm">
+      <%= I18n.t("spree.or") %> <%= link_to I18n.t("spree.create_a_new_account"), signup_path, class:"transition-all duration-300 text-black hover:text-shade-60 underline font-medium" %>
     </div>
 
-    <%= form_for Spree::User.new, as: :spree_user, url: create_new_session_path, html: { class: "space-y-6" } do |f| %>
+    <%= form_for Spree::User.new, as: :spree_user, url: create_new_session_path, html: { class: "space-y-6 mt-8" } do |f| %>
       <div class="text-input">
         <%= f.label :email, "#{t("spree.email")}:" %>
         <%= f.email_field :email, placeholder: 'name@example.com' %>
@@ -18,19 +18,18 @@
         <%= f.password_field :password, placeholder: "p455w0rd" %>
       </div>
 
-      <div class="flex justify-between">
-        <div class="items-center leading-none py-1">
-          <%= f.check_box :remember_me, tabindex: 3 %>
-          <%= f.label :remember_me, I18n.t("spree.remember_me"), class: "mb-0" %>
+      <div class="flex justify-between items-center text-sm text-shade-60">
+        <div class="flex items-center gap-2">
+          <%= f.check_box :remember_me, tabindex: 3, class: "rounded border-hairline-light text-black focus:ring-black" %>
+          <%= f.label :remember_me, I18n.t("spree.remember_me"), class: "mb-0 cursor-pointer" %>
         </div>
-        <div></div>
-        <%= link_to I18n.t("spree.forgot_password"), recover_password_path, class:"transition-all duration-300 text-black hover:!text-red-500 dark:text-sand underline" %>
+        <%= link_to I18n.t("spree.forgot_password"), recover_password_path, class:"transition-all duration-300 text-black hover:text-shade-60 underline font-medium" %>
       </div>
 
       <div class="text-center flex flex-col gap-6 items-center">
         <%= f.button(
           t("spree.login"),
-          class: 'w-full py-3 px-7 rounded-full text-body-sm font-bold leading-none uppercase whitespace-nowrap transiton-colors duration-200 bg-red-500 text-white hover:bg-red-700',
+          class: 'button-primary-pill w-full py-3.5 text-xs font-semibold uppercase tracking-wider text-center flex justify-center items-center justify-items-center',
           name: :commit
         ) %>
       </div>

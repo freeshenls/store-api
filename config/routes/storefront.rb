@@ -57,6 +57,9 @@ resource :cart, only: [:show, :update] do
   put 'empty'
 end
 
+get '/about', to: 'home#about', as: :about
+get '/contact', to: 'home#contact', as: :contact
+
 # route globbing for pretty nested taxon and product paths
 get '/t/*id', to: 'taxons#show', as: :nested_taxons
 

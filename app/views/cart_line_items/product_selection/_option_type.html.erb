@@ -1,14 +1,20 @@
 <%
+  is_color = option_type.presentation.downcase.include?('color')
+  is_size = option_type.presentation.downcase.include?('size')
+
   classes = {
-    "color" => "flex items-center justify-center rounded-full cursor-pointer w-8 h-8 border border-gray-50 transition-colors duration-150 [&>span]:hidden hover:border-gray-300 peer-checked:outline peer-checked:outline-2 peer-checked:outline-offset-2 peer-checked:outline-red-500",
-    "size" => "flex items-center justify-center rounded border-2 border-gray-50 bg-gray-50 py-3 px-6 cursor-pointer font-sans-md text-body text-black hover:bg-white transition-colors duration-150 peer-checked:border-red-500 peer-checked:bg-white"
+    "color" => "flex items-center justify-center rounded-full cursor-pointer w-8 h-8 border border-hairline-light transition-all duration-150 [&>span]:hidden hover:border-shade-40 peer-checked:outline peer-checked:outline-2 peer-checked:outline-offset-2 peer-checked:outline-black",
+    "size" => "flex items-center justify-center rounded-full border border-hairline-light bg-white py-2 px-5 cursor-pointer text-xs font-semibold uppercase tracking-wider text-black hover:border-black transition-all duration-150 peer-checked:border-black peer-checked:bg-[#c1fbd4]/40"
   }
+  
+  swatch_class = is_color ? classes["color"] : classes["size"]
 %>
 
 <div class="modules_product-display-page_product-selection">
   <div class="optionType<%= option_type.presentation %>">
-    <div class="mb-3 font-sans-md"><%= option_type.presentation %>:
-      <span class="selected-value" id='<%= "selected-#{option_type.name}" %>'>
+    <div class="mb-3 text-xs font-bold uppercase tracking-widest text-shade-60">
+      <%= option_type.presentation %>:
+      <span class="selected-value text-black font-semibold ml-1" id='<%= "selected-#{option_type.name}" %>'>
         <%= option_values(product: product, option_type: option_type).first&.presentation %>
       </span>
     </div>
@@ -27,7 +33,7 @@
             "data-presentation": option_value.presentation,
             "data-option-index": index
           ) %>
-          <span class='<%= "#{classes[option_type.presentation.downcase]}" %> <%= "selected-#{option_value.name.downcase}" %>' style='<%= option_type.presentation.downcase == 'color' && "background-color: #{option_value.name.downcase}" %>'>
+          <span class='<%= swatch_class %> <%= "selected-#{option_value.name.downcase}" %>' style='<%= is_color && "background-color: #{option_value.name.downcase}" %>'>
             <span class="value"><%= option_value.presentation %></span>
           </span>
         </label>

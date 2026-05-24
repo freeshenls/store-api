@@ -1,0 +1,108 @@
+<%
+  # Group option types by their roles
+  static_keys = ['normal_production_time', 'product_size']
+  
+  static_specs = {}
+  general_options = {}
+  imprint_options = {}
+  
+  product.option_types.each do |ot|
+    # Query option values for this product (master and child variants)
+    vals = Spree::OptionValue.joins(:variants)
+                             .where(spree_variants: { product_id: product.id })
+                             .where(option_type_id: ot.id)
+                             .distinct
+                             .pluck(:presentation)
+    
+    next if vals.empty?
+    
+    if static_keys.include?(ot.name)
+      static_specs[ot.presentation] = vals.join(', ')
+    elsif ot.name.start_with?('imprint_')
+      # Format presentation name if it starts with "Imprint "
+      presentation_name = ot.presentation.sub(/^Imprint\s+/i, '')
+      imprint_options[presentation_name] = vals.join(', ')
+    else
+      general_options[ot.presentation] = vals.join(', ')
+    end
+  end
+%>
+
+<div class="col-span-full mt-12 pt-12 border-t border-hairline-light" data-controller="tabs">
+  <div class="flex border-b border-hairline-light mb-8 gap-x-8">
+    <button class="pb-3 border-b-2 border-black text-black font-semibold text-sm tracking-wider uppercase transition-all duration-200"
+            data-action="click->tabs#switchTab"
+            data-tab-id="description">
+      Description
+    </button>
+    
+    <% if general_options.any? || imprint_options.any? %>
+      <button class="pb-3 border-b-2 border-transparent text-shade-40 hover:text-black font-semibold text-sm tracking-wider uppercase transition-all duration-200"
+              data-action="click->tabs#switchTab"
+              data-tab-id="options">
+        Product Options
+      </button>
+    <% end %>
+  </div>
+
+  <!-- Tab 1: Description Panel -->
+  <div id="panel-description" class="tab-panel transition-all duration-300">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div class="lg:col-span-7 space-y-4">
+        <h3 class="text-xs font-bold uppercase tracking-widest text-shade-40">Product Description</h3>
+        <p class="text-body-md text-shade-60 leading-relaxed">
+          <%= product_description(product) rescue t('spree.product_has_no_description') %>
+        </p>
+      </div>
+      
+      <% if static_specs.any? %>
+        <div class="lg:col-span-5 space-y-4">
+          <h3 class="text-xs font-bold uppercase tracking-widest text-shade-40">Specifications</h3>
+          <div class="border border-hairline-light rounded-lg overflow-hidden bg-white/40 backdrop-blur-sm divide-y divide-hairline-light">
+            <% static_specs.each do |label, val| %>
+              <div class="grid grid-cols-3 py-3.5 px-5">
+                <span class="col-span-1 text-xs font-bold uppercase tracking-wider text-shade-50 flex items-center"><%= label %></span>
+                <span class="col-span-2 text-sm text-black font-semibold"><%= val %></span>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Tab 2: Product Options Panel -->
+  <% if general_options.any? || imprint_options.any? %>
+    <div id="panel-options" class="tab-panel hidden transition-all duration-300">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <% if general_options.any? %>
+          <div class="space-y-4">
+            <h3 class="text-xs font-bold uppercase tracking-widest text-shade-40">General Options</h3>
+            <div class="border border-hairline-light rounded-lg overflow-hidden bg-white/40 backdrop-blur-sm divide-y divide-hairline-light">
+              <% general_options.each do |label, val| %>
+                <div class="flex flex-col sm:flex-row justify-between py-4 px-6 gap-y-2">
+                  <span class="text-xs font-bold uppercase tracking-wider text-shade-50 flex items-center"><%= label %></span>
+                  <span class="text-sm text-black font-semibold"><%= val %></span>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+
+        <% if imprint_options.any? %>
+          <div class="space-y-4">
+            <h3 class="text-xs font-bold uppercase tracking-widest text-shade-40">Imprint Area Options</h3>
+            <div class="border border-hairline-light rounded-lg overflow-hidden bg-white/40 backdrop-blur-sm divide-y divide-hairline-light">
+              <% imprint_options.each do |label, val| %>
+                <div class="flex flex-col sm:flex-row justify-between py-4 px-6 gap-y-2">
+                  <span class="text-xs font-bold uppercase tracking-wider text-shade-50 flex items-center"><%= label %></span>
+                  <span class="text-sm text-black font-semibold"><%= val %></span>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

@@ -21,8 +21,14 @@ Spree.config do |config|
   config.image_attachment_module = 'Spree::Image::ActiveStorageAttachment'
   config.taxon_attachment_module = 'Spree::Taxon::ActiveStorageAttachment'
 
-  # Uncomment to recalculate cart prices when the cart changes
-  # config.recalculate_cart_prices = true
+  # Configure variant price selector class for volume/tiered pricing
+  config.variant_price_selector_class = 'SolidusVolumePricing::Pricer'
+
+  # Recalculate cart prices when the cart changes
+  config.recalculate_cart_prices = true
+
+  # Inherit master variant volume pricing for child variants if they do not have specific rules
+  config.use_master_variant_volume_pricing = true
 
   # Defaults
   # Permission Sets:

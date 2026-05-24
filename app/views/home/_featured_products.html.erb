@@ -1,16 +1,31 @@
-<section class="wrapper pt-3 pb-14 md:pb-24">
-  <div class="grid-container">
-    <div class="col-span-full md:col-span-8 md:max">
-      <%= render 'products/featured_product_card', { product: products[0], size: :big } %>
-    </div>
-    <div class="col-span-full flex flex-col gap-y-6 md:col-span-4">
-      <% products.each_with_index do |product, index| %>
-        <% if index > 0 %>
-          <div class="basis-1/2">
-            <%= render 'products/featured_product_card', { product: product, size: :small } %>
-          </div>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 font-sans">
+  <% products.each do |product| %>
+    <%= link_to product, class: "bg-canvas-night-elevated border border-hairline-dark/60 rounded-xl hover:border-hairline-dark hover:shadow-sheen-dark transition-all flex flex-col overflow-hidden group" do %>
+      <!-- Image Container -->
+      <div class="aspect-square bg-black/40 flex items-center justify-center p-6 relative overflow-hidden shrink-0 border-b border-hairline-dark/40">
+        <% if product.images.any? %>
+          <%= image_tag product.images.first.url(:product), alt: product.name, class: "max-h-[85%] max-w-[85%] object-contain transition-transform duration-500 group-hover:scale-105" %>
+        <% elsif product.variants.any? && product.variants.map(&:images).flatten.any? %>
+          <%= image_tag product.variants.map(&:images).flatten.first.url(:product), alt: product.name, class: "max-h-[85%] max-w-[85%] object-contain transition-transform duration-500 group-hover:scale-105" %>
+        <% else %>
+          <svg class="w-12 h-12 text-shade-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+          </svg>
         <% end %>
-      <% end %>
-    </div>
-  </div>
-</section>
+      </div>
+
+      <!-- Content Container -->
+      <div class="p-6 flex flex-col flex-grow justify-between gap-4">
+        <span class="text-xs font-semibold uppercase tracking-wider text-link-cool-2 group-hover:text-white transition-colors leading-tight line-clamp-2">
+          <%= product.name %>
+        </span>
+        <div class="flex flex-col gap-1 mt-auto">
+          <span class="text-sm font-bold text-white tracking-wider">
+            FROM <%= display_price(product) %>
+          </span>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+</div>
+

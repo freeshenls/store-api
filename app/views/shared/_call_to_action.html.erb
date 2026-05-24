@@ -1,16 +1,29 @@
 <%
-  base_class = 'w-fit py-3 px-7 rounded-full text-body-sm font-sans-md tracking-wider leading-none uppercase whitespace-nowrap transition-colors duration-200'
+  type = local_assigns[:type].presence || 'primary'
+  on_dark = local_assigns[:on_dark] || false
   
-  cta_primary_class = 'bg-red-500 text-white hover:bg-red-700'
-  cta_secondary_class = 'bg-white text-black hover:bg-gray-200 dark:text-sand dark:bg-gray-800 dark:hover:bg-gray-700'
-  cta_tertiary_class = 'bg-black text-white dark:text-black dark:bg-white dark:hover:bg-gray-100'
-  
-  type = type.presence ? type : 'primary'
-  cta_class = "#{base_class} #{type == 'primary' && cta_primary_class} #{type == 'secondary' && cta_secondary_class} #{type == 'tertiary' && cta_tertiary_class} #{defined?(additional_classes) ? additional_classes : ''}"
+  # Select appropriate design system button class
+  cta_class = case type
+              when 'primary'
+                'button-primary-pill inline-block'
+              when 'secondary'
+                on_dark ? 'button-outline-on-dark inline-block' : 'button-outline-on-light inline-block'
+              when 'tertiary'
+                'button-aloe-pill inline-block'
+              when 'outline_dark'
+                'button-outline-on-dark inline-block'
+              when 'outline_light'
+                'button-outline-on-light inline-block'
+              else
+                'button-primary-pill inline-block'
+              end
+              
+  extra_classes = local_assigns[:additional_classes].presence || ''
+  final_class = "#{cta_class} #{extra_classes}".strip
 %>
 
-<% if defined?(url) && url != nil %>
- <%= link_to label.html_safe, url, class: cta_class, target: defined?(target) ? target : '_self' %> 
+<% if local_assigns[:url].present? %>
+  <%= link_to label.html_safe, url, class: final_class, target: local_assigns[:target].presence || '_self' %> 
 <% else %>
-  <%= button_tag(label.html_safe, class: cta_class, id: defined?(id) && id) %>
+  <%= button_tag(label.html_safe, class: final_class, id: local_assigns[:id].presence || nil) %>
 <% end %>

@@ -15,7 +15,7 @@
   </h3>
 
   <% if defined?(line_item.single_money) %>
-    <p class="font-sans-md text-body-sm">
+    <p class="font-sans-md text-body-sm" data-cart-item-target="unitPrice">
       <%= line_item.single_money.to_html %>
     </p>
   <% end %>

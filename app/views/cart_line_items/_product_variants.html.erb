@@ -17,6 +17,14 @@
             index == 0,
             "data-js" => 'variant-radio',
             "data-js_price" => variant.price_for_options(current_pricing_options)&.money.to_s,
+            "data-price-amount" => variant.price_for_options(current_pricing_options)&.amount.to_f,
+            "data-volume-rules" => (variant.volume_prices.any? ? variant.volume_prices : product.master.volume_prices).map { |vp|
+              {
+                range: vp.range,
+                amount: vp.amount.to_f,
+                discount_type: vp.discount_type
+              }
+            }.to_json,
             "data-option-value-ids" => sorted_option_values(variant).to_json,
             "data-target" => "variantOptions",
             "data-price" => variant.price_for_options(current_pricing_options)&.money&.to_html

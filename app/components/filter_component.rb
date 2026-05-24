@@ -12,13 +12,55 @@ class FilterComponent < ViewComponent::Base
   end
 
   def call
-    safe_join([filter_list_title, filter_list].compact) if filter_list
+    if filter[:scope] == :price_range_any
+      safe_join([filter_list_title, price_inputs].compact)
+    else
+      safe_join([filter_list_title, filter_list].compact) if filter_list
+    end
   end
 
   private
 
   def filter_list_title
-    content_tag(:h6, title, class: "#{BASE_CLASS}__title font-sans-md") if title
+    content_tag(:h6, title, class: "#{BASE_CLASS}__title text-heading-sm text-black font-semibold mb-4 mt-8") if title
+  end
+
+  def price_inputs
+    content_tag :div, class: 'flex items-center gap-2 mt-4 font-sans text-sm text-black w-full' do
+      min_input_div = content_tag :div, class: 'flex flex-col gap-1 w-[45%]' do
+        concat content_tag(:label, 'Min Price', class: 'text-xs text-shade-60 uppercase tracking-wider font-semibold mb-1')
+        concat content_tag(:div, class: 'text-input') {
+          number_field_tag(
+            'search[price_min]',
+            search_params[:price_min],
+            placeholder: '$ Min',
+            min: 0,
+            step: '0.01',
+            class: 'w-full'
+          )
+        }
+      end
+
+      separator_span = content_tag :span, '-', class: 'text-shade-40 mt-5'
+
+      max_input_div = content_tag :div, class: 'flex flex-col gap-1 w-[45%]' do
+        concat content_tag(:label, 'Max Price', class: 'text-xs text-shade-60 uppercase tracking-wider font-semibold mb-1')
+        concat content_tag(:div, class: 'text-input') {
+          number_field_tag(
+            'search[price_max]',
+            search_params[:price_max],
+            placeholder: '$ Max',
+            min: 0,
+            step: '0.01',
+            class: 'w-full'
+          )
+        }
+      end
+
+      concat min_input_div
+      concat separator_span
+      concat max_input_div
+    end
   end
 
   def filter_list

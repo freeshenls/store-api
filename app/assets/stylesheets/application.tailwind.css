@@ -5,8 +5,9 @@
 @layer base {
   html,
   body {
-    @apply box-border max-w-full antialiased scroll-smooth bg-sand;
-    @apply dark:bg-black dark:text-sand;
+    @apply box-border max-w-full antialiased scroll-smooth;
+    font-feature-settings: "ss03";
+    font-family: "Inter Variable", Inter, system-ui, sans-serif;
   }
 }
 
@@ -26,9 +27,225 @@
     @apply md:grid-cols-12 md:gap-7;
   }
 
-  .button-primary {
-    @apply w-fit py-3 px-7 rounded-full text-body-sm font-sans-md tracking-wider leading-none uppercase whitespace-nowrap transition-colors duration-200 bg-red-500 text-white hover:bg-red-700;
+  /* ==========================================================================
+     Design System & Component Tokens from DESIGN.md
+     ========================================================================== */
+
+  /* Buttons */
+  .button-primary,
+  .button-primary-pill {
+    @apply w-fit py-3.5 px-6 rounded-full text-[15px] font-medium tracking-wide leading-none whitespace-nowrap transition-colors duration-200 bg-black text-white hover:bg-[#3f3f46];
   }
+
+  .button-outline-on-dark {
+    @apply w-fit py-3.5 px-6 rounded-full text-[15px] font-medium tracking-wide leading-none whitespace-nowrap border-2 border-white bg-transparent text-white hover:bg-white hover:text-black transition-all duration-200;
+  }
+
+  .button-outline-on-light {
+    @apply w-fit py-3.5 px-6 rounded-full text-[15px] font-medium tracking-wide leading-none whitespace-nowrap border border-black bg-transparent text-black hover:bg-black hover:text-white transition-all duration-200;
+  }
+
+  .button-aloe-pill {
+    @apply w-fit py-3.5 px-6 rounded-full text-[15px] font-medium tracking-wide leading-none whitespace-nowrap bg-[#c1fbd4] text-black hover:bg-[#aefab8] transition-all duration-200;
+  }
+
+  /* Typography */
+  .text-display-xxl {
+    font-family: "NeueHaasGrotesk Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 56px;
+    font-weight: 300;
+    line-height: 1.0;
+    letter-spacing: 1.2px;
+    font-feature-settings: "ss03";
+  }
+  @media (min-width: 768px) {
+    .text-display-xxl { font-size: 76px; letter-spacing: 1.8px; }
+  }
+  @media (min-width: 1024px) {
+    .text-display-xxl { font-size: 96px; letter-spacing: 2.4px; }
+  }
+
+  .text-display-xl {
+    font-family: "NeueHaasGrotesk Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 42px;
+    font-weight: 300;
+    line-height: 1.0;
+    font-feature-settings: "ss03";
+  }
+  @media (min-width: 768px) {
+    .text-display-xl { font-size: 56px; }
+  }
+  @media (min-width: 1024px) {
+    .text-display-xl { font-size: 70px; }
+  }
+
+  .text-display-lg {
+    font-family: "NeueHaasGrotesk Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 36px;
+    font-weight: 300;
+    line-height: 1.16;
+    font-feature-settings: "ss03";
+  }
+  @media (min-width: 768px) {
+    .text-display-lg { font-size: 46px; }
+  }
+  @media (min-width: 1024px) {
+    .text-display-lg { font-size: 55px; }
+  }
+
+  .text-display-md {
+    font-family: "NeueHaasGrotesk Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 32px;
+    font-weight: 300;
+    line-height: 1.14;
+    font-feature-settings: "ss03";
+  }
+  @media (min-width: 768px) {
+    .text-display-md { font-size: 40px; }
+  }
+  @media (min-width: 1024px) {
+    .text-display-md { font-size: 48px; }
+  }
+
+  .text-heading-xl {
+    font-family: "NeueHaasGrotesk Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 1.28;
+    letter-spacing: 0.42px;
+    font-feature-settings: "ss03";
+  }
+
+  .text-heading-lg {
+    font-family: "NeueHaasGrotesk Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1.14;
+    letter-spacing: 0.36px;
+    font-feature-settings: "ss03";
+  }
+
+  .text-heading-md {
+    font-family: "NeueHaasGrotesk Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.3px;
+    font-feature-settings: "ss03";
+  }
+
+  .text-heading-sm {
+    font-family: "NeueHaasGrotesk Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.25;
+    letter-spacing: 0.72px;
+    font-feature-settings: "ss03";
+  }
+
+  .text-body-lg {
+    font-family: "Inter Variable", Inter, Helvetica, Arial, sans-serif;
+    font-size: 18px;
+    font-weight: 550;
+    line-height: 1.56;
+    font-feature-settings: "ss03";
+  }
+
+  .text-body-md {
+    font-family: "Inter Variable", Inter, Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 420;
+    line-height: 1.5;
+    font-feature-settings: "ss03";
+  }
+
+  .text-body-strong {
+    font-family: "Inter Variable", Inter, Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 550;
+    line-height: 1.5;
+    font-feature-settings: "ss03";
+  }
+
+  .text-caption {
+    font-family: "Inter Variable", Inter, Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.49;
+    letter-spacing: 0.28px;
+    font-feature-settings: "ss03";
+  }
+
+  .text-micro {
+    font-family: "Inter Variable", Inter, Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: -0.13px;
+    font-feature-settings: "ss03";
+  }
+
+  .text-eyebrow-cap {
+    font-family: "Inter Variable", Inter, Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: 0.72px;
+    text-transform: uppercase;
+    font-feature-settings: "ss03";
+  }
+
+  .text-code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    font-feature-settings: "ss03";
+  }
+
+  /* Cards */
+  .card-pricing {
+    @apply bg-white text-black border border-hairline-light rounded-xl p-8 shadow-halos;
+  }
+
+  .card-pricing-featured {
+    @apply bg-[#c1fbd4] text-black border border-hairline-light rounded-xl p-8;
+  }
+
+  .card-feature-cinematic {
+    @apply bg-[#0a0a0a] text-white border border-[#1e2c31]/50 rounded-xl p-8 shadow-sheen-dark hover:border-[#1e2c31] transition-colors duration-300;
+  }
+
+  .card-pistachio-band {
+    @apply bg-[#d4f9e0] text-black rounded-xl p-8;
+  }
+
+  .card-photo-frame {
+    @apply bg-black p-0 rounded-2xl overflow-hidden;
+  }
+
+  /* Tags & Pills */
+  .pill-tag-mint {
+    @apply bg-[#c1fbd4] text-black text-eyebrow-cap rounded-full px-3 py-1 font-medium inline-block;
+  }
+
+  .pill-tag-shade {
+    @apply bg-[#d4d4d8] text-black text-eyebrow-cap rounded-full px-3 py-1 font-medium inline-block;
+  }
+
+  /* Soft halos Level 3 shadow stack & dark sheen Level 1 shadow */
+  .shadow-halos {
+    box-shadow: 0 8px 8px rgba(0, 0, 0, 0.02),
+                0 4px 4px rgba(0, 0, 0, 0.02),
+                0 2px 2px rgba(0, 0, 0, 0.02),
+                0 0 0 1px rgba(0, 0, 0, 0.05);
+  }
+
+  .shadow-sheen-dark {
+    box-shadow: 0 1px 2px rgba(255, 255, 255, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+
 
   .categories-menu ul {
     @apply flex flex-col lg:flex-row justify-center p-0 space-y-8 lg:space-y-0 lg:space-x-4 xl:space-x-6 font-medium text-body lg:items-center;
@@ -40,13 +257,12 @@
 
   /* Inputs */
   .text-input input {
-    @apply relative flex items-center justify-start border border-gray-mid rounded px-4 py-3 placeholder:text-gray-500 text-black w-full;
-    @apply hover:border-gray-400 focus:outline-none focus:ring focus:ring-offset-1 focus:ring-black/20 focus:border-gray-400;
-    @apply dark:bg-gray-800 dark:border-gray-600 dark:text-sand dark:placeholder:text-gray-400 dark:focus:ring-white/30;
+    @apply relative flex items-center justify-start border border-hairline-light rounded-lg px-4 py-2.5 placeholder-shade-40 text-black bg-white w-full;
+    @apply hover:border-shade-40 focus:outline-none focus:ring focus:ring-black/10 focus:border-black;
   }
 
   .text-input label {
-    @apply text-body-sm font-normal mb-1;
+    @apply text-body-sm font-normal mb-1 text-shade-60;
   }
 
   .select-input {
@@ -54,9 +270,8 @@
   }
 
   .select-input select {
-    @apply border-gray-mid rounded px-4 py-3 w-full cursor-pointer text-black;
-    @apply hover:border-gray-400 focus:outline-none focus:ring focus:ring-black/20 focus:border-gray-400;
-    @apply dark:bg-gray-800 dark:border-gray-600 dark:text-sand dark:placeholder:text-gray-400;
+    @apply border-hairline-light rounded-lg px-4 py-2.5 w-full cursor-pointer text-black bg-white;
+    @apply hover:border-shade-40 focus:outline-none focus:ring focus:ring-black/10 focus:border-black;
   }
 
   .checkbox-input {
@@ -114,7 +329,7 @@
   }
 
   .checkout-header__steps > ol > li {
-    @apply flex items-center text-body-xs font-sans-md text-gray-500 dark:text-sand last:after:hidden;
+    @apply flex items-center text-body-xs font-medium text-gray-500 dark:text-sand last:after:hidden;
   }
 
   .checkout-header__steps > ol > li::after {
@@ -145,6 +360,51 @@
   .badge.badge-pending,
   .badge.badge-returned {
     @apply bg-yellow text-black;
+  }
+
+  /* Bulk Discount Table Styling */
+  #bulk-discount {
+    @apply border border-hairline-light rounded-xl overflow-hidden bg-white shadow-halos transition-all duration-200 mt-6;
+  }
+
+  #bulk-discount h6 {
+    @apply text-[15px] font-medium tracking-wide uppercase text-black py-3 px-5 bg-[#d4f9e0] border-b border-hairline-light m-0;
+  }
+
+  #bulk-discount table {
+    @apply w-full text-body-sm text-left border-collapse m-0;
+  }
+
+  #bulk-discount table tr {
+    @apply border-b border-hairline-light/60 last:border-b-0 transition-colors duration-150;
+  }
+
+  #bulk-discount table tr.active-tier {
+    @apply bg-[#c1fbd4]/50 transition-all duration-200;
+  }
+
+  #bulk-discount table td {
+    @apply py-3 px-5 text-shade-60 font-sans;
+  }
+
+  #bulk-discount table tr.active-tier td {
+    @apply text-black font-semibold;
+  }
+
+  #bulk-discount table td:first-child {
+    @apply font-medium text-black;
+  }
+
+  #bulk-discount table tr.active-tier td:first-child {
+    @apply text-black font-semibold;
+  }
+
+  #bulk-discount table td:last-child {
+    @apply text-right text-black font-semibold;
+  }
+
+  #bulk-discount table tr.active-tier td:last-child {
+    @apply text-right text-black font-bold;
   }
 }
 

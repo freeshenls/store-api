@@ -13,13 +13,163 @@
       <div class="flex flex-col col-span-full gap-y-8 lg:col-span-4 lg:gap-y-16">
         <%= render 'product_header', product: @product %>
         <%= render 'product_promotions', product: @product %>
+        <%= render partial: 'spree/products/volume_pricing', locals: { product: @product } %>
         <%= render 'cart_line_items/form', product: @product %>
-        <%= render 'product_info', product: @product %>
       </div>
+
+      <%= render 'product_specs_tabs', product: @product %>
     </div>
 
     <div class="col-span-full pt-12">
       <%= render partial: 'home/collection', :locals => { :title => "You May Also Like", :products => @similar_products } %>
     </div>
+
+    <%
+      volume_prices_json = @product.master.volume_prices.map { |vp|
+        {
+          range: vp.range,
+          amount: vp.amount.to_f,
+          discount_type: vp.discount_type
+        }
+      }.to_json
+      base_price = @product.price_for_options(current_pricing_options)&.amount.to_f
+      currency_symbol = current_pricing_options.currency == 'USD' ? '$' : ''
+    %>
+    <div id="volume-pricing-metadata"
+         data-rules="<%= h volume_prices_json %>"
+         data-base-price="<%= base_price %>"
+         data-currency-symbol="<%= currency_symbol %>">
+    </div>
+
+    <script>
+      (function() {
+        function initVolumePricing() {
+          const metadata = document.getElementById("volume-pricing-metadata");
+          if (!metadata) return;
+
+          const defaultRules = JSON.parse(metadata.dataset.rules || "[]");
+          const defaultBasePrice = parseFloat(metadata.dataset.basePrice || "0");
+          const currencySymbol = metadata.dataset.currencySymbol || "$";
+
+          const qtyInput = document.getElementById("quantity") || document.getElementsByName("quantity")[0];
+          const priceContainer = document.getElementById("product-price");
+          const ctaPriceSpan = document.getElementById("cta_price");
+
+          if (!qtyInput) return;
+
+          let currentBasePrice = defaultBasePrice;
+          let currentRules = defaultRules;
+
+          // Check if a variant is already selected initially
+          const initialSelectedRadio = document.querySelector("[data-js='variant-radio']:checked");
+          if (initialSelectedRadio) {
+            currentBasePrice = parseFloat(initialSelectedRadio.dataset.priceAmount || "0") || defaultBasePrice;
+            currentRules = JSON.parse(initialSelectedRadio.dataset.volumeRules || "[]");
+          }
+
+          function isQtyInRange(qty, rangeStr) {
+            const cleanRange = rangeStr.replace(/[()]/g, '').trim();
+            if (cleanRange.includes('..')) {
+              const parts = cleanRange.split('..');
+              const min = parseInt(parts[0], 10);
+              const max = parts[1] ? parseInt(parts[1], 10) : Infinity;
+              return qty >= min && qty <= max;
+            } else if (cleanRange.includes('+')) {
+              const min = parseInt(cleanRange.replace('+', ''), 10);
+              return qty >= min;
+            }
+            return false;
+          }
+
+          function calculateRulePrice(base, rule) {
+            switch (rule.discount_type) {
+              case 'price':
+                return rule.amount;
+              case 'dollar':
+                return base - rule.amount;
+              case 'percent':
+                return base * (1.0 - rule.amount);
+              default:
+                return base;
+            }
+          }
+
+          function calculatePrice(qty, base, rules) {
+            const matchingRule = rules.find(rule => isQtyInRange(qty, rule.range));
+            if (!matchingRule) return base;
+            return calculateRulePrice(base, matchingRule);
+          }
+
+          function updateDisplay() {
+            const qty = parseInt(qtyInput.value, 10) || 1;
+            const currentPrice = calculatePrice(qty, currentBasePrice, currentRules);
+            const formattedPrice = currencySymbol + currentPrice.toFixed(2);
+
+            // Reconstruct the price span to ensure it is always present and updated
+            if (priceContainer) {
+              priceContainer.innerHTML = `<span itemprop="price" content="${currentPrice.toFixed(2)}" data-js="price">${formattedPrice}</span>`;
+            }
+            
+            if (ctaPriceSpan) {
+              ctaPriceSpan.textContent = formattedPrice;
+            }
+
+            // Update bulk discount table and highlight active tier
+            const rows = document.querySelectorAll('[data-js="volume-price-row"]');
+            rows.forEach(row => {
+              const rangeStr = row.dataset.range;
+              const rule = currentRules.find(r => r.range === rangeStr);
+              if (rule) {
+                const tierPrice = calculateRulePrice(currentBasePrice, rule);
+                const priceCell = row.querySelector('td:nth-child(2)');
+                if (priceCell) {
+                  priceCell.textContent = currencySymbol + tierPrice.toFixed(2);
+                }
+              }
+
+              if (isQtyInRange(qty, rangeStr)) {
+                row.classList.add('active-tier');
+              } else {
+                row.classList.remove('active-tier');
+              }
+            });
+          }
+
+          function handleVariantSelection(radio) {
+            const basePriceVal = parseFloat(radio.dataset.priceAmount || "0");
+            const rulesVal = JSON.parse(radio.dataset.volumeRules || "[]");
+            
+            currentBasePrice = basePriceVal || defaultBasePrice;
+            currentRules = rulesVal.length > 0 ? rulesVal : defaultRules;
+
+            // Wait for other selectVariant scripts to complete updating the DOM, then update
+            setTimeout(updateDisplay, 0);
+          }
+
+          // Listen to variant radio clicks and changes
+          const radios = document.querySelectorAll("[data-js='variant-radio']");
+          radios.forEach(radio => {
+            radio.addEventListener("change", () => handleVariantSelection(radio));
+            radio.addEventListener("click", () => handleVariantSelection(radio));
+          });
+
+          // Listen to quantity changes
+          qtyInput.removeEventListener("input", updateDisplay);
+          qtyInput.removeEventListener("change", updateDisplay);
+          qtyInput.addEventListener("input", updateDisplay);
+          qtyInput.addEventListener("change", updateDisplay);
+          
+          updateDisplay();
+        }
+
+        document.addEventListener("DOMContentLoaded", initVolumePricing);
+        document.addEventListener("turbo:load", initVolumePricing);
+        document.addEventListener("turbo:render", initVolumePricing);
+        
+        if (document.readyState === "complete" || document.readyState === "interactive") {
+          initVolumePricing();
+        }
+      })();
+    </script>
   </section>
 <% end %>

@@ -1,68 +1,105 @@
-<%
-  title_text_classes = 'text-body-20 md:text-body'
-   
-  price_classes = 
-    @home_collection ? 
-      'text-body-xs lg:text-body lg:ml-4 lg:pb-[2px]' :
-      'ml-4 text-body md:text-body-sm lg:text-body pb-[4px] md:pb-[2px] xl:pb-[4px]'
-  
-  text_flex_classes = 
-    @home_collection ?
-      'lg:flex justify-between items-end' :
-      'flex justify-between items-end'
-  
-  padding_classes = 
-    @home_collection ?
-      'p-3 md:p-6' :
-      'p-6'
-%>
-
+<% if @home_collection %>
 <li 
-  class="aspect-square bg-gray-50 w-full rounded-lg md:rounded-xl lg:rounded-2xl  <%= additional_classes %>"
+  class="bg-canvas-night-elevated border border-hairline-dark/60 rounded-xl text-white shadow-sheen-dark hover:border-hairline-dark transition-all duration-300 flex flex-col overflow-hidden group <%= additional_classes %>"
   itemscope
   itemtype="http://schema.org/Product"
   id="product_<%= product.id %>"
 >
-  <article class="h-full flex flex-col <%= padding_classes %>">
-    <section class="product-card_image h-full">
-      <%= link_to product_path(product), itemprop: 'url' do %>
+  <article class="flex flex-col h-full">
+    <div class="aspect-square bg-black/40 flex items-center justify-center p-6 relative overflow-hidden shrink-0 border-b border-hairline-dark/40">
+      <%= link_to product_path(product), itemprop: 'url', class: "w-full h-full flex items-center justify-center" do %>
         <%= render(
           ImageComponent.new(
             image: main_image,
             size: :small, 
             itemprop: "image",
-            classes: 'h-0 min-h-full mx-auto object-contain'
+            classes: 'max-h-[85%] max-w-[85%] object-contain transition-transform duration-500 group-hover:scale-105'
           )
         ) %>
       <% end %>
-    </section>
-    <section
-      class="dark:text-black <%= text_flex_classes %>"
-    >
-      <header class="product-card_header <%= title_text_classes %>">
+    </div>
+    <div class="p-6 flex flex-col justify-between flex-grow gap-4">
+      <header class="product-card_header text-xs font-semibold uppercase tracking-wider text-link-cool-2 group-hover:text-white transition-colors leading-tight line-clamp-2">
         <span>
           <%= link_to(
             truncate(product.name, length: 50),
             product_path(product),
-            class: 'info',
+            class: 'info text-link-cool-2 group-hover:text-white transition-colors',
             itemprop: "name",
             title: product.name
           ) %>
         </span>
       </header>
       <section 
-        class="product-card_price font-sans-md mt-1 lg:mt-0 <%= price_classes %>"
+        class="product-card_price font-sans mt-1 lg:mt-0 text-sm font-bold text-white tracking-wider"
         itemprop="offers"
         itemscope
         itemtype="http://schema.org/Offer"
       >
         <% if display_price %>
-          <span class="price selling" itemprop="price" content="<%= display_price.to_d %>">
-            <%= display_price.to_html %>
+          <span class="price selling" itemprop="price" content="<%= lowest_price_money.to_d %>">
+            <% if has_tiered_pricing? && lowest_price_amount < highest_price_amount %>
+              <%= lowest_price_money.to_html %> - <%= highest_price_money.to_html %>
+            <% else %>
+              <%= display_price.to_html %>
+            <% end %>
           </span>
           <span itemprop="priceCurrency" content="<%= display_price.currency %>"></span>
         <% end %>
       </section>
-    </section>
+    </div>
   </article>
 </li>
+<% else %>
+<li 
+  class="bg-white border border-hairline-light rounded-xl text-black shadow-halos hover:shadow-lg transition-all duration-300 flex flex-col overflow-hidden group <%= additional_classes %>"
+  itemscope
+  itemtype="http://schema.org/Product"
+  id="product_<%= product.id %>"
+>
+  <article class="flex flex-col h-full">
+    <div class="aspect-square bg-white flex items-center justify-center p-6 relative overflow-hidden shrink-0 border-b border-hairline-light/50">
+      <%= link_to product_path(product), itemprop: 'url', class: "w-full h-full flex items-center justify-center" do %>
+        <%= render(
+          ImageComponent.new(
+            image: main_image,
+            size: :small, 
+            itemprop: "image",
+            classes: 'max-h-[85%] max-w-[85%] object-contain transition-transform duration-500 group-hover:scale-105'
+          )
+        ) %>
+      <% end %>
+    </div>
+    <div class="p-6 flex flex-col justify-between flex-grow gap-4">
+      <header class="product-card_header text-sm font-medium text-black group-hover:text-shade-60 transition-colors leading-tight line-clamp-2">
+        <span>
+          <%= link_to(
+            truncate(product.name, length: 50),
+            product_path(product),
+            class: 'info text-black group-hover:text-shade-60 transition-colors',
+            itemprop: "name",
+            title: product.name
+          ) %>
+        </span>
+      </header>
+      <section 
+        class="product-card_price font-sans mt-1 lg:mt-0 text-base font-bold text-black tracking-wide"
+        itemprop="offers"
+        itemscope
+        itemtype="http://schema.org/Offer"
+      >
+        <% if display_price %>
+          <span class="price selling" itemprop="price" content="<%= lowest_price_money.to_d %>">
+            <% if has_tiered_pricing? && lowest_price_amount < highest_price_amount %>
+              <%= lowest_price_money.to_html %> - <%= highest_price_money.to_html %>
+            <% else %>
+              <%= display_price.to_html %>
+            <% end %>
+          </span>
+          <span itemprop="priceCurrency" content="<%= display_price.currency %>"></span>
+        <% end %>
+      </section>
+    </div>
+  </article>
+</li>
+<% end %>

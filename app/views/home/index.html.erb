@@ -1,5 +1,220 @@
-<%= render 'featured_products', { products: @featured_products } if @featured_products.try(:any?) %>
-<%= render 'collection', { title: "Shop Collection", products: @collection_products } if @collection_products.try(:any?) %>
-<%= render 'collections_with_call_to_action', { products: @cta_collection_products[0..1] } if @cta_collection_products.try(:any?) %>
-<%= render 'featured_product_banner', { product: @cta_collection_products[2] } if @cta_collection_products && @cta_collection_products.size > 2 %>
-<%= render 'collection', { title: "New Arrivals", products: @new_arrivals } if @new_arrivals.try(:any?) %>
+<div class="w-full flex flex-col bg-black text-white pb-32">
+  <!-- Section 1: Categories Sidebar & Hero Carousel Slider -->
+  <section class="w-full bg-black py-10 mb-16 border-b border-hairline-dark/40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch font-sans">
+      <!-- Left Column: Category Sidebar -->
+      <div class="hidden lg:flex lg:col-span-3 flex-col h-full bg-canvas-night-elevated border border-hairline-dark rounded-2xl overflow-hidden shadow-sheen-dark min-h-[440px]">
+        <ul class="flex flex-col m-0 p-0 list-none">
+          <li class="border-b border-hairline-dark bg-black/40 py-4 px-6 text-xs font-bold tracking-wider uppercase text-white">
+            CATEGORIES
+          </li>
+          <li class="border-b border-hairline-dark/60">
+            <a href="<%= products_path %>" class="py-3.5 px-6 text-xs font-semibold text-link-cool-2 hover:text-white hover:bg-white/5 transition-colors block uppercase tracking-wider">New Products</a>
+          </li>
+          <li class="border-b border-hairline-dark/60">
+            <a href="/t/categories/clothing" class="py-3.5 px-6 text-xs font-semibold text-link-cool-2 hover:text-white hover:bg-white/5 transition-colors block uppercase tracking-wider">Apparel</a>
+          </li>
+          <li class="border-b border-hairline-dark/60">
+            <a href="/t/categories/accessories" class="py-3.5 px-6 text-xs font-semibold text-link-cool-2 hover:text-white hover:bg-white/5 transition-colors block uppercase tracking-wider">Desk Accessories</a>
+          </li>
+          <li class="border-b border-hairline-dark/60">
+            <a href="/t/categories/accessories/water-bottles" class="py-3.5 px-6 text-xs font-semibold text-link-cool-2 hover:text-white hover:bg-white/5 transition-colors block uppercase tracking-wider">Drinkware</a>
+          </li>
+          <li class="border-b border-hairline-dark/60">
+            <a href="/t/categories/stickers" class="py-3.5 px-6 text-xs font-semibold text-link-cool-2 hover:text-white hover:bg-white/5 transition-colors block uppercase tracking-wider">Magnets</a>
+          </li>
+          <li>
+            <a href="<%= products_path %>" class="py-3.5 px-6 text-xs font-semibold text-link-cool-2 hover:text-white hover:bg-white/5 transition-colors block uppercase tracking-wider">Health & Safety</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Right Column: Apparel/Spirit Hero Banner Carousel -->
+      <div class="col-span-1 lg:col-span-9 relative bg-canvas-night-elevated border border-hairline-dark/60 shadow-sheen-dark min-h-[440px] overflow-hidden rounded-2xl" 
+           data-controller="hero-carousel"
+           data-action="mouseenter->hero-carousel#pause mouseleave->hero-carousel#resume">
+        
+        <!-- Slide 1: Apparel -->
+        <div class="absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out flex items-center" 
+             data-hero-carousel-target="slide">
+          <!-- Absolute Image Background aligned to right -->
+          <div class="absolute inset-0 bg-[#f7f7f7]" 
+               style="background-image: url('/images/shop_apparel_banner.png'); background-position: right center; background-size: contain; background-repeat: no-repeat;"></div>
+          <!-- Gradient overlay for legibility -->
+          <div class="absolute inset-0 bg-gradient-to-r from-[#f7f7f7] via-[#f7f7f7]/90 to-transparent lg:via-[#f7f7f7]/20 z-1 pointer-events-none"></div>
+
+          <!-- Hero Content -->
+          <div class="relative z-10 max-w-md md:max-w-lg lg:max-w-xl flex flex-col items-start pl-8 sm:pl-16 pr-4">
+            <h3 class="text-shade-60 text-xs font-bold uppercase tracking-widest mb-3">
+              Polos, Workwear, T-Shirts, & More!
+            </h3>
+            <h1 class="text-black text-display-xl font-light tracking-tight mb-8 leading-none">
+              Shop Apparel
+            </h1>
+            <div>
+              <%= render 'shared/call_to_action', label: 'Shop Now', url: '/t/categories/clothing', type: 'primary' %>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 2: Spirit -->
+        <div class="absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out flex items-center opacity-0 pointer-events-none" 
+             data-hero-carousel-target="slide">
+          <!-- Absolute Image Background aligned to right -->
+          <div class="absolute inset-0 bg-[#f7f7f7]" 
+               style="background-image: url('/images/shop_spirit_banner.png'); background-position: right center; background-size: contain; background-repeat: no-repeat;"></div>
+          <!-- Gradient overlay for legibility -->
+          <div class="absolute inset-0 bg-gradient-to-r from-[#f7f7f7] via-[#f7f7f7]/90 to-transparent lg:via-[#f7f7f7]/20 z-1 pointer-events-none"></div>
+
+          <!-- Hero Content -->
+          <div class="relative z-10 max-w-md md:max-w-lg lg:max-w-xl flex flex-col items-start pl-8 sm:pl-16 pr-4">
+            <h3 class="text-shade-60 text-xs font-bold uppercase tracking-widest mb-3">
+              Go Team!
+            </h3>
+            <h1 class="text-black text-display-xl font-light tracking-tight mb-8 leading-none">
+              Shop Spirit
+            </h1>
+            <div>
+              <%= render 'shared/call_to_action', label: 'Shop Now', url: products_path, type: 'primary' %>
+            </div>
+          </div>
+        </div>
+
+        <!-- Carousel Arrows -->
+        <button type="button" 
+                class="absolute left-6 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-black/10 hover:bg-black/30 text-white flex items-center justify-center transition-colors focus:outline-none" 
+                data-action="click->hero-carousel#previous"
+                aria-label="Previous Slide">
+          <svg class="w-5 h-5 text-black/70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+        </button>
+        <button type="button" 
+                class="absolute right-6 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-black/10 hover:bg-black/30 text-white flex items-center justify-center transition-colors focus:outline-none" 
+                data-action="click->hero-carousel#next"
+                aria-label="Next Slide">
+          <svg class="w-5 h-5 text-black/70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+        </button>
+
+        <!-- Carousel Dots -->
+        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex space-x-2.5">
+          <button type="button" 
+                  class="h-2 rounded-full transition-all duration-300 focus:outline-none" 
+                  data-hero-carousel-target="dot" 
+                  data-action="click->hero-carousel#goTo" 
+                  data-index="0"
+                  aria-label="Go to Slide 1"></button>
+          <button type="button" 
+                  class="h-2 rounded-full transition-all duration-300 focus:outline-none" 
+                  data-hero-carousel-target="dot" 
+                  data-action="click->hero-carousel#goTo" 
+                  data-index="1"
+                  aria-label="Go to Slide 2"></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 2: Featured Products -->
+  <section class="max-w-7xl w-full mx-auto px-4 sm:px-8 py-20 font-sans">
+    <h2 class="text-display-lg text-white font-light text-center uppercase tracking-widest mb-16">Featured Products</h2>
+    
+    <% if @featured_products.try(:any?) %>
+      <%= render 'featured_products', { products: @featured_products } %>
+    <% else %>
+      <div class="text-center text-link-cool-2 py-10">
+        No featured products currently available.
+      </div>
+    <% end %>
+  </section>
+
+  <!-- Section 3: Why Choose ZEVI Promotion -->
+  <section class="py-24 font-sans bg-black border-t border-b border-hairline-dark/40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-8">
+      <h2 class="text-display-lg text-white font-light text-center uppercase tracking-widest mb-20">Why Choose ZEVI</h2>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-8">
+        <!-- Feature 1: Fast Delivery -->
+        <div class="flex flex-col items-center text-center gap-5 p-8 bg-canvas-night-elevated border border-hairline-dark/60 rounded-2xl shadow-sheen-dark hover:border-hairline-dark transition-all duration-300 group">
+          <div class="w-14 h-14 rounded-full border-2 border-hairline-dark flex items-center justify-center text-white group-hover:bg-white group-hover:text-black transition-all">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10M13 16h6a1 1 0 001-1v-4a1 1 0 00-.3-.7l-3-3a1 1 0 00-.7-.3h-3v8z"/>
+            </svg>
+          </div>
+          <h3 class="text-xs font-bold text-white uppercase tracking-wider mt-2">Fast Delivery</h3>
+          <p class="text-link-cool-2 text-xs leading-relaxed max-w-[220px]">
+            Quick turnaround times to meet your deadlines
+          </p>
+        </div>
+
+        <!-- Feature 2: Quality Guaranteed -->
+        <div class="flex flex-col items-center text-center gap-5 p-8 bg-canvas-night-elevated border border-hairline-dark/60 rounded-2xl shadow-sheen-dark hover:border-hairline-dark transition-all duration-300 group">
+          <div class="w-14 h-14 rounded-full border-2 border-hairline-dark flex items-center justify-center text-white group-hover:bg-white group-hover:text-black transition-all">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+            </svg>
+          </div>
+          <h3 class="text-xs font-bold text-white uppercase tracking-wider mt-2">Quality Guaranteed</h3>
+          <p class="text-link-cool-2 text-xs leading-relaxed max-w-[220px]">
+            Premium products with excellent print quality
+          </p>
+        </div>
+
+        <!-- Feature 3: Competitive Pricing -->
+        <div class="flex flex-col items-center text-center gap-5 p-8 bg-canvas-night-elevated border border-hairline-dark/60 rounded-2xl shadow-sheen-dark hover:border-hairline-dark transition-all duration-300 group">
+          <div class="w-14 h-14 rounded-full border-2 border-hairline-dark flex items-center justify-center text-white group-hover:bg-white group-hover:text-black transition-all">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M7 7h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2zM9 16h6m-6-4h6m-6-4h6"/>
+            </svg>
+          </div>
+          <h3 class="text-xs font-bold text-white uppercase tracking-wider mt-2">Competitive Pricing</h3>
+          <p class="text-link-cool-2 text-xs leading-relaxed max-w-[220px]">
+            Best value for your promotional needs
+          </p>
+        </div>
+
+        <!-- Feature 4: 24/7 Support -->
+        <div class="flex flex-col items-center text-center gap-5 p-8 bg-canvas-night-elevated border border-hairline-dark/60 rounded-2xl shadow-sheen-dark hover:border-hairline-dark transition-all duration-300 group">
+          <div class="w-14 h-14 rounded-full border-2 border-hairline-dark flex items-center justify-center text-white group-hover:bg-white group-hover:text-black transition-all">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+            </svg>
+          </div>
+          <h3 class="text-xs font-bold text-white uppercase tracking-wider mt-2">24/7 Support</h3>
+          <p class="text-link-cool-2 text-xs leading-relaxed max-w-[220px]">
+            Dedicated account managers for your needs
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 4: About ZEVI Promotion -->
+  <section id="about" class="scroll-mt-24 max-w-7xl w-full mx-auto px-4 sm:px-8 py-24 lg:py-32 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center font-sans">
+    <!-- Left Copy Column -->
+    <div class="flex flex-col gap-8 order-2 lg:order-1">
+      <h2 class="text-display-lg text-white font-light uppercase tracking-widest leading-tight">About ZEVI</h2>
+      <div class="text-link-cool-2 text-sm leading-relaxed flex flex-col gap-6 font-light">
+        <p class="font-normal text-white text-base">
+          Looking for the perfect promotional item or searching for fresh inspiration? Zevi Promotion is your ultimate one-stop destination for custom promotional products and corporate gifts.
+        </p>
+        <p>
+          As your dedicated brand-building partner, Zevi Promotion transforms your vision into impactful marketing solutions. We combine an extensive product inventory with premium branding and decoration techniques, all while prioritizing sustainable practices.
+        </p>
+        <p>
+          Serving a global clientele, we source and tailor the perfect promotional solutions to elevate your brand for any occasion.
+        </p>
+        <p class="font-bold text-white text-base mt-2">
+          Elevate your brand, make a lasting impression, and stand out from the competition with Zevi Promotion!
+        </p>
+      </div>
+    </div>
+
+    <!-- Right Image Column -->
+    <div class="order-1 lg:order-2 flex justify-center">
+      <div class="relative group w-full max-w-xl">
+        <div class="absolute -inset-2 bg-gradient-to-r from-white/5 to-white/10 rounded-2xl opacity-30 blur-md group-hover:opacity-40 transition duration-300"></div>
+        <img src="/images/zevi_about_us.jpg" alt="About ZEVI Promotion Team" class="relative w-full h-auto object-cover rounded-2xl shadow-sheen-dark border border-hairline-dark/60 max-h-[440px] transition-transform duration-700 group-hover:scale-[1.01]" />
+      </div>
+    </div>
+  </section>
+</div>

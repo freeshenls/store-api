@@ -1,10 +1,10 @@
 <article class="wrapper grid-container py-12" id="new-customer">
-  <div class="col-span-full md:col-start-5 md:col-span-4">
-    <h1 class="font-serif text-h4 md:text-h3 text-center"><%= I18n.t('spree.new_customer') %></h1>
+  <div class="col-span-full md:col-start-5 md:col-span-4 bg-white border border-hairline-light rounded-xl p-8 sm:p-10 shadow-halos mt-8">
+    <h1 class="text-heading-xl text-black font-medium tracking-wide uppercase text-center"><%= I18n.t('spree.new_customer') %></h1>
 
     <%= render 'shared/error_messages', target: resource %>
 
-    <%= form_for resource, as: :spree_user, url: registration_path(resource), html: { class: "space-y-6 mb-12" } do |f| %>
+    <%= form_for resource, as: :spree_user, url: registration_path(resource), html: { class: "space-y-6 mt-8" } do |f| %>
       <div class="text-input">
         <%= f.label :email, "#{t("spree.email")}:" %>
         <%= f.email_field :email, placeholder: 'name@example.com' %>
@@ -23,12 +23,12 @@
       <div class="text-center flex flex-col gap-6 items-center">
         <%= f.button t("spree.create"),
           name: :commit,
-          class: 'w-full w-fit py-3 px-7 rounded-full text-body-sm font-bold leading-none uppercase whitespace-nowrap transiton-colors duration-200 bg-red-500 text-white hover:bg-red-700'
+          class: 'button-primary-pill w-full py-3.5 text-xs font-semibold uppercase tracking-wider text-center flex justify-center items-center justify-items-center'
         %>
       </div>
 
-      <div class="mt-12 text-center">
-        <%= I18n.t("spree.or") %> <%= link_to I18n.t("spree.login_as_existing"), login_path, class:"transition-all duration-300 text-black hover:!text-red-500 dark:text-sand underline" %>
+      <div class="mt-8 text-center text-sm text-shade-60">
+        <%= I18n.t("spree.or") %> <%= link_to I18n.t("spree.login_as_existing"), login_path, class:"transition-all duration-300 text-black hover:text-shade-60 underline font-medium" %>
       </div>
 
     <% end %>

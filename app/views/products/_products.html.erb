@@ -10,14 +10,16 @@
 <% end %>
 
 <% if products.empty? %>
-  <span class="products__results-title font-serif-md text-body-20 mb-6 lg:text-body-lg">
+  <h1 class="text-display-md text-black mb-8 leading-tight">
     <%= t('spree.no_products_found') %>
-  </span>
+  </h1>
 <% else %>
   <% if params.key?(:keywords) %>
-    <span class="products__results-title font-serif-md text-body-20 mb-6 lg:text-body-lg">
+    <h1 class="text-display-md text-black mb-8 leading-tight">
       <%= t('spree.search_results', keywords: h(params[:keywords])) %>
-    </span>
+    </h1>
+  <% elsif local_assigns[:show_title] || taxon.nil? %>
+    <h1 class="text-display-md text-black mb-8 leading-tight">All Products</h1>
   <% end %>
 
   <%= render 'products/products_grid', products: products, taxon: taxon %>

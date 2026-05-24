@@ -1,0 +1,144 @@
+<div class="w-full flex flex-col bg-black text-white pb-32 font-sans">
+  <!-- Hero Section -->
+  <section class="relative py-24 bg-black border-b border-hairline-dark/40 overflow-hidden">
+    <!-- Subtle grid overlay -->
+    <div class="absolute inset-0 opacity-5 bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+    
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-8 text-center flex flex-col items-center gap-6">
+      <span class="text-xs font-bold uppercase tracking-widest text-link-cool-2">
+        GET IN TOUCH
+      </span>
+      <h1 class="text-display-lg sm:text-display-xl font-light tracking-tight leading-none uppercase text-white">
+        Contact Us
+      </h1>
+      <p class="text-link-cool-2 text-sm sm:text-base max-w-2xl leading-relaxed font-light">
+        Have questions or need a custom quote? Reach out to our dedicated branding specialists today.
+      </p>
+    </div>
+  </section>
+
+  <!-- Contact Form & Details Grid -->
+  <section class="max-w-7xl w-full mx-auto px-4 sm:px-8 py-20 grid grid-cols-1 lg:grid-cols-12 gap-12">
+    <!-- Left Column: Premium Contact Form (lg:col-span-7) -->
+    <div class="lg:col-span-7 bg-canvas-night-elevated p-8 sm:p-10 rounded-2xl border border-hairline-dark/60 shadow-sheen-dark flex flex-col gap-6 hover:border-hairline-dark transition-all duration-300">
+      <div class="flex flex-col gap-2">
+        <h2 class="text-heading-xl text-white uppercase tracking-wide">Send Us A Message</h2>
+        <p class="text-link-cool-2 text-sm font-light">
+          Please fill out the form below and one of our dedicated account managers will contact you within 24 hours.
+        </p>
+      </div>
+
+      <!-- Form Elements -->
+      <form action="#" class="flex flex-col gap-5" onsubmit="event.preventDefault(); alert('Thank you for reaching out! We will contact you soon.');">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div class="flex flex-col gap-1.5">
+            <label for="contact_name" class="text-xs font-bold uppercase tracking-widest text-link-cool-2">Full Name</label>
+            <input type="text" id="contact_name" required placeholder="John Doe" class="w-full bg-black border border-hairline-dark/60 focus:border-white focus:ring-1 focus:ring-white rounded-lg px-4 py-3 text-sm text-white placeholder-shade-50 outline-none transition-all" />
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label for="contact_email" class="text-xs font-bold uppercase tracking-widest text-link-cool-2">Email Address</label>
+            <input type="email" id="contact_email" required placeholder="john@example.com" class="w-full bg-black border border-hairline-dark/60 focus:border-white focus:ring-1 focus:ring-white rounded-lg px-4 py-3 text-sm text-white placeholder-shade-50 outline-none transition-all" />
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-1.5">
+          <label for="contact_subject" class="text-xs font-bold uppercase tracking-widest text-link-cool-2">Subject</label>
+          <input type="text" id="contact_subject" required placeholder="Custom Quote / Inquiry" class="w-full bg-black border border-hairline-dark/60 focus:border-white focus:ring-1 focus:ring-white rounded-lg px-4 py-3 text-sm text-white placeholder-shade-50 outline-none transition-all" />
+        </div>
+
+        <div class="flex flex-col gap-1.5">
+          <label for="contact_message" class="text-xs font-bold uppercase tracking-widest text-link-cool-2">Message</label>
+          <textarea id="contact_message" required rows="5" placeholder="Please describe your promotional products needs, quantities, and timelines here..." class="w-full bg-black border border-hairline-dark/60 focus:border-white focus:ring-1 focus:ring-white rounded-lg px-4 py-3 text-sm text-white placeholder-shade-50 outline-none transition-all"></textarea>
+        </div>
+
+        <div class="mt-2">
+          <button type="submit" class="button-outline-on-dark w-full sm:w-auto uppercase tracking-wider text-xs">
+            Send Message
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right Column: Contact Cards (lg:col-span-5) -->
+    <div class="lg:col-span-5 flex flex-col gap-6">
+      <!-- Card 1: Direct Coordinates -->
+      <div class="bg-canvas-night-elevated p-8 rounded-2xl border border-hairline-dark/60 shadow-sheen-dark flex flex-col gap-6 hover:border-hairline-dark transition-all duration-300">
+        <h3 class="text-heading-md text-white border-b border-hairline-dark pb-3 uppercase tracking-wide">
+          Direct Contact
+        </h3>
+        
+        <ul class="flex flex-col gap-5">
+          <!-- Item 1: Address -->
+          <li class="flex items-start gap-4 group">
+            <div class="w-10 h-10 shrink-0 bg-black rounded-lg flex items-center justify-center text-white border border-hairline-dark/60 group-hover:bg-white group-hover:text-black transition-all">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+              </svg>
+            </div>
+            <div class="flex flex-col">
+              <span class="text-[10px] font-bold text-link-cool-2 uppercase tracking-widest">Office Address</span>
+              <span class="text-sm font-light text-white mt-0.5">7 Copperfield Road, Coventry, UK CV2 4AQ</span>
+            </div>
+          </li>
+
+          <!-- Item 2: Phone -->
+          <li class="flex items-start gap-4 group">
+            <div class="w-10 h-10 shrink-0 bg-black rounded-lg flex items-center justify-center text-white border border-hairline-dark/60 group-hover:bg-white group-hover:text-black transition-all">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+              </svg>
+            </div>
+            <div class="flex flex-col">
+              <span class="text-[10px] font-bold text-link-cool-2 uppercase tracking-widest">Phone Number</span>
+              <a href="tel:2812355575" class="text-sm font-bold text-white hover:text-link-cool-1 transition-colors mt-0.5">(281) 235-5575</a>
+            </div>
+          </li>
+
+          <!-- Item 3: Email -->
+          <li class="flex items-start gap-4 group">
+            <div class="w-10 h-10 shrink-0 bg-black rounded-lg flex items-center justify-center text-white border border-hairline-dark/60 group-hover:bg-white group-hover:text-black transition-all">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+              </svg>
+            </div>
+            <div class="flex flex-col">
+              <span class="text-[10px] font-bold text-link-cool-2 uppercase tracking-widest">Email Support</span>
+              <a href="mailto:sales@digitalmonkey.com" class="text-sm font-bold text-white hover:text-link-cool-1 transition-colors mt-0.5">sales@digitalmonkey.com</a>
+            </div>
+          </li>
+
+          <!-- Item 4: Web -->
+          <li class="flex items-start gap-4 group">
+            <div class="w-10 h-10 shrink-0 bg-black rounded-lg flex items-center justify-center text-white border border-hairline-dark/60 group-hover:bg-white group-hover:text-black transition-all">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
+              </svg>
+            </div>
+            <div class="flex flex-col">
+              <span class="text-[10px] font-bold text-link-cool-2 uppercase tracking-widest">Corporate Website</span>
+              <a href="https://www.zevipromotion.com" target="_blank" class="text-sm font-bold text-white hover:text-link-cool-1 transition-colors mt-0.5">www.zevipromotion.com</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Card 2: Operations Schedule -->
+      <div class="bg-canvas-night-elevated p-8 rounded-2xl border border-hairline-dark/60 shadow-sheen-dark flex flex-col gap-4 hover:border-hairline-dark transition-all duration-300">
+        <h3 class="text-heading-md text-white border-b border-hairline-dark pb-3 uppercase tracking-wide">
+          Business Hours
+        </h3>
+        <div class="flex flex-col gap-2.5 text-sm text-link-cool-2">
+          <div class="flex justify-between items-center border-b border-hairline-dark/40 pb-2">
+            <span class="font-light">Monday - Friday</span>
+            <span class="font-medium text-white">9:00 AM - 6:00 PM</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="font-light">Saturday - Sunday</span>
+            <span class="font-medium text-white">Closed</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

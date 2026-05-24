@@ -1,0 +1,17 @@
+<% display_percent ||= false %>
+<% if product.price > 0 and product.master.volume_prices.present? %>
+  <div id="bulk-discount">
+    <h6><%= t('spree.bulk_discount') %></h6>
+    <table class="table">
+      <% product.master.volume_prices.each do |v| %>
+        <tr data-js="volume-price-row" data-range="<%= v.range %>" class="transition-all duration-200">
+          <td><%= v.display_range %></td>
+          <td><%= Spree::Money.new(v.amount).to_s %></td>
+          <% if display_percent %>
+            <td><%= '%i%' % ((1.0 - v.amount / product.master.price) * 100.0).round %></td>
+          <% end %>
+        </tr>
+      <% end %>
+    </table>
+  </div>
+<% end %>

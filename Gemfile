@@ -87,3 +87,7 @@ group :development, :test do
 end
 
 gem "solidus_admin", ">= 0.2"
+
+gem "solidus_volume_pricing", "~> 1.0"
+
+gem "coffee-rails", "~> 5.0"
