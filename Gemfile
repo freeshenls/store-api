@@ -56,3 +56,7 @@ group :test do
 end
 gem "foreman"
 gem "web-console"
+
+gem "alchemy_cms", "~> 8.2"
+
+gem "alchemy-devise", "~> 8.2"

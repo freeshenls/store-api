@@ -1,0 +1,49 @@
+en:
+  alchemy:
+    # Translations for page layout names
+    page_layout_names:
+      index: Homepage
+
+    # Translations for element names
+    element_names:
+      article: Article
+
+    # Translations for ingredient roles
+    ingredient_roles:
+      headline: Headline
+      text: Text
+      picture: Picture
+
+    # Default texts for new ingredients created
+    default_ingredient_texts:
+      article_headline: "Welcome to your first Alchemy CMS page"
+      article_text: |
+        <h2>How to get started.</h2>
+        <p>First of all you should read about Alchemy and it's architecture <a class="external" href="https://guides.alchemy-cms.com/alchemy_approach.html" target="_blank" rel="noopener" data-link-target="blank">in the guidelines</a>.</p>
+        <p>The most important things to know about Alchemy are elements and page layouts.</p>
+        <h3>Elements:</h3>
+        <p>With Alchemy you can split pages into content parts, elements. These elements can be defined out of several base content types: ingredients. The ingredients are:</p>
+        <ul>
+          <li>Text - <em>A single line of text</em></li>
+          <li>Richtext - <em>A TinyMCE powered formatted text block</em></li>
+          <li>Picture - <em>A reference to an image</em></li>
+          <li>Html - <em>HTML embed code</em></li>
+          <li>Select - <em>A selection of values</em></li>
+          <li>Boolean - <em>A checkbox</em></li>
+        </ul>
+        <p>Elements get defined in <code>config/alchemy/elements.yml</code>.</p>
+        <p>Read more about elements and how to define them <a class="external" href="https://guides.alchemy-cms.com/elements.html" target="_blank" rel="noopener" data-link-target="blank">in the guidelines</a>.</p>
+        <h3>Page types:</h3>
+        <p>You can define several types of pages, called page layouts. You can assign elements to page layouts and control how elements and the page of a certain layout behave.</p>
+        <p>Page layouts get defined in <code>config/alchemy/page_layouts.yml</code>.</p>
+        <p>Read more about defining page layouts <a class="external" href="https://guides.alchemy-cms.com/page_layouts.html" target="_blank" rel="noopener" data-link-target="blank">in the guidelines</a>.</p>
+
+    # Hint texts for elements
+    element_hints:
+      article: "This is a hint text for the article element. You can change this text in <code>config/locales/alchemy.en.yml</code>. Feel free to change it as you like, it's yours."
+
+    # Hint texts for ingredients
+    ingredient_hints:
+      headline: "This is a single line of unformatable Text"
+      picture: "Pictures are stored in the library. You can assign a picture multiple times throughout your site. Alchemy has an image cropper build right in."
+      text: "This is a rich text block powered by TinyMCE editor. You can change the configuration of the editor. See https://guides.alchemy-cms.com/customize_tinymce.html"
