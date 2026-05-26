@@ -111,10 +111,121 @@
 </header>
 
 
-<!-- Main Detail Page Section -->
-<main class="section-padding" style="background: linear-gradient(180deg, rgba(242, 101, 34, 0.02) 0%, rgba(15, 23, 42, 0) 100%);">
+<%
+  cat_down = category.to_s.downcase
+
+  # Generate a dynamic SKU matching the style of "AP0116" based on element ID
+  product_id_num = @product.id.to_s.gsub(/\D/, '').to_i
+  product_id_num = 116 if product_id_num <= 0
+  style_number = "AP" + sprintf("%04d", product_id_num % 10000)
+
+  # Dynamic specifications mapper based on category
+  product_specs = case cat_down
+                  when /apparel/
+                    {
+                      "Material" => "100% Ring-Spun Combed Cotton Pique",
+                      "Colors" => "Black, Navy, Royal Blue, Heather Gray, Red, White",
+                      "Size" => "S, M, L, XL, 2XL, 3XL (Unisex Fit)",
+                      "Made In" => "Honduras / Vietnam",
+                      "Set Up Charge" => "£35.00 per color/location (Screen Print or Embroidery)",
+                      "Production Time" => "7-10 Business Days"
+                    }
+                  when /drinkware/
+                    {
+                      "Material" => "Double-Wall 18/8 Food-Grade Stainless Steel",
+                      "Colors" => "Matte Black, Ocean Blue, Alpine White, Copper, Sage Green",
+                      "Size" => "20 oz (590 ml) / 180 x 85 mm",
+                      "Made In" => "Taiwan / China",
+                      "Set Up Charge" => "£40.00 for Laser Engraving or 1-Color Print",
+                      "Production Time" => "5-8 Business Days"
+                    }
+                  when /fidget|novelty/
+                    {
+                      "Material" => "Non-Toxic High-Grade Silicone & Eco-ABS",
+                      "Colors" => "Rainbow Swirl, Blue-Green, Coral-Yellow, Pastel Purple",
+                      "Size" => "70 x 70 x 70 mm",
+                      "Made In" => "Guangdong, China",
+                      "Set Up Charge" => "£30.00 Pad Printed (1 Color 1 Location)",
+                      "Production Time" => "8-12 Business Days"
+                    }
+                  when /gift|desk/
+                    {
+                      "Material" => "Vegan Thermo PU Leather, Brass, & Tempered Steel",
+                      "Colors" => "Cognac Brown, Midnight Black, Slate Gray, Emerald Green",
+                      "Size" => "240 x 200 x 50 mm Gift Box Presentation",
+                      "Made In" => "Guangzhou, China",
+                      "Set Up Charge" => "£45.00 (Foil Debossing / Precision Laser Engraving)",
+                      "Production Time" => "10-14 Business Days"
+                    }
+                  when /bag/
+                    {
+                      "Material" => "600D High-Density Oxford Cloth with Nylon Lining",
+                      "Colors" => "Black, Gray, Green, Pink",
+                      "Size" => "220 x 140 x 200 mm",
+                      "Made In" => "CC-CN",
+                      "Set Up Charge" => "£35 1 Color 1 Location",
+                      "Production Time" => "12-17 days"
+                    }
+                  else
+                    # Fallback default stroller-style/generic specs
+                    {
+                      "Material" => "Oxford Cloth",
+                      "Colors" => "Black, Gray, Green, Pink",
+                      "Size" => "220 x 140 x 200 mm",
+                      "Made In" => "CC-CN",
+                      "Set Up Charge" => "£35 1 Color 1 Location",
+                      "Production Time" => "12-17 days"
+                    }
+                  end
+
+  # Premium sales copywriting descriptions based on product title
+  product_desc_text = case title.to_s.downcase
+                      when /stroller|hanging/
+                        "The bag is made of Oxford cloth materials with an adjustable shoulder strap, which has 2 ways to carry(as a backpack or hanging). It can securely hold bottles and cups and has a zippered tissue pocket, while providing easy access to your phones or privacy items. This bag may serve as storage for diapers, food, small items, phones, keys and more."
+                      when /box/
+                        "Organize your workspace in style with this modern desktop storage box. Made from durable, premium impact-resistant plastic, it features multiple storage compartments of various sizes to keep pens, sticky notes, paperclips, and calculators neatly sorted. Its minimal silhouette and clean lines make it a perfect addition to any modern study or corporate office desk."
+                      when /glasses|leather/
+                        "Protect your eyewear with this exquisite leather glasses case. Styled with a gorgeous natural wood grain texture finish and crafted from premium reinforced vegan leather, it provides exceptional crush-proof protection. Inside, a plush microfiber lining prevents scratching, and the secure magnetic closure ensures your sunglasses or reading glasses remain safe on the go."
+                      when /hoodie|fleece/
+                        "Stay warm and brand-forward with our premium fleece pull-over hoodie. Crafted from an exceptionally soft cotton-poly blend with a cozy midweight brushed interior, it offers a relaxed, modern silhouette. Perfect for corporate swag or casual everyday wear, featuring double-needle stitching, a spacious kangaroo pocket, and a lined hood with drawstrings."
+                      when /fidget/
+                        "Bring instant stress relief and playful colors to your day. This premium sensory fidget ball keychain changes color dynamically under pressure. Made of ultra-durable, food-grade non-toxic silicone, it stands up to endless squeezing and squishing. Attached to a robust metal keychain, it is perfect for backpack zippers, keyrings, or desks."
+                      when /gift|journal/
+                        "Impress your clients and team members with this luxury corporate gift trio. Features our top-rated executive leather journal with 160 pages of lined cream paper, a precision stylus rollerball pen, and a 20 oz double-wall insulated tumbler. All beautifully presented in a matte-finished magnetic-closure presentation gift box ready for gifting."
+                      else
+                        # Fallback dynamic description
+                        "Enhance your brand visibility with this premium custom promotional product. Meticulously designed for everyday utility, it offers high durability and is fully customizable with your company logo. The perfect giveaway for corporate events, tradeshows, client appreciation gifts, and team promotional swag packages."
+                      end
+
+  # Parse base price for tiered wholesale calculations
+  base_price_str = price.to_s.strip
+  currency_sym = base_price_str[/[^\d.]+/] || "£"
+  base_num = base_price_str[/\d+(\.\d+)?/].to_f
+  base_num = 14.00 if base_num <= 0
+
+  # Tier wholesale calculations (50, 100, 250, 500, 1000)
+  p50 = base_num
+  p100 = base_num * 0.966
+  p250 = base_num * 0.932
+  p500 = base_num * 0.908
+  p1000 = base_num * 0.828
+
+  # Resolve fallback alternate thumbnail image
+  secondary_img = case cat_down
+                  when /apparel/
+                    'slide_spirit.png'
+                  when /fidget|novelty/
+                    'card_gifts.png'
+                  when /gift/
+                    'card_drinkware.png'
+                  else
+                    'card_gifts.png'
+                  end
+%>
+
+<!-- Breadcrumb wrapper -->
+<div class="breadcrumb-wrap">
   <div class="container-custom">
-    <!-- Breadcrumb -->
     <div style="margin-bottom: 24px; font-size: 14px; font-weight: 500; color: var(--text-muted);">
       <a href="/" style="color: var(--text-muted); text-decoration: none; hover: color: var(--primary);">Home</a>
       <span style="margin: 0 8px;">/</span>
@@ -122,165 +233,221 @@
       <span style="margin: 0 8px;">/</span>
       <a href="/products?category=<%= u(category) %>" style="color: var(--text-muted); text-decoration: none;"><%= category %></a>
       <span style="margin: 0 8px;">/</span>
-      <span style="color: var(--text-dark); font-weight: 600;"><%= title %></span>
+      <span id="breadcrumbName" style="color: var(--text-dark); font-weight: 600;"><%= title %></span>
     </div>
+  </div>
+</div>
 
-    <!-- Details Grid wrapped in element_view_for to enable inline editing -->
+<section class="product-section">
+  <div class="container-custom">
     <%= element_view_for(@product) do |el| %>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 40px; margin-bottom: 60px; align-items: start;">
-        
-        <!-- Left Column: Product Image Frame -->
-        <div style="background: var(--light-surface); border: 1px solid var(--light-border); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-md); position: relative; display: flex; align-items: center; justify-content: center; min-height: 400px; backdrop-filter: blur(8px);">
-          <% if @product.value_for('image').present? %>
-            <%= el.render :image, { size: "600x600" }, style: "max-width: 100%; height: auto; border-radius: var(--radius-md); object-fit: contain;" %>
-          <% else %>
-            <img src="<%= image_path(default_img) %>" alt="<%= title %>" style="max-width: 100%; height: auto; border-radius: var(--radius-md); object-fit: contain;">
-          <% end %>
+      <div class="row">
+        <!-- Gallery Left Column -->
+        <div class="col-lg-6">
+          <div class="main-img">
+            <% if @product.value_for('image').present? %>
+              <%= el.render :image, { size: "600x600" }, { id: "mainImage" } %>
+            <% else %>
+              <img id="mainImage" src="<%= image_path(default_img) %>" alt="<%= title %>">
+            <% end %>
+          </div>
           
-          <% if badge.present? %>
-            <span style="position: absolute; top: 20px; left: 20px; background: var(--primary); color: #fff; font-family: var(--font-display); font-weight: 800; font-size: 12px; text-transform: uppercase; padding: 6px 14px; border-radius: var(--radius-full); box-shadow: var(--shadow-sm); z-index: 2;">
-              <%= el.render :badge %>
-            </span>
-          <% end %>
-        </div>
-
-        <!-- Right Column: Product Info & Quote Form -->
-        <div style="display: flex; flex-direction: column; gap: 24px;">
-          <div>
-            <span style="display: inline-block; background: rgba(242, 101, 34, 0.08); color: var(--primary); font-family: var(--font-display); font-weight: 700; font-size: 12px; text-transform: uppercase; padding: 4px 12px; border-radius: var(--radius-sm); margin-bottom: 12px; letter-spacing: 0.5px;">
-              <%= el.render :category %>
-            </span>
-            <h1 style="font-family: var(--font-display); font-size: 36px; font-weight: 800; color: var(--text-dark); line-height: 1.2; margin: 0 0 16px 0;">
-              <%= el.render :title %>
-            </h1>
-            
-            <div style="display: flex; align-items: baseline; gap: 16px; margin-bottom: 8px;">
-              <span style="font-family: var(--font-display); font-size: 32px; font-weight: 800; color: var(--primary);">
-                <%= el.render :price %>
-              </span>
-              <% if old_price.present? %>
-                <span style="font-family: var(--font-display); font-size: 20px; font-weight: 600; color: var(--text-muted); text-decoration: line-through;">
-                  <%= el.render :old_price %>
-                </span>
+          <div class="thumb-list" id="thumbList">
+            <div class="thumb active" onclick="changeImage(this)">
+              <% if @product.value_for('image').present? %>
+                <%= el.render :image, { size: "80x80" } %>
+              <% else %>
+                <img src="<%= image_path(default_img) %>" alt="<%= title %> Thumbnail 1">
               <% end %>
             </div>
-            
-            <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 12px;">
-              <% if min_qty.present? %>
-                <div style="display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--text-muted); background: var(--light-surface); border: 1px solid var(--light-border); padding: 6px 16px; border-radius: var(--radius-md);">
-                  <span class="material-symbols-outlined" style="font-size: 18px; color: var(--primary);">inventory_2</span>
-                  <span><%= el.render :min_qty %></span>
-                </div>
-              <% end %>
-
-              <% if respond_to?(:alchemy_preview_mode?) && alchemy_preview_mode? %>
-                <div style="display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; color: var(--text-muted); background: rgba(242, 101, 34, 0.04); border: 1px dashed rgba(242, 101, 34, 0.3); padding: 6px 16px; border-radius: var(--radius-md);">
-                  <span><strong>Slug:</strong> /products/<%= el.render :slug %></span>
+            <div class="thumb" onclick="changeImage(this)">
+              <img src="<%= image_path(secondary_img) %>" alt="<%= title %> Thumbnail 2">
+            </div>
+          </div>
+          
+          <!-- Related Products Ribbon -->
+          <div class="related-products" style="margin-top:50px;">
+            <h6 style="color:#666;margin-bottom:10px;">Related Products</h6>
+            <div class="row g-2" id="relatedProducts">
+              <% @related_products[0..2].each do |related| %>
+                <%
+                  related_slug = related.value_for('slug').to_s.strip
+                  related_link = if related_slug.present?
+                                   "/products/#{related_slug}"
+                                 elsif related.value_for('title').present?
+                                   "/products/#{related.value_for('title').to_s.parameterize}"
+                                 else
+                                   "/products/#{related.id}"
+                                 end
+                  related_title = related.value_for('title')
+                  related_price = related.value_for('price')
+                  
+                  related_cat = related.value_for('category').to_s.downcase
+                  related_default_img = if related_cat.include?('apparel')
+                                          'slide_apparel.png'
+                                        elsif related_cat.include?('fidget') || related_cat.include?('novelty')
+                                          'card_fidgets.png'
+                                        elsif related_cat.include?('gift')
+                                          'card_gifts.png'
+                                        else
+                                          'card_drinkware.png'
+                                        end
+                  
+                  related_img_url = related.essence_for('image')&.picture&.url(size: "300x300") rescue nil
+                %>
+                <div class="col-4">
+                  <div class="related-card" onclick="location.href='<%= related_link %>'">
+                    <% if related_img_url.present? %>
+                      <img src="<%= related_img_url %>" alt="<%= related_title %>">
+                    <% else %>
+                      <img src="<%= image_path(related_default_img) %>" alt="<%= related_title %>">
+                    <% end %>
+                    <div class="related-name"><%= related_title %></div>
+                    <div class="related-price"><%= related_price %></div>
+                  </div>
                 </div>
               <% end %>
             </div>
           </div>
-
-          <hr style="border: 0; border-top: 1px solid var(--light-border); margin: 8px 0;">
-
-          <!-- Inquiry Form -->
-          <div style="background: rgba(242, 101, 34, 0.02); border: 1px solid rgba(242, 101, 34, 0.1); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-sm); backdrop-filter: blur(8px);">
-            <h3 style="font-family: var(--font-display); font-size: 18px; font-weight: 800; color: var(--text-dark); margin: 0 0 16px 0; display: flex; align-items: center; gap: 8px;">
-              <span class="material-symbols-outlined" style="color: var(--primary);">request_quote</span>
-              <span>Request a Custom Quote</span>
-            </h3>
-            
-            <form style="display: flex; flex-direction: column; gap: 16px;" onsubmit="alert('Thank you! Your quote request has been submitted. Our team will contact you shortly.'); return false;">
-              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
-                <div style="display: flex; flex-direction: column; gap: 6px;">
-                  <label style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Full Name</label>
-                  <input type="text" required placeholder="John Doe" style="padding: 10px 14px; border: 1px solid var(--light-border); border-radius: var(--radius-md); font-size: 14px; width: 100%; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--light-border)'">
-                </div>
-                <div style="display: flex; flex-direction: column; gap: 6px;">
-                  <label style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Business Email</label>
-                  <input type="email" required placeholder="name@company.com" style="padding: 10px 14px; border: 1px solid var(--light-border); border-radius: var(--radius-md); font-size: 14px; width: 100%; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--light-border)'">
-                </div>
+        </div>
+        
+        <!-- Info Right Column -->
+        <div class="col-lg-6">
+          <span class="product-cat" id="productCategory"><%= category %></span>
+          <h1 class="product-title" id="productName"><%= title %></h1>
+          <div class="product-sku">SKU: <span id="productSku"><%= style_number %></span></div>
+          
+          <p class="product-desc" id="productDesc"><%= product_desc_text %></p>
+          
+          <!-- Specs Box -->
+          <div class="specs-box">
+            <% product_specs.each do |label, value| %>
+              <div class="spec-row">
+                <span class="spec-label"><%= label %></span>
+                <span class="spec-value"><%= value %></span>
               </div>
-              
-              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
-                <div style="display: flex; flex-direction: column; gap: 6px;">
-                  <label style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Target Quantity</label>
-                  <input type="number" required min="1" placeholder="100" style="padding: 10px 14px; border: 1px solid var(--light-border); border-radius: var(--radius-md); font-size: 14px; width: 100%; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--light-border)'">
+            <% end %>
+          </div>
+          
+          <!-- Price Table -->
+          <div class="price-box">
+            <table class="price-table">
+              <thead>
+                <tr>
+                  <th>50</th>
+                  <th>100</th>
+                  <th>250</th>
+                  <th>500</th>
+                  <th>1000</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><%= currency_sym %><span id="price1"><%= sprintf("%.2f", p50) %></span></td>
+                  <td><%= currency_sym %><span id="price2"><%= sprintf("%.2f", p100) %></span></td>
+                  <td><%= currency_sym %><span id="price3"><%= sprintf("%.2f", p250) %></span></td>
+                  <td><%= currency_sym %><span id="price4"><%= sprintf("%.2f", p500) %></span></td>
+                  <td><%= currency_sym %><span id="price5"><%= sprintf("%.2f", p1000) %></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- Quote Form -->
+          <div class="quote-form">
+            <h4>Request a Quote</h4>
+            <form onsubmit="window.submitQuote ? window.submitQuote(event) : (event.preventDefault(), alert('Thank you! Your quote request has been submitted successfully. Our team will contact you shortly.'), event.target.reset())">
+              <div class="row g-3">
+                <!-- First Name & Last Name -->
+                <div class="col-6">
+                  <input type="text" required class="form-control" placeholder="First name *" oninvalid="this.setCustomValidity('Please fill out this field')" oninput="this.setCustomValidity('')">
                 </div>
-                <div style="display: flex; flex-direction: column; gap: 6px;">
-                  <label style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Branding Option</label>
-                  <select style="padding: 10px 14px; border: 1px solid var(--light-border); border-radius: var(--radius-md); font-size: 14px; width: 100%; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--light-border)'">
-                    <option>Screen Printed Logo</option>
-                    <option>Laser Engraved Logo</option>
-                    <option>Embroidered Branding</option>
-                    <option>Full Color Custom Print</option>
-                    <option>No Logo (Blank Stock)</option>
+                <div class="col-6">
+                  <input type="text" required class="form-control" placeholder="Last name *" oninvalid="this.setCustomValidity('Please fill out this field')" oninput="this.setCustomValidity('')">
+                </div>
+
+                <!-- Company Name & Country/Region -->
+                <div class="col-6">
+                  <input type="text" required class="form-control" placeholder="Company name *" oninvalid="this.setCustomValidity('Please fill out this field')" oninput="this.setCustomValidity('')">
+                </div>
+                <div class="col-6">
+                  <input type="text" class="form-control" placeholder="Country/Region">
+                </div>
+
+                <!-- Email & Phone number -->
+                <div class="col-6">
+                  <input type="email" required class="form-control" placeholder="Email *" oninvalid="this.setCustomValidity('Please enter a valid email address')" oninput="this.setCustomValidity('')">
+                </div>
+                <div class="col-6" style="display: flex; gap: 8px;">
+                  <select class="form-control" style="max-width: 90px; padding: 6px 8px; font-size: 13px;">
+                    <option>USA</option>
+                    <option>Canada</option>
+                    <option>China</option>
+                    <option>UK</option>
+                    <option>Germany</option>
+                    <option>Japan</option>
                   </select>
+                  <input type="tel" class="form-control" placeholder="Phone number" style="flex: 1;">
+                </div>
+
+                <!-- Color & Quantity -->
+                <div class="col-6">
+                  <input type="text" class="form-control" placeholder="Color">
+                </div>
+                <div class="col-6">
+                  <input type="number" class="form-control" id="quoteQty" placeholder="Quantity *" min="1" required="" oninvalid="this.setCustomValidity('Please fill out this field')" oninput="this.setCustomValidity('')">
+                </div>
+
+                <!-- Date Required -->
+                <div class="col-12">
+                  <div style="display: flex; flex-direction: column; gap: 4px;">
+                    <label style="font-size: 12px; font-weight: 600; color: var(--text-muted); margin-left: 2px;">Date Required</label>
+                    <input type="date" class="form-control">
+                  </div>
+                </div>
+
+                <!-- Toggle Artwork Button -->
+                <div class="col-12" style="margin-top: 4px;">
+                  <button type="button" id="toggle-artwork-btn" class="btn-secondary" style="font-size: 13px; padding: 8px 16px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; border-radius: var(--radius-sm); border: 1px solid var(--light-border); background: var(--light-surface); font-weight: 600; width: 100%; justify-content: center;">
+                    <span class="material-symbols-outlined" style="font-size: 18px; color: var(--primary);">add_photo_alternate</span>
+                    <span>Add Artwork & Special Requests (Optional)</span>
+                  </button>
+                </div>
+
+                <!-- Togglable Your Artwork & Comments container -->
+                <div class="col-12" id="artwork-upload-container" style="display: none; flex-direction: column; gap: 12px; margin-top: 4px; border: 1px dashed var(--light-border); border-radius: var(--radius-sm); padding: 16px; background: rgba(12, 58, 107, 0.01);">
+                  <div style="display: flex; flex-direction: column; gap: 4px;">
+                    <label style="font-size: 13px; font-weight: 700; color: var(--text-dark); margin-bottom: 2px;">Your Artwork (Optional)</label>
+                    <input type="file" accept="image/*,.pdf,.ai,.eps,.cdr" style="padding: 6px 10px; border: 1px dashed var(--light-border); border-radius: var(--radius-sm); font-size: 13px; background-color: var(--light-bg); width: 100%; cursor: pointer;">
+                    <span style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Supported: AI, CDR, EPS, PDF, PNG, JPG</span>
+                  </div>
+
+                  <div style="display: flex; flex-direction: column; gap: 4px;">
+                    <label style="font-size: 13px; font-weight: 700; color: var(--text-dark); margin-bottom: 2px;">Comments / Special Requests / Color Options (Optional)</label>
+                    <textarea class="form-control" rows="3" placeholder="Enter special requirements or comments..."></textarea>
+                  </div>
+                </div>
+
+                <!-- SKU -->
+                <div class="col-12">
+                  <div style="display: flex; flex-direction: column; gap: 4px;">
+                    <label style="font-size: 12px; font-weight: 600; color: var(--text-muted); margin-left: 2px;">SKU *</label>
+                    <input type="text" required readonly value="<%= style_number %>" style="background-color: #f1f5f9; color: var(--text-muted); cursor: not-allowed; font-family: monospace; font-weight: 700;" class="form-control" oninvalid="this.setCustomValidity('Please fill out this field')" oninput="this.setCustomValidity('')">
+                  </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="col-12" style="margin-top: 8px;">
+                  <button type="submit" class="btn-quote">Submit Quote</button>
                 </div>
               </div>
-              
-              <button type="submit" class="btn-primary" style="width: 100%; border: none; cursor: pointer; padding: 12px; justify-content: center; font-size: 15px;">
-                <span>Submit Inquiry</span>
-                <span class="material-symbols-outlined">arrow_forward</span>
-              </button>
             </form>
           </div>
         </div>
       </div>
     <% end %>
-
-    <!-- Product Specifications Sheet -->
-    <div style="background: var(--light-surface); border: 1px solid var(--light-border); border-radius: var(--radius-lg); padding: 32px; box-shadow: var(--shadow-sm); margin-bottom: 60px;">
-      <h2 style="font-family: var(--font-display); font-weight: 800; font-size: 24px; color: var(--text-dark); margin: 0 0 20px 0; border-bottom: 2px solid var(--primary); padding-bottom: 8px; display: inline-block;">Product Details & Specifications</h2>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px;">
-        <div>
-          <h4 style="font-family: var(--font-display); font-weight: 700; font-size: 16px; color: var(--text-dark); margin: 0 0 12px 0; display: flex; align-items: center; gap: 8px;">
-            <span class="material-symbols-outlined" style="color: var(--primary);">workspace_premium</span>
-            <span>Premium Quality Guaranteed</span>
-          </h4>
-          <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6; margin: 0;">
-            All of our custom merchandise is sourced from premium materials. We utilize advanced print technologies to ensure your brand's color accuracy, sharpness, and long-lasting durability on any surface.
-          </p>
-        </div>
-        <div>
-          <h4 style="font-family: var(--font-display); font-weight: 700; font-size: 16px; color: var(--text-dark); margin: 0 0 12px 0; display: flex; align-items: center; gap: 8px;">
-            <span class="material-symbols-outlined" style="color: var(--primary);">schedule</span>
-            <span>Production & Turnaround</span>
-          </h4>
-          <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6; margin: 0;">
-            Standard production time is typically 5-10 business days from artwork approval. Rushed production options are available on select categories. Shipping times will vary based on your location and carrier selection.
-          </p>
-        </div>
-        <div>
-          <h4 style="font-family: var(--font-display); font-weight: 700; font-size: 16px; color: var(--text-dark); margin: 0 0 12px 0; display: flex; align-items: center; gap: 8px;">
-            <span class="material-symbols-outlined" style="color: var(--primary);">palette</span>
-            <span>Artwork & Setup Guidelines</span>
-          </h4>
-          <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6; margin: 0;">
-            Please submit your logo files in vector format (.AI, .EPS, or editable PDF) with fonts outlined. Our graphic design team will provide a digital proof for your final review and signature prior to manufacturing.
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Related Products Ribbon -->
-    <% if @related_products.any? %>
-      <div style="margin-top: 80px;">
-        <h2 style="font-family: var(--font-display); font-size: 26px; font-weight: 800; color: var(--text-dark); margin-bottom: 24px; text-align: center; position: relative;">
-          You May Also Like
-          <span style="display: block; width: 60px; height: 3px; background: var(--primary); margin: 8px auto 0 auto; border-radius: var(--radius-full);"></span>
-        </h2>
-        
-        <div class="product-grid">
-          <% @related_products.each do |product| %>
-            <%= render "alchemy/elements/product_card", product_card: product %>
-          <% end %>
-        </div>
-      </div>
-    <% end %>
-
   </div>
-</main>
+</section>
 
 <!-- Footer Section -->
 <footer class="dcFooter" id="footer">

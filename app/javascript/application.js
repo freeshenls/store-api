@@ -2,6 +2,26 @@
 import "@hotwired/turbo-rails"
 import "controllers"
 
+// Global Image Swapping method for product detail thumbnails
+window.changeImage = function(element) {
+  const mainImage = document.getElementById("mainImage");
+  if (!mainImage) return;
+  
+  const imgInside = element.querySelector("img");
+  if (!imgInside) return;
+  
+  // Swap source and alt text
+  mainImage.src = imgInside.src;
+  if (imgInside.alt) mainImage.alt = imgInside.alt;
+  
+  // Reset active classes on all siblings
+  const parent = element.parentElement;
+  if (parent) {
+    parent.querySelectorAll(".thumb").forEach(t => t.classList.remove("active"));
+  }
+  element.classList.add("active");
+};
+
 // ----------------------------------------------------
 // Unified Global Interactive UI Controller for Zevi Store
 // Handles Carousels, Dropdowns, Accordions with event delegation
@@ -160,6 +180,28 @@ if (!window.zeviListenersRegistered) {
       if (widget) {
         collapsedBtn.style.display = "none";
         widget.classList.remove("minimized");
+      }
+      return;
+    }
+
+    // 11. Thumbnail image swap inside product detail view
+    const thumbEl = e.target.closest(".thumb");
+    if (thumbEl) {
+      window.changeImage(thumbEl);
+      return;
+    }
+
+    // 12. Toggle Artwork & Special Requests Container
+    const toggleArtworkBtn = e.target.closest("#toggle-artwork-btn");
+    if (toggleArtworkBtn) {
+      e.preventDefault();
+      const container = document.getElementById("artwork-upload-container");
+      if (container) {
+        const isHidden = container.style.display === "none" || !container.style.display;
+        container.style.display = isHidden ? "flex" : "none";
+        toggleArtworkBtn.innerHTML = isHidden
+          ? '<span class="material-symbols-outlined" style="font-size: 18px; color: var(--highlight-red);">remove_circle</span><span>Remove Artwork & Special Requests</span>'
+          : '<span class="material-symbols-outlined" style="font-size: 18px; color: var(--primary);">add_photo_alternate</span><span>Add Artwork & Special Requests (Optional)</span>';
       }
       return;
     }
