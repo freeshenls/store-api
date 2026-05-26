@@ -25,10 +25,10 @@
   ingredients:
     - role: phone
       type: Text
-      default: "(281) 235-5575"
+      default: "(714) 857-0010"
     - role: email
       type: Text
-      default: "sales@digitalmonkey.com"
+      default: "sales@zevipromotion.com"
 
 - name: carousel_slide
   ingredients:
