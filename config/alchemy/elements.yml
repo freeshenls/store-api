@@ -19,3 +19,67 @@
       type: Richtext
       default: :article_text
       hint: true
+
+- name: header_contact
+  unique: true
+  ingredients:
+    - role: phone
+      type: Text
+      default: "(281) 235-5575"
+    - role: email
+      type: Text
+      default: "sales@digitalmonkey.com"
+
+- name: carousel_slide
+  ingredients:
+    - role: subtitle
+      type: Text
+      default: "Polos, Workwear, T-Shirts, & More!"
+    - role: title
+      type: Text
+      default: "Shop Apparel"
+    - role: description
+      type: Text
+      default: "Premium embroidered apparel and printed sportswear designed to make your brand stand out."
+    - role: image
+      type: Picture
+    - role: link
+      type: Text
+      default: "#"
+
+- name: promo_card
+  ingredients:
+    - role: subtitle
+      type: Text
+    - role: title
+      type: Text
+    - role: image
+      type: Picture
+    - role: link
+      type: Text
+      default: "#"
+
+- name: product_card
+  ingredients:
+    - role: section
+      type: Select
+      default: "New Products"
+      settings:
+        select_values: ["New Products", "Daily Deals", "Trending Products"]
+    - role: category
+      type: Text
+    - role: title
+      type: Text
+    - role: badge
+      type: Text
+    - role: price
+      type: Text
+    - role: old_price
+      type: Text
+    - role: min_qty
+      type: Text
+    - role: image
+      type: Picture
+    - role: slug
+      type: Text
+

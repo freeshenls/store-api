@@ -4,5 +4,34 @@
 
 - name: index
   unique: true
-  elements: [article]
-  autogenerate: [article]
+  elements:
+    - article
+    - header_contact
+    - carousel_slide
+    - promo_card
+    - product_card
+  autogenerate:
+    - header_contact
+
+- name: standard
+  unique: false
+  elements:
+    - article
+  autogenerate:
+    - article
+
+- name: products
+  unique: true
+  elements:
+    - product_card
+
+- name: global_layout
+  unique: true
+  layoutpage: true
+  elements:
+    - header_contact
+  autogenerate:
+    - header_contact
+
+
+

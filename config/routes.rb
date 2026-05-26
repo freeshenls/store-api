@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+  get "/products" => "products#index"
+  get "/products/:slug" => "products#show", as: :product
+  get "/p/catalog" => "products#index"
+  get "/p/catalog/all" => "products#index"
+
   mount Alchemy::Engine, at: '/'
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
