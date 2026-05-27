@@ -43,72 +43,8 @@
   email_address = header_contact&.value_for('email').presence || "sales@zevipromotion.com"
 %>
 
-<!-- Top Utility Contact Bar -->
-<div class="top-contact-bar">
-  <div class="container-custom">
-    <div class="contact-info">
-      <a href="tel:<%= phone_number %>" class="contact-item">
-        <span class="icon material-symbols-outlined">call</span>
-        <span><%= phone_number %></span>
-      </a>
-      <a href="mailto:<%= email_address %>" class="contact-item">
-        <span class="icon material-symbols-outlined">mail</span>
-        <span><%= email_address %></span>
-      </a>
-    </div>
-  </div>
-</div>
-
-<!-- Main Header & Navbar -->
-<header class="main-header">
-  <div class="container-custom navbar-container">
-    <!-- Brand Logo -->
-    <a href="/" class="brand-logo">
-      <img src="<%= image_path('logo_zevi.png') %>" alt="Zevi Promotion Logo">
-      <span>Zevi <span class="highlight">Promotion</span></span>
-    </a>
-
-    <!-- Search Form -->
-    <form class="navbar-search" action="/products" method="GET">
-      <span class="search-icon material-symbols-outlined">search</span>
-      <input type="text" name="q" placeholder="Search products...">
-      <button type="submit" class="search-submit">Search</button>
-    </form>
-
-    <!-- Desktop Navigation Menu -->
-    <nav class="navbar-menu">
-      <div class="navbar-link dropdown-trigger">
-        <span>Categories</span>
-        <span class="material-symbols-outlined" style="font-size: 16px;">keyboard_arrow_down</span>
-        <div class="dropdown-menu-list">
-          <a href="/products" class="dropdown-item">All Products</a>
-          <% categories.each do |cat| %>
-            <a href="/products?category=<%= u(cat) %>" class="dropdown-item"><%= cat %></a>
-          <% end %>
-        </div>
-      </div>
-      <a href="/" class="navbar-link">Home</a>
-      <a href="/products" class="navbar-link active">Shop Now</a>
-      <a href="javascript:void(0)" class="navbar-link">About</a>
-      <a href="#footer" class="navbar-link">Contact</a>
-    </nav>
-
-    <!-- Mobile menu toggle -->
-    <button class="mobile-menu-toggle" id="mobile-menu-btn">
-      <span class="material-symbols-outlined">menu</span>
-    </button>
-  </div>
-
-  <!-- Mobile Navigation Accordion Menu -->
-  <div id="mobile-dropdown-menu" class="mobile-accordion-menu">
-    <div class="mobile-menu-links">
-      <a href="/" class="mobile-menu-link">Home</a>
-      <a href="/products" class="mobile-menu-link">Product Catalog</a>
-      <a href="javascript:void(0)" class="mobile-menu-link">About</a>
-      <a href="#footer" class="mobile-menu-link">Contact</a>
-    </div>
-  </div>
-</header>
+<%= render "shared/top_contact_bar" %>
+<%= render "shared/main_header" %>
 
 
 <%
@@ -221,6 +157,76 @@
                   else
                     'card_gifts.png'
                   end
+
+  # Dynamic parameters for Accordion Sections
+  accordion_category = case cat_down
+                       when /apparel/ then "APPAREL & FASHION; CORPORATE UNIFORMS"
+                       when /drinkware/ then "DRINKWARE & BARWARE; INSULATED TUMBLERS"
+                       when /fidget|novelty/ then "NOVELTIES & SENSORY TOYS; KEYCHAINS"
+                       when /gift|desk/ then "DESK ACCESSORIES; CORPORATE GIFTS"
+                       when /bag/ then "BAGS & TOTES; TRAVEL ACCESSORIES"
+                       else "PROMOTIONAL PRODUCTS & GIVEAWAYS"
+                       end
+
+  accordion_colors = product_specs["Colors"] || "Black, Blue, White, Red"
+  accordion_material = product_specs["Material"] || "Premium Quality Materials"
+  accordion_size = product_specs["Size"] || "Standard Size"
+  
+  accordion_weight = case cat_down
+                     when /apparel/ then "0.22 kg"
+                     when /drinkware/ then "0.34 kg"
+                     when /fidget|novelty/ then "0.05 kg"
+                     when /gift|desk/ then "0.85 kg"
+                     when /bag/ then "0.15 kg"
+                     else "0.12 kg"
+                     end
+
+  accordion_ship_dims = case cat_down
+                        when /apparel/ then "24\" x 18\" x 14\""
+                        when /drinkware/ then "22\" x 16\" x 12\""
+                        when /fidget|novelty/ then "20\" x 15\" x 10\""
+                        when /gift|desk/ then "18\" x 14\" x 12\""
+                        when /bag/ then "23\" x 17\" x 15\""
+                        else "22\" x 16\" x 14\""
+                        end
+
+  accordion_ship_est = case cat_down
+                       when /apparel/ then "72 per Carton"
+                       when /drinkware/ then "36 per Carton"
+                       when /fidget|novelty/ then "200 per Carton"
+                       when /gift|desk/ then "24 per Carton"
+                       when /bag/ then "120 per Carton"
+                       else "100 per Carton"
+                       end
+
+  accordion_imprint_method = case cat_down
+                             when /apparel/ then "Screen Print, Embroidery"
+                             when /drinkware/ then "Laser Engraving, Silkscreen"
+                             when /fidget|novelty/ then "Pad Print, Silkscreen"
+                             when /gift|desk/ then "Foil Debossing, Laser Engraving"
+                             when /bag/ then "Screen Print, Heat Transfer"
+                             else "Silkscreen, Unimprinted"
+                             end
+
+  accordion_imprint_size = case cat_down
+                           when /apparel/ then "4.00\" x 4.00\""
+                           when /drinkware/ then "3.00\" x 3.00\""
+                           when /fidget|novelty/ then "1.18\" x 0.59\""
+                           when /gift|desk/ then "2.50\" x 2.00\""
+                           when /bag/ then "5.00\" x 5.00\""
+                           else "3.00\" x 2.00\""
+                           end
+
+  accordion_prod_time = product_specs["Production Time"] || "7 Business Days"
+  accordion_packaging = case cat_down
+                        when /gift|desk/ then "Gift Box Presentation"
+                        else "Individual Poly Bag"
+                        end
+
+  accordion_safety = case cat_down
+                     when /fidget|novelty/ then "Choking Hazard - Small Parts. Not for children under 3 years."
+                     else "No safety warnings for this product"
+                     end
 %>
 
 <!-- Breadcrumb wrapper -->
@@ -253,20 +259,24 @@
           </div>
           
           <div class="thumb-list" id="thumbList">
-            <div class="thumb active" onclick="changeImage(this)">
+            <%
+              large_img_url_1 = @product.essence_for('image')&.picture&.url(size: "600x600") rescue nil
+              large_img_url_2 = image_path(secondary_img)
+            %>
+            <div class="thumb active" onclick="changeImage(this)" data-large-src="<%= large_img_url_1 || image_path(default_img) %>">
               <% if @product.value_for('image').present? %>
                 <%= el.render :image, { size: "80x80" } %>
               <% else %>
                 <img src="<%= image_path(default_img) %>" alt="<%= title %> Thumbnail 1">
               <% end %>
             </div>
-            <div class="thumb" onclick="changeImage(this)">
+            <div class="thumb" onclick="changeImage(this)" data-large-src="<%= large_img_url_2 %>">
               <img src="<%= image_path(secondary_img) %>" alt="<%= title %> Thumbnail 2">
             </div>
           </div>
-          
+
           <!-- Related Products Ribbon -->
-          <div class="related-products" style="margin-top:50px;">
+          <div class="related-products" style="margin-top:40px;">
             <h6 style="color:#666;margin-bottom:10px;">Related Products</h6>
             <div class="row g-2" id="relatedProducts">
               <% @related_products[0..2].each do |related| %>
@@ -319,129 +329,374 @@
           
           <p class="product-desc" id="productDesc"><%= product_desc_text %></p>
           
-          <!-- Specs Box -->
-          <div class="specs-box">
-            <% product_specs.each do |label, value| %>
-              <div class="spec-row">
-                <span class="spec-label"><%= label %></span>
-                <span class="spec-value"><%= value %></span>
+          <!-- Pricing & Specifications Accordion Stack (Right Column) -->
+          <div class="product-accordion" style="margin-bottom: 24px;">
+            <!-- 1. Pricing Accordion (Static - Never Collapses) -->
+            <div class="attributesContainerStatic" style="margin-bottom: 12px;">
+              <div class="btnSection">
+                <span class="sectionHeader">Pricing</span>
               </div>
-            <% end %>
-          </div>
-          
-          <!-- Price Table -->
-          <div class="price-box">
-            <table class="price-table">
-              <thead>
-                <tr>
-                  <th>50</th>
-                  <th>100</th>
-                  <th>250</th>
-                  <th>500</th>
-                  <th>1000</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><%= currency_sym %><span id="price1"><%= sprintf("%.2f", p50) %></span></td>
-                  <td><%= currency_sym %><span id="price2"><%= sprintf("%.2f", p100) %></span></td>
-                  <td><%= currency_sym %><span id="price3"><%= sprintf("%.2f", p250) %></span></td>
-                  <td><%= currency_sym %><span id="price4"><%= sprintf("%.2f", p500) %></span></td>
-                  <td><%= currency_sym %><span id="price5"><%= sprintf("%.2f", p1000) %></span></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          
-          <!-- Quote Form -->
-          <div class="quote-form">
-            <h4>Request a Quote</h4>
-            <form onsubmit="window.submitQuote ? window.submitQuote(event) : (event.preventDefault(), alert('Thank you! Your quote request has been submitted successfully. Our team will contact you shortly.'), event.target.reset())">
-              <div class="row g-3">
-                <!-- First Name & Last Name -->
-                <div class="col-6">
-                  <input type="text" required class="form-control" placeholder="First name *" oninvalid="this.setCustomValidity('Please fill out this field')" oninput="this.setCustomValidity('')">
-                </div>
-                <div class="col-6">
-                  <input type="text" required class="form-control" placeholder="Last name *" oninvalid="this.setCustomValidity('Please fill out this field')" oninput="this.setCustomValidity('')">
-                </div>
-
-                <!-- Company Name & Country/Region -->
-                <div class="col-6">
-                  <input type="text" required class="form-control" placeholder="Company name *" oninvalid="this.setCustomValidity('Please fill out this field')" oninput="this.setCustomValidity('')">
-                </div>
-                <div class="col-6">
-                  <input type="text" class="form-control" placeholder="Country/Region">
-                </div>
-
-                <!-- Email & Phone number -->
-                <div class="col-6">
-                  <input type="email" required class="form-control" placeholder="Email *" oninvalid="this.setCustomValidity('Please enter a valid email address')" oninput="this.setCustomValidity('')">
-                </div>
-                <div class="col-6" style="display: flex; gap: 8px;">
-                  <select class="form-control" style="max-width: 90px; padding: 6px 8px; font-size: 13px;">
-                    <option>USA</option>
-                    <option>Canada</option>
-                    <option>China</option>
-                    <option>UK</option>
-                    <option>Germany</option>
-                    <option>Japan</option>
-                  </select>
-                  <input type="tel" class="form-control" placeholder="Phone number" style="flex: 1;">
-                </div>
-
-                <!-- Color & Quantity -->
-                <div class="col-6">
-                  <input type="text" class="form-control" placeholder="Color">
-                </div>
-                <div class="col-6">
-                  <input type="number" class="form-control" id="quoteQty" placeholder="Quantity *" min="1" required="" oninvalid="this.setCustomValidity('Please fill out this field')" oninput="this.setCustomValidity('')">
-                </div>
-
-                <!-- Date Required -->
-                <div class="col-12">
-                  <div style="display: flex; flex-direction: column; gap: 4px;">
-                    <label style="font-size: 12px; font-weight: 600; color: var(--text-muted); margin-left: 2px;">Date Required</label>
-                    <input type="date" class="form-control">
-                  </div>
-                </div>
-
-                <!-- Toggle Artwork Button -->
-                <div class="col-12" style="margin-top: 4px;">
-                  <button type="button" id="toggle-artwork-btn" class="btn-secondary" style="font-size: 13px; padding: 8px 16px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; border-radius: var(--radius-sm); border: 1px solid var(--light-border); background: var(--light-surface); font-weight: 600; width: 100%; justify-content: center;">
-                    <span class="material-symbols-outlined" style="font-size: 18px; color: var(--primary);">add_photo_alternate</span>
-                    <span>Add Artwork & Special Requests (Optional)</span>
-                  </button>
-                </div>
-
-                <!-- Togglable Your Artwork & Comments container -->
-                <div class="col-12" id="artwork-upload-container" style="display: none; flex-direction: column; gap: 12px; margin-top: 4px; border: 1px dashed var(--light-border); border-radius: var(--radius-sm); padding: 16px; background: rgba(12, 58, 107, 0.01);">
-                  <div style="display: flex; flex-direction: column; gap: 4px;">
-                    <label style="font-size: 13px; font-weight: 700; color: var(--text-dark); margin-bottom: 2px;">Your Artwork (Optional)</label>
-                    <input type="file" accept="image/*,.pdf,.ai,.eps,.cdr" style="padding: 6px 10px; border: 1px dashed var(--light-border); border-radius: var(--radius-sm); font-size: 13px; background-color: var(--light-bg); width: 100%; cursor: pointer;">
-                    <span style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Supported: AI, CDR, EPS, PDF, PNG, JPG</span>
+              <div class="contentContainer">
+                <div class="price-box">
+                  <table class="price-table">
+                    <thead>
+                      <tr>
+                        <th>50</th>
+                        <th>100</th>
+                        <th>250</th>
+                        <th>500</th>
+                        <th>1000</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><%= currency_sym %><span id="price1"><%= sprintf("%.2f", p50) %></span></td>
+                        <td><%= currency_sym %><span id="price2"><%= sprintf("%.2f", p100) %></span></td>
+                        <td><%= currency_sym %><span id="price3"><%= sprintf("%.2f", p250) %></span></td>
+                        <td><%= currency_sym %><span id="price4"><%= sprintf("%.2f", p500) %></span></td>
+                        <td><%= currency_sym %><span id="price5"><%= sprintf("%.2f", p1000) %></span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; flex-wrap: wrap; gap: 12px;">
+                    <div style="font-size: 12.5px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; font-family: var(--font-body); font-weight: 500;">
+                      <span class="material-symbols-outlined" style="font-size: 16px; color: var(--primary);">info</span>
+                      <span>Price Includes: 1 side 1 color 1 location</span>
+                    </div>
+                    <div>
+                      <button type="button" id="pricing-request-btn" class="btn-quote" style="height: 34px; padding: 0 16px; font-size: 13px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; border-radius: var(--radius-sm); border: none; background-color: var(--primary); color: #ffffff; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: var(--transition); width: auto;">
+                        <span>Request Info</span>
+                        <span class="material-symbols-outlined" style="font-size: 16px;">expand_more</span>
+                      </button>
+                    </div>
                   </div>
 
-                  <div style="display: flex; flex-direction: column; gap: 4px;">
-                    <label style="font-size: 13px; font-weight: 700; color: var(--text-dark); margin-bottom: 2px;">Comments / Special Requests / Color Options (Optional)</label>
-                    <textarea class="form-control" rows="3" placeholder="Enter special requirements or comments..."></textarea>
-                  </div>
-                </div>
+                  <!-- 3-Step Stepper Request Form (Inline) -->
+                  <div id="inline-stepper-container">
+                    <!-- Stepper Progress Dots -->
+                    <div class="stepper-indicator">
+                      <div class="step-dot active" data-step="1">
+                        <span class="dot-number">1</span>
+                        <span class="dot-label">Contact</span>
+                      </div>
+                      <div class="step-line"></div>
+                      <div class="step-dot" data-step="2">
+                        <span class="dot-number">2</span>
+                        <span class="dot-label">Details</span>
+                      </div>
+                      <div class="step-line"></div>
+                      <div class="step-dot" data-step="3">
+                        <span class="dot-number">3</span>
+                        <span class="dot-label">Artwork</span>
+                      </div>
+                    </div>
 
-                <!-- SKU -->
-                <div class="col-12">
-                  <div style="display: flex; flex-direction: column; gap: 4px;">
-                    <label style="font-size: 12px; font-weight: 600; color: var(--text-muted); margin-left: 2px;">SKU *</label>
-                    <input type="text" required readonly value="<%= style_number %>" style="background-color: #f1f5f9; color: var(--text-muted); cursor: not-allowed; font-family: monospace; font-weight: 700;" class="form-control" oninvalid="this.setCustomValidity('Please fill out this field')" oninput="this.setCustomValidity('')">
-                  </div>
-                </div>
+                    <!-- Main Stepper Form -->
+                    <form id="inline-quote-form" onsubmit="event.preventDefault(); alert('Thank you! Your quote request has been submitted successfully. Our team will contact you shortly.'); window.resetZeviStepper();">
+                      
+                      <!-- STEP 1: Contact (Required Fields) -->
+                      <div class="stepper-step active" data-step="1">
+                        <!-- First Name -->
+                        <div class="fieldrow">
+                          <div class="_30">
+                            <label class="required side">First name</label>
+                          </div>
+                          <div>
+                            <input type="text" required class="form-control" name="first_name" oninvalid="this.setCustomValidity('Please fill out this field')" oninput="this.setCustomValidity('')">
+                          </div>
+                        </div>
 
-                <!-- Submit Button -->
-                <div class="col-12" style="margin-top: 8px;">
-                  <button type="submit" class="btn-quote">Submit Quote</button>
+                        <!-- Last Name -->
+                        <div class="fieldrow">
+                          <div class="_30">
+                            <label class="required side">Last name</label>
+                          </div>
+                          <div>
+                            <input type="text" required class="form-control" name="last_name" oninvalid="this.setCustomValidity('Please fill out this field')" oninput="this.setCustomValidity('')">
+                          </div>
+                        </div>
+
+                        <!-- Company Name -->
+                        <div class="fieldrow">
+                          <div class="_30">
+                            <label class="required side">Company name</label>
+                          </div>
+                          <div>
+                            <input type="text" required class="form-control" name="company_name" oninvalid="this.setCustomValidity('Please fill out this field')" oninput="this.setCustomValidity('')">
+                          </div>
+                        </div>
+
+                        <!-- Email Address -->
+                        <div class="fieldrow">
+                          <div class="_30">
+                            <label class="required side">Email</label>
+                          </div>
+                          <div>
+                            <input type="email" required class="form-control" name="email" oninvalid="this.setCustomValidity('Please enter a valid email address')" oninput="this.setCustomValidity('')">
+                          </div>
+                        </div>
+
+                        <!-- Step 1 Nav -->
+                        <div class="stepper-nav">
+                          <div></div> <!-- Spacer -->
+                          <button type="button" class="btn-next" onclick="window.nextStepperStep(1)">
+                            <span>Next Step</span>
+                            <span class="material-symbols-outlined" style="font-size: 16px;">arrow_forward</span>
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- STEP 2: Details (Optional Fields) -->
+                      <div class="stepper-step" data-step="2">
+                        <!-- Country/Region -->
+                        <div class="fieldrow">
+                          <div class="_30">
+                            <label class="side">Country/Region</label>
+                          </div>
+                          <div>
+                            <select class="form-control" name="country">
+                              <option value="United States">United States</option>
+                              <option value="Canada">Canada</option>
+                              <option value="United Kingdom">United Kingdom</option>
+                              <option value="Australia">Australia</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <!-- Phone Number -->
+                        <div class="fieldrow">
+                          <div class="_30">
+                            <label class="side">Phone number</label>
+                          </div>
+                          <div style="display: flex; gap: 8px; width: 100%; box-sizing: border-box;">
+                            <select class="form-control" name="phone_country" style="flex: 0 0 42%; max-width: 140px;" onchange="document.getElementById('phone-prefix').value = this.value === 'Canada' ? '+1' : (this.value === 'United Kingdom' ? '+44' : (this.value === 'Australia' ? '+61' : '+1'))">
+                              <option value="United States">United States</option>
+                              <option value="Canada">Canada</option>
+                              <option value="United Kingdom">United Kingdom</option>
+                              <option value="Australia">Australia</option>
+                            </select>
+                            <div style="position: relative; flex: 1; display: flex; box-sizing: border-box;">
+                              <input type="text" id="phone-prefix" value="+1" readonly style="width: 42px; text-align: center; border: 1px solid var(--light-border); border-right: none; border-radius: var(--radius-sm) 0 0 var(--radius-sm); font-size: 13px; background-color: var(--light-bg); color: var(--text-muted); outline: none; height: 34px; box-sizing: border-box; font-family: var(--font-body);">
+                              <input type="tel" class="form-control" name="phone" placeholder="Phone number" style="border-top-left-radius: 0 !important; border-bottom-left-radius: 0 !important; flex: 1; height: 34px !important;">
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- Color -->
+                        <div class="fieldrow">
+                          <div class="_30">
+                            <label class="side">Color</label>
+                          </div>
+                          <div>
+                            <input type="text" class="form-control" name="color" placeholder="Preferred color(s)">
+                          </div>
+                        </div>
+
+                        <!-- Quantity -->
+                        <div class="fieldrow">
+                          <div class="_30">
+                            <label class="side">Quantity</label>
+                          </div>
+                          <div>
+                            <input type="number" class="form-control" name="quantity" min="1">
+                          </div>
+                        </div>
+
+                        <!-- Date Required -->
+                        <div class="fieldrow">
+                          <div class="_30">
+                            <label class="side">Date Required</label>
+                          </div>
+                          <div>
+                            <input type="date" class="form-control" name="date_required">
+                          </div>
+                        </div>
+
+                        <!-- Step 2 Nav -->
+                        <div class="stepper-nav">
+                          <button type="button" class="btn-back" onclick="window.prevStepperStep(2)">
+                            <span class="material-symbols-outlined" style="font-size: 16px;">arrow_back</span>
+                            <span>Back</span>
+                          </button>
+                          <button type="button" class="btn-next" onclick="window.nextStepperStep(2)">
+                            <span>Next Step</span>
+                            <span class="material-symbols-outlined" style="font-size: 16px;">arrow_forward</span>
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- STEP 3: Artwork & Comments (Optional) -->
+                      <div class="stepper-step" data-step="3">
+                        <!-- Your Artwork -->
+                        <div class="fieldrow">
+                          <div class="_30">
+                            <label class="side">Your Artwork</label>
+                          </div>
+                          <div>
+                            <div style="display: flex; flex-direction: column; gap: 4px; width: 100%; box-sizing: border-box;">
+                              <input type="file" name="artwork" accept="image/*,.pdf,.ai,.eps,.cdr" style="padding: 4px 10px; border: 1px dashed var(--light-border); border-radius: var(--radius-sm); font-size: 13px; background-color: var(--light-bg); width: 100%; cursor: pointer; box-sizing: border-box;">
+                              <span style="font-size: 11px; color: var(--text-muted);">Supported: AI, CDR, EPS, PDF, PNG, JPG (Optional)</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- Comments -->
+                        <div class="fieldrow">
+                          <div class="_30">
+                            <label class="side">Comments</label>
+                          </div>
+                          <div>
+                            <textarea class="form-control" rows="3" name="comments" placeholder="Any special requests or comments..."></textarea>
+                          </div>
+                        </div>
+
+                        <!-- Step 3 Nav -->
+                        <div class="stepper-nav">
+                          <button type="button" class="btn-back" onclick="window.prevStepperStep(3)">
+                            <span class="material-symbols-outlined" style="font-size: 16px;">arrow_back</span>
+                            <span>Back</span>
+                          </button>
+                          <button type="submit" class="btn-submit">
+                            <span>Submit Quote</span>
+                            <span class="material-symbols-outlined" style="font-size: 16px;">send</span>
+                          </button>
+                        </div>
+                      </div>
+
+                    </form>
+                  </div>
                 </div>
               </div>
-            </form>
+            </div>
+
+            <!-- 2. Product Detail (Collapsed by Default) -->
+            <div class="attributesContainer" style="margin-bottom: 12px;">
+              <button type="button" class="btnSection" onclick="window.toggleZeviAccordion && window.toggleZeviAccordion(this)">
+                <span class="sectionHeader">Product Detail <span class="material-symbols-outlined accordion-icon">keyboard_arrow_down</span></span>
+              </button>
+              <div class="contentContainer">
+                <div class="dataFieldBlock">
+                  <div class="data-row">
+                    <div class="data-label">Category</div>
+                    <div class="data-value"><%= accordion_category %></div>
+                  </div>
+                  <div class="data-row">
+                    <div class="data-label">Color</div>
+                    <div class="data-value"><%= accordion_colors %></div>
+                  </div>
+                  <div class="data-row">
+                    <div class="data-label">Material</div>
+                    <div class="data-value"><%= accordion_material %></div>
+                  </div>
+                  <div class="data-row">
+                    <div class="data-label">Size</div>
+                    <div class="data-value"><%= accordion_size %></div>
+                  </div>
+                  <div class="data-row">
+                    <div class="data-label">Item Weight</div>
+                    <div class="data-value"><%= accordion_weight %></div>
+                  </div>
+                  <div class="data-row">
+                    <div class="data-label">Samples</div>
+                    <div class="data-value">Product Sample (Free (Random Sample)), Spec Sample (setup charge: $30, Depending on the request)</div>
+                  </div>
+                  <div class="data-row">
+                    <div class="data-label">Shipping Dimensions</div>
+                    <div class="data-value"><%= accordion_ship_dims %></div>
+                  </div>
+                  <div class="data-row">
+                    <div class="data-label">Shipping Estimate</div>
+                    <div class="data-value"><%= accordion_ship_est %></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. Imprint (Collapsed by Default) -->
+            <div class="attributesContainer" style="margin-bottom: 12px;">
+              <button type="button" class="btnSection" onclick="window.toggleZeviAccordion && window.toggleZeviAccordion(this)">
+                <span class="sectionHeader">Imprint <span class="material-symbols-outlined accordion-icon">keyboard_arrow_down</span></span>
+              </button>
+              <div class="contentContainer">
+                <div class="dataFieldBlock">
+                  <div class="data-row">
+                    <div class="data-label">Imprint Method</div>
+                    <div class="data-value"><%= accordion_imprint_method %></div>
+                  </div>
+                  <div class="data-row">
+                    <div class="data-label">Imprint Color</div>
+                    <div class="data-value">Custom Colors, PMS Colors, Standard Colors</div>
+                  </div>
+                  <div class="data-row">
+                    <div class="data-label">Imprint Size</div>
+                    <div class="data-value"><%= accordion_imprint_size %></div>
+                  </div>
+                  <div class="data-row">
+                    <div class="data-label">Full Color Process</div>
+                    <div class="data-value">No</div>
+                  </div>
+                  <div class="data-row">
+                    <div class="data-label">Personalization</div>
+                    <div class="data-value">No</div>
+                  </div>
+                  <div class="data-row">
+                    <div class="data-label">Sold Unimprinted</div>
+                    <div class="data-value">Yes</div>
+                  </div>
+                  <div class="data-row">
+                    <div class="data-label">Artwork & Proofs</div>
+                    <div class="data-value">Virtual Proof (Free Virtual Proof with Different Possible Printing Size, Location and Color Options.), Art Services (Free), Pre-production Proof (Free)</div>
+                  </div>
+                  <div class="data-row">
+                    <div class="data-label">Imprint Location</div>
+                    <div class="data-value">Front or Suitable Workable Location</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4. Production and Shipping (Collapsed by Default) -->
+            <div class="attributesContainer" style="margin-bottom: 12px;">
+              <button type="button" class="btnSection" onclick="window.toggleZeviAccordion && window.toggleZeviAccordion(this)">
+                <span class="sectionHeader">Production and Shipping <span class="material-symbols-outlined accordion-icon">keyboard_arrow_down</span></span>
+              </button>
+              <div class="contentContainer">
+                <div class="dataFieldBlock">
+                  <div class="data-row">
+                    <div class="data-label">Production Time</div>
+                    <div class="data-value"><%= accordion_prod_time %></div>
+                  </div>
+                  <div class="data-row">
+                    <div class="data-label">Rush Service</div>
+                    <div class="data-value">Yes (5 business days, setup charge: $30)</div>
+                  </div>
+                  <div class="data-row">
+                    <div class="data-label">Shipping Weight</div>
+                    <div class="data-value">33 lbs (Carton Weight)</div>
+                  </div>
+                  <div class="data-row">
+                    <div class="data-label">Packaging</div>
+                    <div class="data-value"><%= accordion_packaging %></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 5. Safety and Compliance (Collapsed by Default) -->
+            <div class="attributesContainer">
+              <button type="button" class="btnSection" onclick="window.toggleZeviAccordion && window.toggleZeviAccordion(this)">
+                <span class="sectionHeader">Safety and Compliance <span class="material-symbols-outlined accordion-icon">keyboard_arrow_down</span></span>
+              </button>
+              <div class="contentContainer">
+                <div class="dataFieldBlock">
+                  <div class="data-row">
+                    <div class="data-label">Safety Warnings</div>
+                    <div class="data-value"><%= accordion_safety %></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
           </div>
         </div>
       </div>
@@ -449,62 +704,7 @@
   </div>
 </section>
 
-<!-- Footer Section -->
-<footer class="dcFooter" id="footer">
-  <div class="container-custom footer-grid">
-    <!-- Brand Info -->
-    <div class="footer-col-brand">
-      <div class="footer-logo">
-        <img src="<%= image_path('logo_zevi.png') %>" alt="Zevi Promotion Logo">
-        <span>Zevi <span>Promotion</span></span>
-      </div>
-      <p>Your one-stop source for premium promotional apparel, corporate gifts, spirit items, and custom-branded marketing giveaways.</p>
-      <div style="font-size: 12px; color: #64748b;">Powered by Alchemy CMS & Rails 8.1</div>
-    </div>
-
-    <!-- Sitemap Navigation Links -->
-    <div>
-      <div class="footer-col-title">Quick Links</div>
-      <ul class="footer-links">
-        <li><a href="/">Home</a></li>
-        <li><a href="/products">Product Catalog</a></li>
-        <li><a href="/#about">About Us</a></li>
-        <li><a href="#footer">Contact Us</a></li>
-      </ul>
-    </div>
-
-    <!-- Contact address -->
-    <div>
-      <div class="footer-col-title">Contact Us</div>
-      <address class="footer-contact-address">
-        <div class="footer-contact-item" style="font-weight: 700; color: var(--text-light);">
-          <span>Zevi Promotions Inc.</span>
-        </div>
-        <div class="footer-contact-item">
-          <span class="icon material-symbols-outlined">business</span>
-          <span>1434 W Taft Ave, Suite 335<br>Orange, CA 92865</span>
-        </div>
-
-        <div class="footer-contact-item">
-          <span class="icon material-symbols-outlined">call</span>
-          <span><%= phone_number %></span>
-        </div>
-        <div class="footer-contact-item">
-          <span class="icon material-symbols-outlined">mail</span>
-          <a href="mailto:<%= email_address %>"><%= email_address %></a>
-        </div>
-      </address>
-    </div>
-  </div>
-
-  <div class="container-custom footer-bottom">
-    <p>&copy; <%= Time.current.year %> Zevi Promotion. All rights reserved.</p>
-    <div class="footer-bottom-links">
-      <a href="javascript:void(0)">Privacy Policy</a>
-      <a href="javascript:void(0)">Terms & Conditions</a>
-    </div>
-  </div>
-</footer>
+<%= render "shared/footer" %>
 
 <!-- Floating Email Widget -->
 <div id="floating-email-widget" class="floating-email-box minimized">

@@ -29,6 +29,26 @@ class ProductsController < ApplicationController
         p.value_for('category').to_s.downcase.include?(cat_down)
       end
     end
+
+    # 3. Filter by min price
+    if params[:min_price].present?
+      @min_price = params[:min_price].to_f
+      @product_cards = @product_cards.select do |p|
+        price_str = p.value_for('price').to_s
+        price_num = price_str[/\d+(\.\d+)?/].to_f
+        price_num >= @min_price
+      end
+    end
+
+    # 4. Filter by max price
+    if params[:max_price].present?
+      @max_price = params[:max_price].to_f
+      @product_cards = @product_cards.select do |p|
+        price_str = p.value_for('price').to_s
+        price_num = price_str[/\d+(\.\d+)?/].to_f
+        price_num <= @max_price
+      end
+    end
     
     # Extract unique categories from all products for the sidebar filter
     if @page

@@ -1,0 +1,103 @@
+<%
+  # Set up category fallbacks in case the database is in an empty state
+  categories = (@categories.present? ? @categories : nil)
+  if categories.blank?
+    products_page = Alchemy::Page.find_by(page_layout: 'products') || Alchemy::Page.find_by(id: 2)
+    if products_page
+      all_products = products_page.elements.where(name: 'product_card')
+      categories = all_products.map { |p| p.value_for('category').to_s.strip }.uniq.reject(&:empty?)
+    end
+  end
+  categories = [
+    "Apparel",
+    "Desk Accessories",
+    "Drinkware",
+    "Fidgets",
+    "Novelties",
+    "Gifts",
+    "Bags & Totes",
+    "Technology"
+  ] if categories.blank?
+
+  # Fetch the root main menu node configured in Alchemy CMS editor
+  main_navigation = Alchemy::Node.roots.find_by(name: 'main_menu')
+%>
+
+<!-- Main Header & Navbar -->
+<header class="main-header">
+  <div class="container-custom navbar-container">
+    <!-- Brand Logo -->
+    <a href="/" class="brand-logo">
+      <img src="<%= image_path('logo_zevi.png') %>" alt="Zevi Promotion Logo">
+      <span>Zevi <span class="highlight">Promotion</span></span>
+    </a>
+
+    <!-- Search Form -->
+    <form class="navbar-search" action="/products" method="GET">
+      <span class="search-icon material-symbols-outlined">search</span>
+      <input type="text" name="q" value="<%= params[:q] %>" placeholder="Search products...">
+      <button type="submit" class="search-submit">Search</button>
+    </form>
+
+    <!-- Desktop Navigation Menu -->
+    <nav class="navbar-menu">
+      <% if main_navigation && main_navigation.children.any? %>
+        <%# Dynamically render from Alchemy CMS visual Menus %>
+        <% main_navigation.children.each do |node| %>
+          <% if node.children.any? %>
+            <div class="navbar-link dropdown-trigger">
+              <span><%= node.name %></span>
+              <span class="material-symbols-outlined" style="font-size: 16px;">keyboard_arrow_down</span>
+              <div class="dropdown-menu-list">
+                <% node.children.each do |child_node| %>
+                  <a href="<%= child_node.url %>" class="dropdown-item"><%= child_node.name %></a>
+                <% end %>
+              </div>
+            </div>
+          <% else %>
+            <a href="<%= node.url %>" class="navbar-link <%= 'active' if node.active? || current_page?(node.url) rescue false %>">
+              <%= node.name %>
+            </a>
+          <% end %>
+        <% end %>
+      <% else %>
+        <%# Fallback to standard Zevi menu structure if CMS Node is empty %>
+        <div class="navbar-link dropdown-trigger">
+          <span>Categories</span>
+          <span class="material-symbols-outlined" style="font-size: 16px;">keyboard_arrow_down</span>
+          <div class="dropdown-menu-list">
+            <a href="/products" class="dropdown-item">All Products</a>
+            <% categories.each do |cat| %>
+              <a href="/products?category=<%= u(cat) %>" class="dropdown-item"><%= cat %></a>
+            <% end %>
+          </div>
+        </div>
+        <a href="/" class="navbar-link <%= 'active' if current_page?('/') rescue false %>">Home</a>
+        <a href="/products" class="navbar-link <%= 'active' if current_page?('/products') rescue false %>">Shop Now</a>
+        <a href="/#about" class="navbar-link">About</a>
+        <a href="#footer" class="navbar-link">Contact</a>
+      <% end %>
+    </nav>
+
+    <!-- Mobile menu toggle -->
+    <button class="mobile-menu-toggle" id="mobile-menu-btn">
+      <span class="material-symbols-outlined">menu</span>
+    </button>
+  </div>
+
+  <!-- Mobile Navigation Accordion Menu -->
+  <div id="mobile-dropdown-menu" class="mobile-accordion-menu">
+    <div class="mobile-menu-links">
+      <% if main_navigation && main_navigation.children.any? %>
+        <% main_navigation.children.each do |node| %>
+          <a href="<%= node.url %>" class="mobile-menu-link <%= 'active' if node.active? || current_page?(node.url) rescue false %>"><%= node.name %></a>
+        <% end %>
+      <% else %>
+        <a href="/" class="mobile-menu-link <%= 'active' if current_page?('/') rescue false %>">Home</a>
+        <a href="/products" class="mobile-menu-link <%= 'active' if current_page?('/products') rescue false %>">Product Catalog</a>
+        <a href="/#about" class="mobile-menu-link">About</a>
+        <a href="#footer" class="mobile-menu-link">Contact</a>
+      <% end %>
+    </div>
+  </div>
+</header>

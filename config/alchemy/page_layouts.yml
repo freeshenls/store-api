@@ -25,6 +25,13 @@
   elements:
     - product_card
 
+- name: artwork_tips
+  unique: true
+  elements:
+    - artwork_tips
+  autogenerate:
+    - artwork_tips
+
 - name: global_layout
   unique: true
   layoutpage: true

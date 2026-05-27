@@ -83,3 +83,30 @@
     - role: slug
       type: Text
 
+- name: artwork_tips
+  unique: true
+  ingredients:
+    - role: phone
+      type: Text
+      default: "(714) 857-0010"
+    - role: email
+      type: Text
+      default: "sales@zevipromotion.com"
+    - role: avatar
+      type: Picture
+    - role: designer_name
+      type: Text
+      default: "Libby"
+    - role: designer_title
+      type: Text
+      default: "with Zevi Promotions"
+    - role: designer_years
+      type: Text
+      default: "12 years of experience"
+    - role: banner_title
+      type: Text
+      default: "Artwork Tips & Guidelines"
+    - role: banner_description
+      type: Text
+      default: "Our dedicated creative team is always willing to work directly with you to make sure your custom artwork looks absolutely amazing on whatever item you choose. Explore this page to learn more about file specifications and how our processes work!"
+

@@ -7,12 +7,17 @@ window.changeImage = function(element) {
   const mainImage = document.getElementById("mainImage");
   if (!mainImage) return;
   
+  // Try to read large source from data-large-src attribute to avoid blurry/shrunk thumbnails
+  const largeSrc = element.getAttribute("data-large-src");
   const imgInside = element.querySelector("img");
-  if (!imgInside) return;
   
-  // Swap source and alt text
-  mainImage.src = imgInside.src;
-  if (imgInside.alt) mainImage.alt = imgInside.alt;
+  if (largeSrc) {
+    mainImage.src = largeSrc;
+  } else if (imgInside) {
+    mainImage.src = imgInside.src;
+  }
+  
+  if (imgInside && imgInside.alt) mainImage.alt = imgInside.alt;
   
   // Reset active classes on all siblings
   const parent = element.parentElement;
@@ -191,17 +196,22 @@ if (!window.zeviListenersRegistered) {
       return;
     }
 
-    // 12. Toggle Artwork & Special Requests Container
-    const toggleArtworkBtn = e.target.closest("#toggle-artwork-btn");
-    if (toggleArtworkBtn) {
+
+
+    // 13. Toggle Inline Request Info Stepper Form
+    const pricingRequestBtn = e.target.closest("#pricing-request-btn");
+    if (pricingRequestBtn) {
       e.preventDefault();
-      const container = document.getElementById("artwork-upload-container");
-      if (container) {
-        const isHidden = container.style.display === "none" || !container.style.display;
-        container.style.display = isHidden ? "flex" : "none";
-        toggleArtworkBtn.innerHTML = isHidden
-          ? '<span class="material-symbols-outlined" style="font-size: 18px; color: var(--highlight-red);">remove_circle</span><span>Remove Artwork & Special Requests</span>'
-          : '<span class="material-symbols-outlined" style="font-size: 18px; color: var(--primary);">add_photo_alternate</span><span>Add Artwork & Special Requests (Optional)</span>';
+      const stepperContainer = document.getElementById("inline-stepper-container");
+      if (stepperContainer) {
+        const isHidden = stepperContainer.style.display === "none" || !stepperContainer.style.display;
+        if (isHidden) {
+          stepperContainer.style.display = "block";
+          // Scroll inline stepper into view smoothly
+          stepperContainer.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        } else {
+          stepperContainer.style.display = "none";
+        }
       }
       return;
     }
@@ -257,3 +267,156 @@ document.addEventListener("turbo:load", function() {
 document.addEventListener("turbo:before-cache", function() {
   stopSlideTimer();
 });
+
+// Toggle Zevi Specifications Accordion smoothly
+window.toggleZeviAccordion = function(button) {
+  const container = button.closest(".attributesContainer");
+  if (!container) return;
+  
+  const content = container.querySelector(".contentContainer");
+  if (!content) return;
+  
+  const isOpen = container.classList.contains("open");
+  if (isOpen) {
+    content.style.maxHeight = null;
+    container.classList.remove("open");
+  } else {
+    container.classList.add("open");
+    // Calculate scrollHeight after classList.add("open") to ensure padding is fully included!
+    // Plus a 20px safety buffer to guarantee zero cutoffs across all browsers
+    content.style.maxHeight = (content.scrollHeight + 20) + "px";
+  }
+};
+
+// Stepper Navigation Helpers
+window.nextStepperStep = function(currentStep) {
+  if (currentStep === 1) {
+    // Validate required fields in Step 1
+    const firstName = document.querySelector('input[name="first_name"]');
+    const lastName = document.querySelector('input[name="last_name"]');
+    const companyName = document.querySelector('input[name="company_name"]');
+    const email = document.querySelector('input[name="email"]');
+    
+    if (firstName && !firstName.value.trim()) {
+      firstName.reportValidity();
+      return;
+    }
+    if (lastName && !lastName.value.trim()) {
+      lastName.reportValidity();
+      return;
+    }
+    if (companyName && !companyName.value.trim()) {
+      companyName.reportValidity();
+      return;
+    }
+    if (email && (!email.value.trim() || !email.checkValidity())) {
+      email.reportValidity();
+      return;
+    }
+  }
+
+  // Go to next step
+  const nextStep = currentStep + 1;
+  const currentStepEl = document.querySelector(`.stepper-step[data-step="${currentStep}"]`);
+  const nextStepEl = document.querySelector(`.stepper-step[data-step="${nextStep}"]`);
+  
+  if (currentStepEl && nextStepEl) {
+    currentStepEl.classList.remove("active");
+    nextStepEl.classList.add("active");
+    
+    // Update step dots
+    const dots = document.querySelectorAll('.step-dot');
+    dots.forEach(dot => {
+      const stepNum = parseInt(dot.getAttribute('data-step'));
+      if (stepNum === nextStep) {
+        dot.classList.add('active');
+        dot.classList.remove('completed');
+      } else if (stepNum < nextStep) {
+        dot.classList.remove('active');
+        dot.classList.add('completed');
+      } else {
+        dot.classList.remove('active', 'completed');
+      }
+    });
+
+    // Update connector lines
+    const lines = document.querySelectorAll('.step-line');
+    lines.forEach((line, index) => {
+      if (index < nextStep - 1) {
+        line.classList.add('active');
+      } else {
+        line.classList.remove('active');
+      }
+    });
+  }
+};
+
+window.prevStepperStep = function(currentStep) {
+  const prevStep = currentStep - 1;
+  const currentStepEl = document.querySelector(`.stepper-step[data-step="${currentStep}"]`);
+  const prevStepEl = document.querySelector(`.stepper-step[data-step="${prevStep}"]`);
+  
+  if (currentStepEl && prevStepEl) {
+    currentStepEl.classList.remove("active");
+    prevStepEl.classList.add("active");
+    
+    // Update step dots
+    const dots = document.querySelectorAll('.step-dot');
+    dots.forEach(dot => {
+      const stepNum = parseInt(dot.getAttribute('data-step'));
+      if (stepNum === prevStep) {
+        dot.classList.add('active');
+        dot.classList.remove('completed');
+      } else if (stepNum < prevStep) {
+        dot.classList.remove('active');
+        dot.classList.add('completed');
+      } else {
+        dot.classList.remove('active', 'completed');
+      }
+    });
+
+    // Update connector lines
+    const lines = document.querySelectorAll('.step-line');
+    lines.forEach((line, index) => {
+      if (index < prevStep - 1) {
+        line.classList.add('active');
+      } else {
+        line.classList.remove('active');
+      }
+    });
+  }
+};
+
+// Reset Stepper to Step 1
+window.resetZeviStepper = function() {
+  const form = document.getElementById("inline-quote-form");
+  if (form) form.reset();
+
+  const stepperContainer = document.getElementById("inline-stepper-container");
+  if (stepperContainer) stepperContainer.style.display = "none";
+
+  // Reset steps
+  const steps = document.querySelectorAll('.stepper-step');
+  steps.forEach((step, index) => {
+    if (index === 0) {
+      step.classList.add('active');
+    } else {
+      step.classList.remove('active');
+    }
+  });
+
+  // Reset dots
+  const dots = document.querySelectorAll('.step-dot');
+  dots.forEach((dot, index) => {
+    if (index === 0) {
+      dot.classList.add('active');
+      dot.classList.remove('completed');
+    } else {
+      dot.classList.remove('active', 'completed');
+    }
+  });
+
+  // Reset lines
+  const lines = document.querySelectorAll('.step-line');
+  lines.forEach(line => line.classList.remove('active'));
+};
