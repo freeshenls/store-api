@@ -17,8 +17,12 @@
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <!-- Material Symbols Outlined Icon Font -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" />
+    <%# Include locally hosted font definitions (Inter, Outfit, Material Symbols Outlined) %>
+    <%= stylesheet_link_tag "fonts", "data-turbo-track": "reload" %>
+
+    <%# Include locally hosted Air Datepicker CSS & JS %>
+    <%= stylesheet_link_tag "air-datepicker", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "air-datepicker", "data-turbo-track": "reload" %>
 
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>

@@ -1,9 +1,5 @@
 <%= element_view_for(promo_card, class: "promo-card") do |el| %>
-  <% if promo_card.value_for('image').present? %>
-    <%= el.render :image, { size: "400x300", class: "promo-bg" } %>
-  <% else %>
-    <img src="<%= image_path(local_assigns[:fallback_image] || 'card_drinkware.png') %>" class="promo-bg" alt="Default promo image">
-  <% end %>
+  <%= el.render :image, { size: "400x300", class: "promo-bg" } %>
   
   <div class="promo-card-overlay"></div>
   <div class="promo-card-content">

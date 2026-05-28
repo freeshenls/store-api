@@ -46,7 +46,7 @@ function showCarouselSlide(index) {
     currentSlide = slides.length - 1;
   }
 
-  // Hide all slides & deactivate all dots
+  // Deactivate all slides & dots
   slides.forEach(slide => slide.classList.remove("active"));
   dots.forEach(dot => dot.classList.remove("active"));
 
@@ -56,6 +56,12 @@ function showCarouselSlide(index) {
   }
   if (dots[currentSlide]) {
     dots[currentSlide].classList.add("active");
+  }
+
+  // Translate the slider track horizontally
+  const track = document.querySelector(".carousel-slides");
+  if (track) {
+    track.style.transform = `translateX(${-currentSlide * 100}%)`;
   }
 }
 
@@ -231,6 +237,42 @@ document.addEventListener("turbo:load", function() {
     // Initial display reset (make sure first slide is active)
     showCarouselSlide(0);
     startSlideTimer();
+
+    // Register mobile touch swipe gestures on the carousel wrapper
+    const wrapper = document.querySelector(".carousel-wrapper");
+    if (wrapper && !wrapper.dataset.swipeRegistered) {
+      let startX = 0;
+      let endX = 0;
+
+      wrapper.addEventListener("touchstart", function(e) {
+        startX = e.touches[0].clientX;
+        endX = e.touches[0].clientX; // Defensive initialization
+      }, { passive: true });
+
+      wrapper.addEventListener("touchmove", function(e) {
+        endX = e.touches[0].clientX;
+      }, { passive: true });
+
+      wrapper.addEventListener("touchend", function() {
+        const threshold = 40; // swipe threshold in pixels
+        const diff = startX - endX;
+        if (Math.abs(diff) > threshold) {
+          if (diff > 0) {
+            // Swiped left -> show next slide
+            navigateCarousel(1);
+            startSlideTimer();
+          } else {
+            // Swiped right -> show prev slide
+            navigateCarousel(-1);
+            startSlideTimer();
+          }
+        }
+        startX = 0;
+        endX = 0;
+      });
+
+      wrapper.dataset.swipeRegistered = "true";
+    }
   }
 
   // Ensure dropdown states are reset on page load
@@ -261,6 +303,38 @@ document.addEventListener("turbo:load", function() {
   if (widget) {
     widget.classList.add("minimized");
   }
+
+  // Initialize Air Datepicker on any elements with class .flatpickr
+  const dateInputs = document.querySelectorAll(".flatpickr");
+  const localeEn = {
+    days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+    daysShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+    daysMin: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+    months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+    monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+    today: 'Today',
+    clear: 'Clear',
+    dateFormat: 'MM/dd/yyyy',
+    timeFormat: 'hh:mm aa',
+    firstDay: 0
+  };
+
+  dateInputs.forEach(el => {
+    if (el && window.AirDatepicker) {
+      // Destroy any existing instance to ensure fresh initialization with the correct upward position
+      if (el.airDatepickerInstance) {
+        el.airDatepickerInstance.destroy();
+      }
+      
+      el.airDatepickerInstance = new window.AirDatepicker(el, {
+        autoClose: true,
+        minDate: new Date(),
+        locale: localeEn,
+        position: 'top left'
+      });
+      el.dataset.airDatepickerInitialized = "true";
+    }
+  });
 });
 
 // Clear slide timer before caching the page to prevent any background tasks

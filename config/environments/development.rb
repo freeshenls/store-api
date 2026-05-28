@@ -72,4 +72,10 @@ Rails.application.configure do
 
   # Raise error when a before_action's only/except options reference missing actions.
   config.action_controller.raise_on_missing_callback_actions = true
+
+  # Configure asset host to serve compiled static assets from Cloudflare R2 if R2_PUBLIC_URL is defined
+  if ENV["R2_PUBLIC_URL"].present?
+    config.action_controller.asset_host = ENV["R2_PUBLIC_URL"]
+  end
 end
+

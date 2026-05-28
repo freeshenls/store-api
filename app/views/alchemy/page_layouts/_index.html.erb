@@ -66,12 +66,12 @@
         <% slides = @page.elements.where(name: 'carousel_slide') %>
         <% if slides.any? %>
           <% slides.each_with_index do |slide, index| %>
-            <%= render slide, active: (index == 0), fallback_image: (index == 1 ? 'slide_spirit.png' : 'slide_apparel.png') %>
+            <%= render slide, active: (index == 0) %>
           <% end %>
         <% else %>
           <!-- Fallback static slide 1 -->
           <div class="carousel-slide active" id="slide-1">
-            <img src="<%= image_path('slide_apparel.png') %>" class="slide-bg" alt="Apparel Collection">
+            <div class="slide-bg" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; background: linear-gradient(135deg, var(--primary) 0%, #1e4f8a 100%);"></div>
             <div class="carousel-overlay">
               <div class="carousel-content">
                 <h3>Polos, Workwear, T-Shirts, & More!</h3>
@@ -87,7 +87,7 @@
 
           <!-- Fallback static slide 2 -->
           <div class="carousel-slide" id="slide-2">
-            <img src="<%= image_path('slide_spirit.png') %>" class="slide-bg" alt="Spirit Collection">
+            <div class="slide-bg" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; background: linear-gradient(135deg, #1e4f8a 0%, var(--secondary) 100%);"></div>
             <div class="carousel-overlay">
               <div class="carousel-content">
                 <h3>Go Team!</h3>
@@ -173,140 +173,321 @@
   </div>
 </section>
 
-<!-- 2. Featured Products Section -->
-<section class="section-padding featured-products-section" id="products">
+<!-- 2. Trending Products Section -->
+<section class="section-padding trending-products-section" id="products">
   <div class="container-custom">
-    <div class="section-header">
-      <h2>Featured Products</h2>
+    <div style="text-align: center; margin-bottom: 24px;">
+      <h2 style="font-size: 26px; font-weight: 700; color: var(--text-dark); margin-bottom: 10px; font-family: var(--font-display);">Trending Products</h2>
+      <hr class="bottomBorder" style="border: 0; height: 3px; background: var(--primary); width: 60px; margin: 0 auto;">
     </div>
 
-    <div class="product-grid">
-      <% product_cards = @page.elements.where(name: 'product_card') %>
-      <% if product_cards.any? %>
-        <% product_cards.each do |product| %>
-          <%= render product %>
-        <% end %>
-      <% else %>
-        <!-- Fallback static products (representing the seeded products in the user's requested layout) -->
-        <!-- Product 1 -->
-        <div class="product-card">
-          <div class="product-image-wrapper">
-            <img src="https://media.psiproductfinder.de/images/60990/ap0116/7bf946486855b2de8087585ba0263832.jpg" alt="Baby Stroller Hanging Bag">
-          </div>
-          <div class="product-info">
-            <span class="product-cat">Bags</span>
-            <h3 class="product-title">Baby Stroller Hanging Bag</h3>
-            <div class="product-bottom">
-              <div class="product-price">
-                <span class="price-now">$11.60</span>
+    <div class="product-slider-wrapper">
+      <!-- Left Navigation Arrow -->
+      <button class="slider-nav-btn prev-btn" onclick="slideProducts('prev')" aria-label="Slide left">
+        <span class="material-symbols-outlined">chevron_left</span>
+      </button>
+      
+      <div class="product-slider-container">
+        <div class="product-slider-track" id="productSliderTrack" style="transform: translateX(0px);">
+          <%
+            products_page = Alchemy::Page.find_by(page_layout: 'products') || Alchemy::Page.find_by(id: 2)
+            product_cards = products_page ? products_page.elements.where(name: 'product_card').to_a : []
+          %>
+          <% if product_cards.any? %>
+            <% product_cards.each do |product| %>
+              <div class="slider-item">
+                <%= render "alchemy/elements/product_card", product_card: product, hide_category: true %>
               </div>
-              <span class="product-qty">Min: 50 pcs</span>
+            <% end %>
+          <% else %>
+            <!-- Fallback static products -->
+            <!-- Product 1 -->
+            <div class="slider-item">
+              <div class="product-card">
+                <div class="product-image-wrapper">
+                  <a href="/products/baby-stroller-hanging-bag" style="display: block; width: 100%; height: 100%;">
+                    <img src="https://media.psiproductfinder.de/images/60990/ap0116/7bf946486855b2de8087585ba0263832.jpg" alt="Baby Stroller Hanging Bag">
+                  </a>
+                </div>
+                <div class="product-info">
+                  <h3 class="product-title" style="margin: 4px 0 8px 0;">
+                    <a href="/products/baby-stroller-hanging-bag" style="color: var(--text-dark); text-decoration: none;">
+                      Baby Stroller Hanging Bag
+                    </a>
+                  </h3>
+                  <div class="product-bottom">
+                    <div class="product-price">
+                      <span class="price-now">$11.60</span>
+                    </div>
+                    <span class="product-qty">Min: 50 pcs</span>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
 
-        <!-- Product 2 -->
-        <div class="product-card">
-          <div class="product-image-wrapper">
-            <img src="https://media.psiproductfinder.de/images/60990/ap0276/618ce536c57eab39dbb6818704826266.jpg" alt="Plastic Desktop Storage Box">
-          </div>
-          <div class="product-info">
-            <span class="product-cat">Desk Accessories</span>
-            <h3 class="product-title">Plastic Desktop Storage Box</h3>
-            <div class="product-bottom">
-              <div class="product-price">
-                <span class="price-now">$3.04</span>
+            <!-- Product 2 -->
+            <div class="slider-item">
+              <div class="product-card">
+                <div class="product-image-wrapper">
+                  <a href="/products/plastic-desktop-storage-box" style="display: block; width: 100%; height: 100%;">
+                    <img src="https://media.psiproductfinder.de/images/60990/ap0276/618ce536c57eab39dbb6818704826266.jpg" alt="Plastic Desktop Storage Box">
+                  </a>
+                </div>
+                <div class="product-info">
+                  <h3 class="product-title" style="margin: 4px 0 8px 0;">
+                    <a href="/products/plastic-desktop-storage-box" style="color: var(--text-dark); text-decoration: none;">
+                      Plastic Desktop Storage Box
+                    </a>
+                  </h3>
+                  <div class="product-bottom">
+                    <div class="product-price">
+                      <span class="price-now">$3.04</span>
+                    </div>
+                    <span class="product-qty">Min: 100 pcs</span>
+                  </div>
+                </div>
               </div>
-              <span class="product-qty">Min: 100 pcs</span>
             </div>
-          </div>
-        </div>
 
-        <!-- Product 3 -->
-        <div class="product-card">
-          <div class="product-image-wrapper">
-            <img src="https://media.psiproductfinder.de/images/60990/ap0395/ea5f0651e48b9c61ffff2db83c8d8a16.jpg" alt="Wooden Grain Leather Glasses Case">
-          </div>
-          <div class="product-info">
-            <span class="product-cat">Desk Accessories</span>
-            <h3 class="product-title">Wooden Grain Leather Glasses Case</h3>
-            <div class="product-bottom">
-              <div class="product-price">
-                <span class="price-now">$4.03</span>
+            <!-- Product 3 -->
+            <div class="slider-item">
+              <div class="product-card">
+                <div class="product-image-wrapper">
+                  <a href="/products/wooden-grain-leather-glasses-case" style="display: block; width: 100%; height: 100%;">
+                    <img src="https://media.psiproductfinder.de/images/60990/ap0395/ea5f0651e48b9c61ffff2db83c8d8a16.jpg" alt="Wooden Grain Leather Glasses Case">
+                  </a>
+                </div>
+                <div class="product-info">
+                  <h3 class="product-title" style="margin: 4px 0 8px 0;">
+                    <a href="/products/wooden-grain-leather-glasses-case" style="color: var(--text-dark); text-decoration: none;">
+                      Wooden Grain Leather Glasses Case
+                    </a>
+                  </h3>
+                  <div class="product-bottom">
+                    <div class="product-price">
+                      <span class="price-now">$4.03</span>
+                    </div>
+                    <span class="product-qty">Min: 50 pcs</span>
+                  </div>
+                </div>
               </div>
-              <span class="product-qty">Min: 50 pcs</span>
             </div>
-          </div>
-        </div>
 
-        <!-- Product 4 -->
-        <div class="product-card">
-          <div class="product-image-wrapper">
-            <button class="product-quick-view">
-              <span class="material-symbols-outlined" style="font-size: 16px;">visibility</span>
-              <span>Quick View</span>
-            </button>
-          </div>
-          <div class="product-info">
-            <span class="product-cat">Apparel</span>
-            <h3 class="product-title">Unisex Midweight Cozy Fleece Pull-Over Custom Hoodie</h3>
-            <div class="product-bottom">
-              <div class="product-price">
-                <span class="price-now">$34.99</span>
-                <span class="price-old">$44.99</span>
+            <!-- Product 4 -->
+            <div class="slider-item">
+              <div class="product-card">
+                <div class="product-image-wrapper">
+                  <a href="/products/unisex-midweight-cozy-fleece-pull-over-custom-hoodie" style="display: block; width: 100%; height: 100%;">
+                    <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #f3f4f6; color: #9ca3af; font-weight: 500;">No Image</div>
+                  </a>
+                </div>
+                <div class="product-info">
+                  <h3 class="product-title" style="margin: 4px 0 8px 0;">
+                    <a href="/products/unisex-midweight-cozy-fleece-pull-over-custom-hoodie" style="color: var(--text-dark); text-decoration: none;">
+                      Unisex Midweight Cozy Fleece Pull-Over Custom Hoodie
+                    </a>
+                  </h3>
+                  <div class="product-bottom">
+                    <div class="product-price">
+                      <span class="price-now">$34.99</span>
+                      <span class="price-old">$44.99</span>
+                    </div>
+                    <span class="product-qty">Min: 24 pcs</span>
+                  </div>
+                </div>
               </div>
-              <span class="product-qty">Min: 24 pcs</span>
             </div>
-          </div>
-        </div>
 
-        <!-- Deal 3 -->
-        <div class="product-card">
-          <div class="product-image-wrapper">
-            <img src="<%= image_path('card_fidgets.png') %>" alt="Pop-It Ball">
-            <span class="product-badge" style="background-color: #ef4444;">Save 28%</span>
-            <button class="product-quick-view">
-              <span class="material-symbols-outlined" style="font-size: 16px;">visibility</span>
-              <span>Quick View</span>
-            </button>
-          </div>
-          <div class="product-info">
-            <span class="product-cat">Novelties</span>
-            <h3 class="product-title">Mini Color-Changing Rainbow Fidget Ball Keychains</h3>
-            <div class="product-bottom">
-              <div class="product-price">
-                <span class="price-now">$2.49</span>
-                <span class="price-old">$3.49</span>
+            <!-- Product 5 -->
+            <div class="slider-item">
+              <div class="product-card">
+                <div class="product-image-wrapper">
+                  <a href="/products/mini-color-changing-rainbow-fidget-ball-keychains" style="display: block; width: 100%; height: 100%;">
+                    <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #f3f4f6; color: #9ca3af; font-weight: 500;">No Image</div>
+                  </a>
+                  <span class="product-badge" style="background-color: #ef4444;">Save 28%</span>
+                </div>
+                <div class="product-info">
+                  <h3 class="product-title" style="margin: 4px 0 8px 0;">
+                    <a href="/products/mini-color-changing-rainbow-fidget-ball-keychains" style="color: var(--text-dark); text-decoration: none;">
+                      Mini Color-Changing Rainbow Fidget Ball Keychains
+                    </a>
+                  </h3>
+                  <div class="product-bottom">
+                    <div class="product-price">
+                      <span class="price-now">$2.49</span>
+                      <span class="price-old">$3.49</span>
+                    </div>
+                    <span class="product-qty">Min: 500 pcs</span>
+                  </div>
+                </div>
               </div>
-              <span class="product-qty">Min: 500 pcs</span>
             </div>
-          </div>
-        </div>
 
-        <!-- Deal 4 -->
-        <div class="product-card">
-          <div class="product-image-wrapper">
-            <img src="<%= image_path('card_gifts.png') %>" alt="Executive Gift Box">
-            <span class="product-badge" style="background-color: #ef4444;">Save 25%</span>
-            <button class="product-quick-view">
-              <span class="material-symbols-outlined" style="font-size: 16px;">visibility</span>
-              <span>Quick View</span>
-            </button>
-          </div>
-          <div class="product-info">
-            <span class="product-cat">Gifts</span>
-            <h3 class="product-title">Executive Leather Journal, Stylus Pen & Tumbler Gift Set</h3>
-            <div class="product-bottom">
-              <div class="product-price">
-                <span class="price-now">$59.99</span>
-                <span class="price-old">$79.99</span>
+            <!-- Product 6 -->
+            <div class="slider-item">
+              <div class="product-card">
+                <div class="product-image-wrapper">
+                  <a href="/products/executive-leather-journal-stylus-pen-tumbler-gift-set" style="display: block; width: 100%; height: 100%;">
+                    <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #f3f4f6; color: #9ca3af; font-weight: 500;">No Image</div>
+                  </a>
+                  <span class="product-badge" style="background-color: #ef4444;">Save 25%</span>
+                </div>
+                <div class="product-info">
+                  <h3 class="product-title" style="margin: 4px 0 8px 0;">
+                    <a href="/products/executive-leather-journal-stylus-pen-tumbler-gift-set" style="color: var(--text-dark); text-decoration: none;">
+                      Executive Leather Journal, Stylus Pen & Tumbler Gift Set
+                    </a>
+                  </h3>
+                  <div class="product-bottom">
+                    <div class="product-price">
+                      <span class="price-now">$59.99</span>
+                      <span class="price-old">$79.99</span>
+                    </div>
+                    <span class="product-qty">Min: 12 pcs</span>
+                  </div>
+                </div>
               </div>
-              <span class="product-qty">Min: 10 pcs</span>
             </div>
-          </div>
+          <% end %>
         </div>
-      <% end %>
+      </div>
+
+      <!-- Right Navigation Arrow -->
+      <button class="slider-nav-btn next-btn" onclick="slideProducts('next')" aria-label="Slide right">
+        <span class="material-symbols-outlined">chevron_right</span>
+      </button>
     </div>
+
+    <!-- Product Slider Control Script -->
+    <script>
+      (function() {
+        function initProductSlider() {
+          const track = document.getElementById("productSliderTrack");
+          if (!track) return;
+
+          // Reset slide position
+          if (window.innerWidth <= 768) {
+            track.style.transform = "none";
+          } else {
+            track.style.transform = "translateX(0px)";
+          }
+          track.dataset.currentIndex = "0";
+
+          window.adjustProductSlidePosition = function() {
+            const track = document.getElementById("productSliderTrack");
+            if (!track) return;
+            if (window.innerWidth <= 768) {
+              track.style.transform = "none";
+              return;
+            }
+            const items = track.querySelectorAll(".slider-item");
+            if (items.length === 0) return;
+
+            const gap = 24;
+            const itemWidth = items[0].getBoundingClientRect().width + gap;
+            const currentIndex = parseInt(track.dataset.currentIndex || "0");
+            const offset = -currentIndex * itemWidth;
+            track.style.transform = `translateX(${offset}px)`;
+          };
+
+          window.slideProducts = function(direction) {
+            if (window.innerWidth <= 768) return; // Disable horizontal slide on mobile
+            const track = document.getElementById("productSliderTrack");
+            if (!track) return;
+
+            const items = track.querySelectorAll(".slider-item");
+            if (items.length === 0) return;
+
+            const gap = 24;
+            const itemWidth = items[0].getBoundingClientRect().width + gap; // Width of card + gap
+            const containerWidth = track.parentElement.getBoundingClientRect().width;
+            
+            let currentIndex = parseInt(track.dataset.currentIndex || "0");
+            const visibleCount = Math.round(containerWidth / itemWidth);
+            const maxIndex = Math.max(0, items.length - visibleCount);
+
+            if (direction === "next") {
+              if (currentIndex < maxIndex) {
+                currentIndex++;
+              } else {
+                currentIndex = 0; // Wrap back to start
+              }
+            } else if (direction === "prev") {
+              if (currentIndex > 0) {
+                currentIndex--;
+              } else {
+                currentIndex = maxIndex; // Wrap to end
+              }
+            }
+
+            track.dataset.currentIndex = currentIndex.toString();
+            if (typeof window.adjustProductSlidePosition === "function") {
+              window.adjustProductSlidePosition();
+            }
+          };
+
+          // Touch Swipe Support for Products Slider
+          const productWrapper = document.querySelector(".product-slider-wrapper");
+          if (productWrapper && !productWrapper.dataset.swipeRegistered) {
+            let startX = 0;
+            let endX = 0;
+            
+            productWrapper.addEventListener("touchstart", function(e) {
+              startX = e.touches[0].clientX;
+              endX = e.touches[0].clientX; // Defensive initialization
+            }, { passive: true });
+            
+            productWrapper.addEventListener("touchmove", function(e) {
+              endX = e.touches[0].clientX;
+            }, { passive: true });
+            
+            productWrapper.addEventListener("touchend", function() {
+              if (window.innerWidth <= 768) return; // Disable swipe actions when stacked vertically on mobile
+              const threshold = 40;
+              const diff = startX - endX;
+              if (Math.abs(diff) > threshold) {
+                if (diff > 0) {
+                  // Swipe left -> slide to next products
+                  if (typeof window.slideProducts === "function") {
+                    window.slideProducts("next");
+                  }
+                } else {
+                  // Swipe right -> slide to prev products
+                  if (typeof window.slideProducts === "function") {
+                    window.slideProducts("prev");
+                  }
+                }
+              }
+              startX = 0;
+              endX = 0;
+            });
+            
+            productWrapper.dataset.swipeRegistered = "true";
+          }
+        }
+
+        // Register resize handler once globally
+        if (!window.productSliderResizeRegistered) {
+          window.addEventListener("resize", function() {
+            if (typeof window.adjustProductSlidePosition === "function") {
+              window.adjustProductSlidePosition();
+            }
+          });
+          window.productSliderResizeRegistered = true;
+        }
+
+        // Run on Turbo load
+        document.addEventListener("turbo:load", initProductSlider);
+        
+        // DOMContentLoaded fallback
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', initProductSlider);
+        } else {
+          initProductSlider();
+        }
+      })();
+    </script>
 
     <div class="section-footer">
       <a href="/products" class="btn-secondary">
@@ -365,19 +546,25 @@
 </section>
 
 <!-- 4. About Us Section -->
-<section class="section-padding about-section" id="about">
-  <div class="container-custom about-container">
-    <div class="about-content">
-      <h2>About Zevi Promotion</h2>
-      <p>Looking for the perfect promotional item or searching for fresh inspiration? Zevi Promotion is your ultimate one-stop destination for custom promotional products and corporate gifts, proudly serving clients worldwide.</p>
-      <p>Our process is simple, fast, and built around you. Zevi Promotion transforms your vision into impactful marketing solutions. Our design experts will prepare and format your artwork using industry-standard software such as Adobe Illustrator, CorelDRAW, and Photoshop, ensuring compatibility with all major production processes. We support popular file formats including AI, CDR, EPS, PDF, and PNG. We combine an extensive product inventory with premium branding and decoration techniques, all while prioritizing sustainable practices.</p>
-      <p style="font-weight: 700; color: var(--primary); font-family: var(--font-display); font-size: 16px;">Elevate your brand, make a lasting impression, and stand out from the competition with Zevi Promotion!</p>
+<% about_us_el = @page.elements.find_by(name: 'about_us') %>
+<% if about_us_el %>
+  <%= render "alchemy/elements/about_us", about_us: about_us_el %>
+<% else %>
+  <section class="section-padding about-section" id="about">
+    <div class="container-custom about-container">
+      <div class="about-content">
+        <h2>About Zevi Promotion</h2>
+        <p>Looking for the perfect promotional item or searching for fresh inspiration? Zevi Promotion is your ultimate one-stop destination for custom promotional products and corporate gifts, proudly serving clients worldwide.</p>
+        <p>Our process is simple, fast, and built around you. Zevi Promotion transforms your vision into impactful marketing solutions. Our design experts will prepare and format your artwork using industry-standard software such as Adobe Illustrator, CorelDRAW, and Photoshop, ensuring compatibility with all major production processes. We support popular file formats including AI, CDR, EPS, PDF, and PNG. We combine an extensive product inventory with premium branding and decoration techniques, all while prioritizing sustainable practices.</p>
+        <p style="font-weight: 700; color: var(--primary); font-family: var(--font-display); font-size: 16px;">Elevate your brand, make a lasting impression, and stand out from the competition with Zevi Promotion!</p>
+      </div>
+      <div class="about-image-wrapper">
+        <img src="<%= image_path('about_team.jpg') %>" alt="About Zevi Promotion Team">
+      </div>
     </div>
-    <div class="about-image-wrapper">
-      <img src="<%= image_path('about_team.jpg') %>" alt="About Zevi Promotion Team">
-    </div>
-  </div>
-</section>
+  </section>
+<% end %>
+
 
 <%# Interactive Alchemy Preview Mode Editor Panel %>
 <% if respond_to?(:alchemy_preview_mode?) && alchemy_preview_mode? %>

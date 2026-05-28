@@ -3,7 +3,6 @@
  * Built using Vanilla CSS for maximum flexibility and performance.
  */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
 :root {
   --primary: #0c3a6b;
@@ -406,31 +405,28 @@ img {
 .carousel-slides {
   width: 100%;
   height: 100%;
-  position: relative;
+  display: flex;
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .carousel-slide {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
+  position: relative;
+  flex: 0 0 100%;
+  width: 100% !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
   height: 100%;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.8s ease-in-out, visibility 0.8s ease-in-out;
   display: flex;
   align-items: center;
 }
 
 .carousel-slide.active {
-  opacity: 1;
-  visibility: visible;
   z-index: 1;
 }
 
 .carousel-slide img.slide-bg {
-  width: 100%;
-  height: 100%;
+  width: 100% !important;
+  height: 100% !important;
   object-fit: cover;
   position: absolute;
   top: 0;
@@ -548,24 +544,25 @@ img {
 .carousel-dots {
   position: absolute;
   bottom: 24px;
-  left: 60px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
-  gap: 10px;
+  gap: 8px;
   z-index: 5;
 }
 
 .carousel-dot {
-  width: 24px;
+  width: 6px;
   height: 6px;
-  border-radius: 3px;
-  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.4);
   cursor: pointer;
   transition: var(--transition);
 }
 
 .carousel-dot.active {
   background-color: var(--primary);
-  width: 36px;
+  transform: scale(1.2);
 }
 
 /* 4. Promo Cards Section (3 columns) */
@@ -712,7 +709,6 @@ img {
 }
 
 .product-card:hover {
-  transform: translateY(-4px);
   box-shadow: var(--shadow-md);
   border-color: var(--primary-light);
 }
@@ -728,11 +724,11 @@ img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease;
+  transition: opacity 0.3s ease;
 }
 
 .product-card:hover .product-image-wrapper img {
-  transform: scale(1.05);
+  transform: none;
 }
 
 .product-badge {
@@ -750,7 +746,7 @@ img {
 
 .product-quick-view {
   position: absolute;
-  bottom: -40px;
+  bottom: 0;
   left: 0;
   width: 100%;
   height: 40px;
@@ -762,15 +758,16 @@ img {
   font-weight: 700;
   font-size: 13px;
   cursor: pointer;
-  transition: var(--transition);
+  transition: opacity 0.25s ease-in-out;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
+  opacity: 0;
 }
 
 .product-card:hover .product-quick-view {
-  bottom: 0;
+  opacity: 1;
 }
 
 .product-quick-view:hover {
@@ -778,7 +775,7 @@ img {
 }
 
 .product-info {
-  padding: 16px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -789,7 +786,7 @@ img {
   font-weight: 600;
   color: var(--text-muted);
   text-transform: uppercase;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
 .product-title {
@@ -797,7 +794,7 @@ img {
   font-size: 15px;
   font-weight: 700;
   color: var(--text-dark);
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   line-height: 1.3;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -811,7 +808,7 @@ img {
   justify-content: space-between;
   align-items: center;
   margin-top: auto;
-  padding-top: 12px;
+  padding-top: 8px;
   border-top: 1px dashed var(--light-border);
 }
 
@@ -2290,77 +2287,39 @@ img {
 .stepper-indicator {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 20px;
-  padding: 0 10px;
-  box-sizing: border-box;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
 }
 
 .step-dot {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  position: relative;
-  z-index: 2;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
 }
 
-.step-dot .dot-number {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  border: 2px solid var(--light-border);
-  background-color: #ffffff;
+.step-dot.active {
+  color: var(--primary) !important;
+  font-weight: 700 !important;
+}
+
+.step-dot.completed {
+  color: var(--text-dark) !important;
+  font-weight: 600 !important;
+}
+
+.step-separator {
   color: var(--text-muted);
   font-size: 12px;
   font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-display);
-}
-
-.step-dot .dot-label {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--text-muted);
-  font-family: var(--font-body);
-  white-space: nowrap;
-}
-
-.step-dot.active .dot-number {
-  border-color: var(--primary);
-  background-color: var(--primary);
-  color: #ffffff;
-}
-
-.step-dot.active .dot-label {
-  color: var(--primary);
-  font-weight: 700;
-}
-
-.step-dot.completed .dot-number {
-  border-color: var(--primary);
-  background-color: var(--primary-light);
-  color: var(--primary);
-}
-
-.step-dot.completed .dot-label {
-  color: var(--text-dark);
-}
-
-.step-line {
-  flex: 1;
-  height: 2px;
-  background-color: var(--light-border);
-  margin: 0 8px;
-  margin-top: -16px; /* align center with the bubbles */
-  position: relative;
-  z-index: 1;
-}
-
-.step-line.active {
-  background-color: var(--primary-light);
+  user-select: none;
 }
 
 /* Stepper Form spacing and layout overrides (Compact fieldrow) */
@@ -3130,3 +3089,261 @@ img {
   position: sticky;
   top: 100px;
 }
+
+/* ==========================================================================
+   Dynamic Product Slider (Carousel) Styles
+   ========================================================================== */
+
+.product-slider-wrapper {
+  position: relative;
+  width: 100%;
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+}
+
+.product-slider-container {
+  width: 100%;
+  overflow: hidden;
+  padding: 12px 4px; /* vertical padding to prevent card shadow cutoffs */
+}
+
+.product-slider-track {
+  display: flex;
+  gap: 24px;
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  scroll-behavior: smooth;
+  width: 100%;
+}
+
+.slider-item {
+  flex: 0 0 calc(25% - 18px); /* 4 items per page on large viewports */
+  min-width: 250px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1024px) {
+  .slider-item {
+    flex: 0 0 calc(33.333% - 16px); /* 3 items per page */
+  }
+}
+
+@media (max-width: 768px) {
+  .slider-item {
+    flex: 0 0 calc(50% - 12px); /* 2 items per page */
+  }
+}
+
+@media (max-width: 480px) {
+  .slider-item {
+    flex: 0 0 100%; /* 1 item per page */
+  }
+}
+
+/* Premium Floating Arrow Buttons */
+.slider-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid var(--light-border);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.25s ease;
+  color: var(--text-dark);
+  outline: none;
+}
+
+.slider-nav-btn:hover {
+  background-color: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+  transform: translateY(-50%) scale(1.08);
+  box-shadow: 0 6px 16px rgba(12, 58, 107, 0.18);
+}
+
+.slider-nav-btn:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.slider-nav-btn.prev-btn {
+  left: -20px;
+}
+
+.slider-nav-btn.next-btn {
+  right: -20px;
+}
+
+@media (max-width: 1200px) {
+  .slider-nav-btn.prev-btn {
+    left: -10px;
+  }
+  .slider-nav-btn.next-btn {
+    right: -10px;
+  }
+}
+
+@media (max-width: 576px) {
+  .slider-nav-btn {
+    width: 38px;
+    height: 38px;
+  }
+  .slider-nav-btn.prev-btn {
+    left: -6px;
+  }
+  .slider-nav-btn.next-btn {
+    right: -6px;
+  }
+}
+
+/* Hide navigation arrows on mobile and tablet viewports */
+@media (max-width: 768px) {
+  .carousel-nav,
+  .slider-nav-btn {
+    display: none !important;
+  }
+}
+
+/* Tighten trending products section padding */
+.trending-products-section {
+  padding: 40px 0 !important;
+}
+
+/* Hide the homepage left sidebar categories on mobile/tablet viewports to prioritize full-width hero banners */
+@media (max-width: 1024px) {
+  .homepage-sidebar {
+    display: none !important;
+  }
+}
+
+/* Arrange homepage Trending Products vertically on mobile viewports */
+@media (max-width: 768px) {
+  .trending-products-section .product-slider-track {
+    flex-direction: column !important;
+    transform: none !important;
+    gap: 20px !important;
+  }
+  .trending-products-section .slider-item {
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+}
+
+/* Custom Zevi Theme overrides for Air Datepicker Calendar */
+.air-datepicker {
+  border: 1px solid var(--light-border) !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.08) !important;
+  font-family: var(--font-display), sans-serif !important;
+  background: #ffffff !important;
+  padding: 8px !important;
+  z-index: 9999 !important; /* Ensure it floats above stepper cards */
+}
+
+/* Nav Bar action arrows styling */
+.air-datepicker-nav--title,
+.air-datepicker-nav--title i {
+  font-family: var(--font-display), sans-serif !important;
+  font-weight: 700 !important;
+  color: var(--text-dark) !important;
+}
+
+.air-datepicker-nav--action svg path {
+  stroke: var(--text-dark) !important;
+  stroke-width: 2px !important;
+  fill: none !important;
+}
+
+.air-datepicker-nav--action:hover {
+  background: rgba(12, 58, 107, 0.08) !important;
+  border-radius: 4px !important;
+}
+
+/* Day Names grid styling */
+.air-datepicker-body--day-names {
+  margin: 8px 0 4px 0 !important;
+}
+
+.air-datepicker-body--day-name {
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  color: var(--text-muted) !important;
+  text-transform: uppercase;
+}
+
+/* Days cells layout & states styling */
+.air-datepicker-cell.-day- {
+  border-radius: 4px !important;
+  transition: all 0.15s ease !important;
+  font-weight: 500 !important;
+  font-size: 14px !important;
+}
+
+/* Today Day Cell style */
+.air-datepicker-cell.-day-.-current- {
+  color: var(--primary) !important;
+  font-weight: 700 !important;
+  border: 1px solid var(--primary) !important;
+}
+
+.air-datepicker-cell.-day-.-current-.-focus- {
+  background: rgba(12, 58, 107, 0.08) !important;
+}
+
+/* Day Hover state */
+.air-datepicker-cell.-day-.-focus- {
+  background: rgba(12, 58, 107, 0.08) !important;
+}
+
+/* Selected Date state style (Matching Cobalt blue) */
+.air-datepicker-cell.-day-.-selected-,
+.air-datepicker-cell.-month-.-selected-,
+.air-datepicker-cell.-year-.-selected- {
+  background: var(--primary) !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  border-color: var(--primary) !important;
+}
+
+.air-datepicker-cell.-day-.-selected-.-focus-,
+.air-datepicker-cell.-month-.-selected-.-focus-,
+.air-datepicker-cell.-year-.-selected-.-focus- {
+  background: var(--primary-hover) !important;
+}
+
+/* Compact Responsive Overrides for Mobile viewports (width <= 480px) */
+@media (max-width: 480px) {
+  .air-datepicker {
+    width: 260px !important;
+    padding: 6px !important;
+  }
+  .air-datepicker--content {
+    padding: 0 !important;
+  }
+  .air-datepicker-nav {
+    padding: 0 4px !important;
+    height: 32px !important;
+  }
+  .air-datepicker-nav--title {
+    font-size: 14px !important;
+  }
+  .air-datepicker-body--day-names {
+    margin: 4px 0 !important;
+  }
+  .air-datepicker-body--day-name {
+    font-size: 10px !important;
+  }
+  .air-datepicker-cell {
+    height: 32px !important;
+    font-size: 12px !important;
+  }
+}
+

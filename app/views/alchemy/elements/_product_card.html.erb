@@ -11,25 +11,10 @@
   %>
 
   <div class="product-image-wrapper">
-    <%
-      cat = product_card.value_for('category').to_s.downcase
-      default_img = if cat.include?('apparel')
-                      'slide_apparel.png'
-                    elsif cat.include?('fidget') || cat.include?('novelty')
-                      'card_fidgets.png'
-                    elsif cat.include?('gift')
-                      'card_gifts.png'
-                    else
-                      'card_drinkware.png'
-                    end
-    %>
     <a href="<%= product_link %>" class="product-image-link" style="display: block; width: 100%; height: 100%;">
-      <% if product_card.value_for('image').present? %>
-        <%= el.render :image, { size: "300x300" } %>
-      <% else %>
-        <img src="<%= image_path(default_img) %>" alt="Default product image" style="width: 100%; height: 100%; object-fit: cover;">
-      <% end %>
+      <%= el.render :image, { size: "300x300" } %>
     </a>
+
     
     <% if product_card.value_for('badge').present? %>
       <span class="product-badge"><%= el.render :badge %></span>
@@ -42,7 +27,9 @@
   </div>
   
   <div class="product-info">
-    <span class="product-cat"><%= el.render :category %></span>
+    <% unless local_assigns[:hide_category] %>
+      <span class="product-cat"><%= el.render :category %></span>
+    <% end %>
     <h3 class="product-title" style="margin: 6px 0;">
       <a href="<%= product_link %>" style="color: var(--text-dark); text-decoration: none; transition: color 0.2s ease;">
         <%= el.render :title %>

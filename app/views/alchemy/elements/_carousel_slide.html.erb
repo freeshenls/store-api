@@ -1,9 +1,5 @@
 <%= element_view_for(carousel_slide, class: "carousel-slide #{'active' if local_assigns[:active]}") do |el| %>
-  <% if carousel_slide.value_for('image').present? %>
-    <%= el.render :image, { size: "1200x600", class: "slide-bg" } %>
-  <% else %>
-    <img src="<%= image_path(local_assigns[:fallback_image] || 'slide_apparel.png') %>" class="slide-bg" alt="Default slide image">
-  <% end %>
+  <%= el.render :image, { size: "1200x600" }, { class: "slide-bg" } %>
   
   <div class="carousel-overlay">
     <div class="carousel-content">

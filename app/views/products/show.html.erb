@@ -19,18 +19,6 @@
   badge = @product.value_for('badge')
   min_qty = @product.value_for('min_qty')
   
-  # Resolve default fallback images based on category
-  cat_down = category.to_s.downcase
-  default_img = if cat_down.include?('apparel')
-                  'slide_apparel.png'
-                elsif cat_down.include?('fidget') || cat_down.include?('novelty')
-                  'card_fidgets.png'
-                elsif cat_down.include?('gift')
-                  'card_gifts.png'
-                else
-                  'card_drinkware.png'
-                end
-
   # Retrieve unified contact details from Alchemy Layout Pages (Global Pages)
   global_page = Alchemy::Page.layoutpages.find_by(page_layout: 'global_layout')
 
@@ -146,17 +134,7 @@
   p500 = base_num * 0.908
   p1000 = base_num * 0.828
 
-  # Resolve fallback alternate thumbnail image
-  secondary_img = case cat_down
-                  when /apparel/
-                    'slide_spirit.png'
-                  when /fidget|novelty/
-                    'card_gifts.png'
-                  when /gift/
-                    'card_drinkware.png'
-                  else
-                    'card_gifts.png'
-                  end
+
 
   # Dynamic parameters for Accordion Sections
   accordion_category = case cat_down
@@ -251,28 +229,16 @@
         <!-- Gallery Left Column -->
         <div class="col-lg-6">
           <div class="main-img">
-            <% if @product.value_for('image').present? %>
-              <%= el.render :image, { size: "600x600" }, { id: "mainImage" } %>
-            <% else %>
-              <img id="mainImage" src="<%= image_path(default_img) %>" alt="<%= title %>">
-            <% end %>
+            <%= el.render :image, { size: "600x600" }, { id: "mainImage" } %>
           </div>
           
           <div class="thumb-list" id="thumbList">
-            <%
-              large_img_url_1 = @product.essence_for('image')&.picture&.url(size: "600x600") rescue nil
-              large_img_url_2 = image_path(secondary_img)
-            %>
-            <div class="thumb active" onclick="changeImage(this)" data-large-src="<%= large_img_url_1 || image_path(default_img) %>">
-              <% if @product.value_for('image').present? %>
+            <% large_img_url_1 = @product.value_for('image')&.url(size: "600x600") rescue nil %>
+            <% if large_img_url_1 %>
+              <div class="thumb active" onclick="changeImage(this)" data-large-src="<%= large_img_url_1 %>">
                 <%= el.render :image, { size: "80x80" } %>
-              <% else %>
-                <img src="<%= image_path(default_img) %>" alt="<%= title %> Thumbnail 1">
-              <% end %>
-            </div>
-            <div class="thumb" onclick="changeImage(this)" data-large-src="<%= large_img_url_2 %>">
-              <img src="<%= image_path(secondary_img) %>" alt="<%= title %> Thumbnail 2">
-            </div>
+              </div>
+            <% end %>
           </div>
 
           <!-- Related Products Ribbon -->
@@ -292,26 +258,11 @@
                   related_title = related.value_for('title')
                   related_price = related.value_for('price')
                   
-                  related_cat = related.value_for('category').to_s.downcase
-                  related_default_img = if related_cat.include?('apparel')
-                                          'slide_apparel.png'
-                                        elsif related_cat.include?('fidget') || related_cat.include?('novelty')
-                                          'card_fidgets.png'
-                                        elsif related_cat.include?('gift')
-                                          'card_gifts.png'
-                                        else
-                                          'card_drinkware.png'
-                                        end
-                  
-                  related_img_url = related.essence_for('image')&.picture&.url(size: "300x300") rescue nil
+                  related_img_url = related.value_for('image')&.url(size: "300x300") rescue nil
                 %>
                 <div class="col-4">
                   <div class="related-card" onclick="location.href='<%= related_link %>'">
-                    <% if related_img_url.present? %>
-                      <img src="<%= related_img_url %>" alt="<%= related_title %>">
-                    <% else %>
-                      <img src="<%= image_path(related_default_img) %>" alt="<%= related_title %>">
-                    <% end %>
+                    <img src="<%= related_img_url %>" alt="<%= related_title %>">
                     <div class="related-name"><%= related_title %></div>
                     <div class="related-price"><%= related_price %></div>
                   </div>
@@ -373,26 +324,15 @@
 
                   <!-- 3-Step Stepper Request Form (Inline) -->
                   <div id="inline-stepper-container">
-                    <!-- Stepper Progress Dots -->
+                    <!-- Stepper Progress Breadcrumbs -->
                     <div class="stepper-indicator">
-                      <div class="step-dot active" data-step="1">
-                        <span class="dot-number">1</span>
-                        <span class="dot-label">Contact</span>
-                      </div>
-                      <div class="step-line"></div>
-                      <div class="step-dot" data-step="2">
-                        <span class="dot-number">2</span>
-                        <span class="dot-label">Details</span>
-                      </div>
-                      <div class="step-line"></div>
-                      <div class="step-dot" data-step="3">
-                        <span class="dot-number">3</span>
-                        <span class="dot-label">Artwork</span>
-                      </div>
+                      <span class="step-dot active" data-step="1">Contact</span>
+                      <span class="step-separator">&gt;</span>
+                      <span class="step-dot" data-step="2">Details & Artwork</span>
                     </div>
 
                     <!-- Main Stepper Form -->
-                    <form id="inline-quote-form" onsubmit="event.preventDefault(); alert('Thank you! Your quote request has been submitted successfully. Our team will contact you shortly.'); window.resetZeviStepper();">
+                    <form id="inline-quote-form" onsubmit="event.preventDefault(); alert('Thank you! Your inquiry has been submitted successfully. Our team will contact you shortly.'); window.resetZeviStepper();">
                       
                       <!-- STEP 1: Contact (Required Fields) -->
                       <div class="stepper-step active" data-step="1">
@@ -436,33 +376,6 @@
                           </div>
                         </div>
 
-                        <!-- Step 1 Nav -->
-                        <div class="stepper-nav">
-                          <div></div> <!-- Spacer -->
-                          <button type="button" class="btn-next" onclick="window.nextStepperStep(1)">
-                            <span>Next Step</span>
-                            <span class="material-symbols-outlined" style="font-size: 16px;">arrow_forward</span>
-                          </button>
-                        </div>
-                      </div>
-
-                      <!-- STEP 2: Details (Optional Fields) -->
-                      <div class="stepper-step" data-step="2">
-                        <!-- Country/Region -->
-                        <div class="fieldrow">
-                          <div class="_30">
-                            <label class="side">Country/Region</label>
-                          </div>
-                          <div>
-                            <select class="form-control" name="country">
-                              <option value="United States">United States</option>
-                              <option value="Canada">Canada</option>
-                              <option value="United Kingdom">United Kingdom</option>
-                              <option value="Australia">Australia</option>
-                            </select>
-                          </div>
-                        </div>
-
                         <!-- Phone Number -->
                         <div class="fieldrow">
                           <div class="_30">
@@ -478,6 +391,41 @@
                             <div style="position: relative; flex: 1; display: flex; box-sizing: border-box;">
                               <input type="text" id="phone-prefix" value="+1" readonly style="width: 42px; text-align: center; border: 1px solid var(--light-border); border-right: none; border-radius: var(--radius-sm) 0 0 var(--radius-sm); font-size: 13px; background-color: var(--light-bg); color: var(--text-muted); outline: none; height: 34px; box-sizing: border-box; font-family: var(--font-body);">
                               <input type="tel" class="form-control" name="phone" placeholder="Phone number" style="border-top-left-radius: 0 !important; border-bottom-left-radius: 0 !important; flex: 1; height: 34px !important;">
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- Country/Region -->
+                        <div class="fieldrow">
+                          <div class="_30">
+                            <label class="side">Country/Region</label>
+                          </div>
+                          <div>
+                            <input type="text" class="form-control" name="country" placeholder="Enter country/region...">
+                          </div>
+                        </div>
+
+                        <!-- Step 1 Nav -->
+                        <div class="stepper-nav">
+                          <div></div> <!-- Spacer -->
+                          <button type="button" class="btn-next" onclick="window.nextStepperStep(1)">
+                            <span>Next Step</span>
+                            <span class="material-symbols-outlined" style="font-size: 16px;">arrow_forward</span>
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- STEP 2: Details & Artwork (Optional Fields) -->
+                      <div class="stepper-step" data-step="2">
+                        <!-- Your Artwork -->
+                        <div class="fieldrow">
+                          <div class="_30">
+                            <label class="side">Your Artwork</label>
+                          </div>
+                          <div>
+                            <div style="display: flex; flex-direction: column; gap: 4px; width: 100%; box-sizing: border-box;">
+                              <input type="file" name="artwork" accept="image/*,.pdf,.ai,.eps,.cdr" style="padding: 4px 10px; border: 1px dashed var(--light-border); border-radius: var(--radius-sm); font-size: 13px; background-color: var(--light-bg); width: 100%; cursor: pointer; box-sizing: border-box;">
+                              <span style="font-size: 11px; color: var(--text-muted);">Supported: AI, CDR, EPS, PDF, PNG, JPG (Optional)</span>
                             </div>
                           </div>
                         </div>
@@ -507,36 +455,9 @@
                           <div class="_30">
                             <label class="side">Date Required</label>
                           </div>
-                          <div>
-                            <input type="date" class="form-control" name="date_required">
-                          </div>
-                        </div>
-
-                        <!-- Step 2 Nav -->
-                        <div class="stepper-nav">
-                          <button type="button" class="btn-back" onclick="window.prevStepperStep(2)">
-                            <span class="material-symbols-outlined" style="font-size: 16px;">arrow_back</span>
-                            <span>Back</span>
-                          </button>
-                          <button type="button" class="btn-next" onclick="window.nextStepperStep(2)">
-                            <span>Next Step</span>
-                            <span class="material-symbols-outlined" style="font-size: 16px;">arrow_forward</span>
-                          </button>
-                        </div>
-                      </div>
-
-                      <!-- STEP 3: Artwork & Comments (Optional) -->
-                      <div class="stepper-step" data-step="3">
-                        <!-- Your Artwork -->
-                        <div class="fieldrow">
-                          <div class="_30">
-                            <label class="side">Your Artwork</label>
-                          </div>
-                          <div>
-                            <div style="display: flex; flex-direction: column; gap: 4px; width: 100%; box-sizing: border-box;">
-                              <input type="file" name="artwork" accept="image/*,.pdf,.ai,.eps,.cdr" style="padding: 4px 10px; border: 1px dashed var(--light-border); border-radius: var(--radius-sm); font-size: 13px; background-color: var(--light-bg); width: 100%; cursor: pointer; box-sizing: border-box;">
-                              <span style="font-size: 11px; color: var(--text-muted);">Supported: AI, CDR, EPS, PDF, PNG, JPG (Optional)</span>
-                            </div>
+                          <div style="position: relative; flex-grow: 1;">
+                            <input type="text" class="form-control flatpickr" name="date_required" placeholder="Select date needed..." style="padding-right: 36px; background-color: #ffffff;" readonly>
+                            <span class="material-symbols-outlined" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; font-size: 18px;">calendar_month</span>
                           </div>
                         </div>
 
@@ -550,14 +471,14 @@
                           </div>
                         </div>
 
-                        <!-- Step 3 Nav -->
+                        <!-- Step 2 Nav -->
                         <div class="stepper-nav">
-                          <button type="button" class="btn-back" onclick="window.prevStepperStep(3)">
+                          <button type="button" class="btn-back" onclick="window.prevStepperStep(2)">
                             <span class="material-symbols-outlined" style="font-size: 16px;">arrow_back</span>
                             <span>Back</span>
                           </button>
                           <button type="submit" class="btn-submit">
-                            <span>Submit Quote</span>
+                            <span>Send Request Info</span>
                             <span class="material-symbols-outlined" style="font-size: 16px;">send</span>
                           </button>
                         </div>

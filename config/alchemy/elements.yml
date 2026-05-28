@@ -43,6 +43,7 @@
       default: "Premium embroidered apparel and printed sportswear designed to make your brand stand out."
     - role: image
       type: Picture
+      validate: [presence]
     - role: link
       type: Text
       default: "#"
@@ -55,6 +56,7 @@
       type: Text
     - role: image
       type: Picture
+      validate: [presence]
     - role: link
       type: Text
       default: "#"
@@ -80,6 +82,7 @@
       type: Text
     - role: image
       type: Picture
+      validate: [presence]
     - role: slug
       type: Text
 
@@ -109,4 +112,24 @@
     - role: banner_description
       type: Text
       default: "Our dedicated creative team is always willing to work directly with you to make sure your custom artwork looks absolutely amazing on whatever item you choose. Explore this page to learn more about file specifications and how our processes work!"
+
+- name: about_us
+  unique: true
+  ingredients:
+    - role: title
+      type: Text
+      default: "About Zevi Promotion"
+    - role: description_1
+      type: Text
+      default: "Looking for the perfect promotional item or searching for fresh inspiration? Zevi Promotion is your ultimate one-stop destination for custom promotional products and corporate gifts, proudly serving clients worldwide."
+    - role: description_2
+      type: Text
+      default: "Our process is simple, fast, and built around you. Zevi Promotion transforms your vision into impactful marketing solutions. Our design experts will prepare and format your artwork using industry-standard software such as Adobe Illustrator, CorelDRAW, and Photoshop, ensuring compatibility with all major production processes. We support popular file formats including AI, CDR, EPS, PDF, and PNG. We combine an extensive product inventory with premium branding and decoration techniques, all while prioritizing sustainable practices."
+    - role: description_3
+      type: Text
+      default: "Elevate your brand, make a lasting impression, and stand out from the competition with Zevi Promotion!"
+    - role: image
+      type: Picture
+      validate: [presence]
+
 

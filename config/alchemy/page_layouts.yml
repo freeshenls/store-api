@@ -10,8 +10,10 @@
     - carousel_slide
     - promo_card
     - product_card
+    - about_us
   autogenerate:
     - header_contact
+    - about_us
 
 - name: standard
   unique: false
