@@ -54,15 +54,5 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
-gem "foreman"
 gem "web-console"
-
-gem "alchemy_cms", "~> 8.2"
-
-gem "alchemy-devise", "~> 8.2"
-
-gem "aws-sdk-s3", "~> 1.224"
-
-gem "caxlsx"
-gem "roo"
-
+gem "foreman"

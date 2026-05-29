@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <%= render "alchemy/pages/meta_data" %>
+    <title><%= content_for(:title) || "Store Api" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="application-name" content="Store Api">
@@ -15,22 +15,17 @@
     <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
 
     <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
-
-    <%# Include locally hosted font definitions (Inter, Outfit, Material Symbols Outlined) %>
-    <%= stylesheet_link_tag "fonts", "data-turbo-track": "reload" %>
-
-    <%# Include locally hosted Air Datepicker CSS & JS %>
-    <%= stylesheet_link_tag "air-datepicker", "data-turbo-track": "reload" %>
-    <%= javascript_include_tag "air-datepicker", "data-turbo-track": "reload" %>
 
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
-    <%= stylesheet_link_tag "digital_monkey", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
   <body>
-    <%= yield %>
+    <main class="container mx-auto mt-28 px-5 flex">
+      <%= yield %>
+    </main>
   </body>
 </html>

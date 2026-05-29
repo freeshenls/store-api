@@ -1,11 +1,4 @@
 Rails.application.routes.draw do
-  get "/products" => "products#index"
-  get "/products/:slug" => "products#show", as: :product
-  get "/p/catalog" => "products#index"
-  get "/p/catalog/all" => "products#index"
-
-  mount Alchemy::Engine, at: '/'
-
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
