@@ -75,7 +75,13 @@ Rails.application.configure do
 
   # Configure asset host to serve compiled static assets from Cloudflare R2 if R2_PUBLIC_URL is defined
   if ENV["R2_PUBLIC_URL"].present?
-    config.action_controller.asset_host = ENV["R2_PUBLIC_URL"]
+    config.action_controller.asset_host = Proc.new do |source|
+      if source.to_s.include?("rails/active_storage")
+        nil
+      else
+        ENV["R2_PUBLIC_URL"]
+      end
+    end
   end
 end
 

@@ -22,7 +22,7 @@ puts "Found #{existing_elements.count} existing product cards. Deleting them..."
 existing_elements.destroy_all
 puts "Existing product cards cleared."
 
-# 3. HTML Parsing
+# 3. HTML Parsing of Search Page
 content_path = '/Users/promote/.gemini/antigravity/brain/2e81f3f9-81db-4b3f-885a-bacbb46aef11/.system_generated/steps/4188/content.md'
 unless File.exist?(content_path)
   puts "ERROR: Content file not found at: #{content_path}"
@@ -70,8 +70,9 @@ def set_ingredient(element, role, value, extra = {})
     ing.update!({ value: value }.merge(extra))
   else
     type = case role
-           when 'image' then 'Alchemy::Ingredients::Picture'
+           when /image/ then 'Alchemy::Ingredients::Picture'
            when 'section' then 'Alchemy::Ingredients::Select'
+           when 'product_detail', 'imprint', 'production_shipping', 'safety_compliance' then 'Alchemy::Ingredients::Richtext'
            else 'Alchemy::Ingredients::Text'
            end
     element.ingredients.create!({
@@ -92,9 +93,13 @@ product_containers.each_with_index do |container, idx|
   title_el = container.css('.prodName span[id$=_lblTVProdName]').first
   title = title_el ? title_el.text.strip : "Product #{idx + 1}"
   
-  # Image URL
+  # Main Image URL from search results (used as fallback)
   img_el = container.css('.prodImg img').first
-  image_url = img_el ? (img_el['data-original'] || img_el['src']) : nil
+  fallback_image_url = img_el ? (img_el['data-original'] || img_el['src']) : nil
+  
+  # Product ID
+  prod_id_el = container.css('input[id$=_productId]').first
+  product_id = prod_id_el ? prod_id_el['value'] : nil
   
   # CPN (SKU)
   cpn_el = container.css('.prodName.notranslate').first
@@ -111,51 +116,93 @@ product_containers.each_with_index do |container, idx|
   # Category
   category = determine_category(title)
   
-  # Price parsing & dynamic math for comparative prices and min qty
-  price_float = price_str[/\d+(\.\d+)?/].to_f
-  if price_float > 0
-    if price_float < 1.0
-      old_price = sprintf("$%.2f", price_float * 1.4)
-      min_qty = "Min: 1000 pcs"
-    elsif price_float < 5.0
-      old_price = sprintf("$%.2f", price_float * 1.3)
-      min_qty = "Min: 250 pcs"
-    elsif price_float < 10.0
-      old_price = sprintf("$%.2f", price_float * 1.25)
-      min_qty = "Min: 100 pcs"
-    else
-      old_price = sprintf("$%.2f", price_float * 1.2)
-      min_qty = "Min: 50 pcs"
+  # 5a. Fetch HD Multiple Image URLs from Detail Page & Parse JSON Pricing/Quantities
+  hd_image_urls = []
+  old_price = nil
+  min_qty = "Min: 100 pcs" # Fallback if not found
+
+  if product_id.present?
+    detail_url = "https://atozspecialties.espwebsite.com/ProductDetails/?productID=#{product_id}"
+    puts "Fetching product details from #{detail_url}..."
+    begin
+      # Defensive timeouts: read_timeout and open_timeout
+      detail_html = URI.open(detail_url, "User-Agent" => "Mozilla/5.0", read_timeout: 5, open_timeout: 5).read
+      
+      # Extract unique image IDs
+      image_ids = detail_html.scan(/images\/jpg(?:[otb]|eg)\/\d+\/(\d+)\./).flatten.uniq
+      puts "Found unique image IDs in details: #{image_ids.inspect}"
+      
+      # Reconstruct HD JPGO URLs
+      hd_image_urls = image_ids.map do |id|
+        folder = (id.to_i / 10000) * 10000
+        "https://media-asicdn.azureedge.net/images/jpgo/#{folder}/#{id}.jpg"
+      end
+
+      # Parse original minimum quantity from pricing grid
+      if detail_html =~ /var\s+Product\s*=\s*(\{.*?\});/m
+        json_str = $1
+        begin
+          product_data = JSON.parse(json_str)
+          prices = product_data["Prices"]
+          if prices && prices.any?
+            qtys = prices.map { |p| p["Quantity"]["From"].to_i }.uniq.sort
+            if qtys.any?
+              min_qty = "Min: #{qtys.first} pcs"
+            end
+            puts "Parsed real minimum quantity: '#{min_qty}'"
+          end
+        rescue => pe
+          puts "WARNING: Failed to parse Product JSON for min qty: #{pe.message}"
+        end
+      end
+    rescue => e
+      puts "WARNING: Failed to fetch detail page or extract images: #{e.message}"
     end
-  else
-    old_price = nil
-    min_qty = "Min: 100 pcs"
   end
 
-  puts "Title: '#{title}'"
-  puts "Category: '#{category}' | SKU: '#{cpn}' | Price: '#{price_str}' (Old: '#{old_price}') | Min Qty: '#{min_qty}' | Badge: '#{badge}'"
+  # Fallback to the main search results image if no images were extracted
+  if hd_image_urls.empty? && fallback_image_url.present?
+    puts "Using search results image as fallback..."
+    # Convert fallbacks to high-definition JPGO format if possible
+    hd_url = fallback_image_url.gsub('/jpgt/', '/jpgo/').gsub('/jpgb/', '/jpgo/')
+    hd_image_urls << hd_url
+  end
 
-  # Image download and R2 upload
-  picture = nil
-  if image_url.present?
-    puts "Downloading image from #{image_url}..."
+  # We limit to at most 5 HD images (roles: image, image_2, image_3, image_4, image_5)
+  hd_image_urls = hd_image_urls.first(5)
+  puts "Target HD URLs to upload (Cap at 5): #{hd_image_urls.inspect}"
+
+  # 5b. Download and upload all HD pictures (Optimized with Reuse)
+  uploaded_pictures = []
+
+  hd_image_urls.each_with_index do |image_url, img_idx|
+    picture_name = "#{title.parameterize}_#{img_idx + 1}"
+    existing_picture = Alchemy::Picture.find_by(name: picture_name)
+    
+    if existing_picture
+      puts "Image #{img_idx + 1} already uploaded! Reusing existing Picture ID: #{existing_picture.id}"
+      uploaded_pictures << existing_picture
+      next
+    end
+
+    puts "Processing Image #{img_idx + 1}/#{hd_image_urls.size}: #{image_url}"
     begin
       # Generate temp file path
       ext = File.extname(URI.parse(image_url).path)
       ext = ".jpg" if ext.blank?
-      temp_filename = "esp_import_#{idx + 1}#{ext}"
+      temp_filename = "esp_import_#{idx + 1}_#{img_idx + 1}#{ext}"
       temp_filepath = Rails.root.join("tmp", temp_filename)
       
-      # Download file stream to temp file
-      URI.open(image_url, "User-Agent" => "Mozilla/5.0") do |stream|
+      # Download file stream to temp file - Defensive timeouts to prevent hanging
+      URI.open(image_url, "User-Agent" => "Mozilla/5.0", read_timeout: 5, open_timeout: 5) do |stream|
         File.open(temp_filepath, "wb") do |f|
           f.write(stream.read)
         end
       end
       
       # Create Alchemy::Picture
-      puts "Uploading image to Cloudflare R2 via ActiveStorage..."
-      picture = Alchemy::Picture.new(name: title.parameterize)
+      puts "Uploading HD image to Cloudflare R2 via ActiveStorage..."
+      picture = Alchemy::Picture.new(name: picture_name)
       File.open(temp_filepath, "rb") do |file|
         picture.image_file.attach(
           io: file,
@@ -165,26 +212,23 @@ product_containers.each_with_index do |container, idx|
         
         # Save picture INSIDE the block while the file stream is open!
         if picture.save
-          puts "Image uploaded successfully! Picture ID: #{picture.id}"
+          puts "Image #{img_idx + 1} uploaded successfully! Picture ID: #{picture.id}"
+          uploaded_pictures << picture
         else
-          puts "ERROR saving picture: #{picture.errors.full_messages.join(', ')}"
-          picture = nil
+          puts "ERROR saving picture #{img_idx + 1}: #{picture.errors.full_messages.join(', ')}"
         end
       end
       
       # Clean up local temp file immediately to keep local storage pristine
       File.delete(temp_filepath) if File.exist?(temp_filepath)
-      puts "Local temporary file cleaned up."
     rescue => e
-      puts "ERROR downloading/uploading image: #{e.message}"
+      puts "ERROR downloading/uploading image #{img_idx + 1}: #{e.message}"
       # Clean up if it failed after file creation
       File.delete(temp_filepath) if File.exist?(temp_filepath) rescue nil
     end
-  else
-    puts "No image URL found for this product."
   end
 
-  # Create Element
+  # 5c. Create Element
   begin
     puts "Creating product_card element on page draft..."
     new_el = Alchemy::Element.create!(
@@ -204,8 +248,11 @@ product_containers.each_with_index do |container, idx|
     set_ingredient(new_el, 'category', category)
     set_ingredient(new_el, 'section', 'New Products')
     
-    if picture
-      set_ingredient(new_el, 'image', nil, related_object_id: picture.id, related_object_type: 'Alchemy::Picture')
+    # Map uploaded pictures to ingredients: image, image_2, image_3, image_4, image_5
+    uploaded_pictures.each_with_index do |picture, pic_idx|
+      role_name = pic_idx == 0 ? 'image' : "image_#{pic_idx + 1}"
+      set_ingredient(new_el, role_name, nil, related_object_id: picture.id, related_object_type: 'Alchemy::Picture')
+      puts "Associated Picture ID #{picture.id} with ingredient role: #{role_name}"
     end
     
     puts "Product imported successfully!"
@@ -223,7 +270,7 @@ if imported_count > 0
     puts "Publishing page ID #{page.id}..."
     Alchemy::PublishPageJob.perform_now(page.id, public_on: Time.current)
     puts "Products page published successfully!"
-    puts "Successfully imported #{imported_count} products!"
+    puts "Successfully imported #{imported_count} products with multiple HD images!"
   rescue => e
     puts "ERROR publishing page: #{e.message}"
   end

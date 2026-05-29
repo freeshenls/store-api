@@ -57,7 +57,26 @@ Dir.glob(assets_dir.join("**/*")).each do |file_path|
   else
     'application/octet-stream'
   end
-  
+  # Check if the file already exists in Cloudflare R2 bucket to prevent redundant uploading
+  file_exists = false
+  begin
+    s3.head_object(bucket: bucket_name, key: key)
+    file_exists = true
+  rescue Aws::S3::Errors::NotFound, Aws::S3::Errors::NoSuchKey
+    # File is not present in R2, we need to upload
+  rescue => e
+    if e.class.name.include?("NotFound") || e.class.name.include?("NoSuchKey") || (e.respond_to?(:context) && e.context.response.status_code == 404)
+      # Not found (alternate exception form)
+    else
+      puts "WARNING: Error checking existence of #{key}: #{e.message}"
+    end
+  end
+
+  if file_exists
+    puts "Skipping #{relative_path} (Already exists in R2)"
+    next
+  end
+
   puts "Uploading #{relative_path} -> #{key} (Type: #{content_type})..."
   File.open(file_path, 'rb') do |file|
     s3.put_object(

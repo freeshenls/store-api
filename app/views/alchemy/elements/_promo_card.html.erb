@@ -5,7 +5,7 @@
   <div class="promo-card-content">
     <h4><%= el.render :subtitle %></h4>
     <h2><%= el.render :title %></h2>
-    <a href="<%= promo_card.value_for('link') || '#' %>" class="textBtn">
+    <a href="<%= promo_card.value_for('link').presence && promo_card.value_for('link') != '#' ? promo_card.value_for('link') : '/products' %>" class="textBtn">
       <span>Shop Now</span>
       <span class="material-symbols-outlined" style="font-size: 14px;">arrow_forward</span>
     </a>

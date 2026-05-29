@@ -83,6 +83,22 @@
     - role: image
       type: Picture
       validate: [presence]
+    - role: image_2
+      type: Picture
+    - role: image_3
+      type: Picture
+    - role: image_4
+      type: Picture
+    - role: image_5
+      type: Picture
+    - role: product_detail
+      type: Richtext
+    - role: imprint
+      type: Richtext
+    - role: production_shipping
+      type: Richtext
+    - role: safety_compliance
+      type: Richtext
     - role: slug
       type: Text
 

@@ -6,7 +6,7 @@
       <h3><%= el.render :subtitle %></h3>
       <h1><%= el.render :title %></h1>
       <p><%= el.render :description %></p>
-      <a href="<%= carousel_slide.value_for('link') || '#' %>" class="btn-primary">
+      <a href="<%= carousel_slide.value_for('link').presence && carousel_slide.value_for('link') != '#' ? carousel_slide.value_for('link') : '/products' %>" class="btn-primary">
         <span>Shop Now</span>
         <span class="material-symbols-outlined">arrow_forward</span>
       </a>

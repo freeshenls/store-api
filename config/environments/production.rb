@@ -20,7 +20,13 @@ Rails.application.configure do
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   if ENV["R2_PUBLIC_URL"].present?
-    config.asset_host = ENV["R2_PUBLIC_URL"]
+    config.asset_host = Proc.new do |source|
+      if source.to_s.include?("rails/active_storage")
+        nil
+      else
+        ENV["R2_PUBLIC_URL"]
+      end
+    end
   end
 
 

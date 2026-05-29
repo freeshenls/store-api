@@ -1,8 +1,14 @@
 <%
   products_page = Alchemy::Page.find_by(page_layout: 'products') || Alchemy::Page.find_by(id: 2)
   if products_page
-    all_products = products_page.elements.where(name: 'product_card')
-    categories = all_products.map { |p| p.value_for('category').to_s.strip }.uniq.reject(&:empty?)
+    all_products = products_page.elements.where(name: 'product_card').to_a
+    category_counts = Hash.new(0)
+    all_products.each do |p|
+      cat = p.value_for('category').to_s.strip
+      category_counts[cat] += 1 unless cat.empty?
+    end
+    # Sort categories by frequency descending, and limit to the top 8
+    categories = category_counts.sort_by { |_, count| -count }.map { |cat, _| cat }.first(8)
   else
     categories = []
   end
@@ -16,7 +22,7 @@
     "Gifts",
     "Bags & Totes",
     "Technology"
-  ] if categories.empty?
+  ].first(8) if categories.empty?
 
   # Retrieve unified contact details from Alchemy Layout Pages (Global Pages)
   global_page = Alchemy::Page.layoutpages.find_by(page_layout: 'global_layout')
