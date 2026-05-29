@@ -1,0 +1,631 @@
+<%
+  # Set up category fallbacks in case the database is in an empty state
+  categories = @categories.any? ? @categories : [
+    "Apparel",
+    "Desk Accessories",
+    "Drinkware",
+    "Fidgets",
+    "Novelties",
+    "Gifts",
+    "Bags & Totes",
+    "Technology",
+    "Wristbands"
+  ]
+
+  # Resolve product info from native database model
+  title = @product.title
+  category = @product.category
+  price = @product.price
+  old_price = @product.old_price
+  badge = @product.badge
+  min_qty = @product.min_qty
+  
+  phone_number = "(714) 857-0010"
+  email_address = "info@zevipromotions.com"
+%>
+
+<%= render "shared/top_contact_bar" %>
+<%= render "shared/main_header" %>
+
+<%
+  cat_down = category.to_s.downcase
+
+  # Generate a dynamic SKU matching the style of "CPU-XXX" based on the CPN code
+  style_number = @product.cpn.to_s.start_with?('CPN-') ? @product.cpn.to_s.gsub('CPN-', 'CPU-') : "CPU-#{@product.cpn}"
+
+  # Dynamic specifications mapper based on category
+  product_specs = case cat_down
+                  when /apparel/
+                    {
+                      "Material" => "100% Ring-Spun Combed Cotton Pique",
+                      "Colors" => "Black, Navy, Royal Blue, Heather Gray, Red, White",
+                      "Size" => "S, M, L, XL, 2XL, 3XL (Unisex Fit)",
+                      "Made In" => "Honduras / Vietnam",
+                      "Set Up Charge" => "£35.00 per color/location (Screen Print or Embroidery)",
+                      "Production Time" => "7-10 Business Days"
+                    }
+                  when /drinkware/
+                    {
+                      "Material" => "Double-Wall 18/8 Food-Grade Stainless Steel",
+                      "Colors" => "Matte Black, Ocean Blue, Alpine White, Copper, Sage Green",
+                      "Size" => "20 oz (590 ml) / 180 x 85 mm",
+                      "Made In" => "Taiwan / China",
+                      "Set Up Charge" => "£40.00 for Laser Engraving or 1-Color Print",
+                      "Production Time" => "5-8 Business Days"
+                    }
+                  when /fidget|novelty/
+                    {
+                      "Material" => "Non-Toxic High-Grade Silicone & Eco-ABS",
+                      "Colors" => "Rainbow Swirl, Blue-Green, Coral-Yellow, Pastel Purple",
+                      "Size" => "70 x 70 x 70 mm",
+                      "Made In" => "Guangdong, China",
+                      "Set Up Charge" => "£30.00 Pad Printed (1 Color 1 Location)",
+                      "Production Time" => "8-12 Business Days"
+                    }
+                  when /gift|desk/
+                    {
+                      "Material" => "Vegan Thermo PU Leather, Brass, & Tempered Steel",
+                      "Colors" => "Cognac Brown, Midnight Black, Slate Gray, Emerald Green",
+                      "Size" => "240 x 200 x 50 mm Gift Box Presentation",
+                      "Made In" => "Guangzhou, China",
+                      "Set Up Charge" => "£45.00 (Foil Debossing / Precision Laser Engraving)",
+                      "Production Time" => "10-14 Business Days"
+                    }
+                  when /bag/
+                    {
+                      "Material" => "600D High-Density Oxford Cloth with Nylon Lining",
+                      "Colors" => "Black, Gray, Green, Pink",
+                      "Size" => "220 x 140 x 200 mm",
+                      "Made In" => "CC-CN",
+                      "Set Up Charge" => "£35 1 Color 1 Location",
+                      "Production Time" => "12-17 days"
+                    }
+                  else
+                    {
+                      "Material" => "Oxford Cloth",
+                      "Colors" => "Black, Gray, Green, Pink",
+                      "Size" => "220 x 140 x 200 mm",
+                      "Made In" => "CC-CN",
+                      "Set Up Charge" => "£35 1 Color 1 Location",
+                      "Production Time" => "12-17 days"
+                    }
+                  end
+
+  # Premium sales copywriting descriptions based on product title
+  product_desc_text = case title.to_s.downcase
+                      when /stroller|hanging/
+                        "The bag is made of Oxford cloth materials with an adjustable shoulder strap, which has 2 ways to carry(as a backpack or hanging). It can securely hold bottles and cups and has a zippered tissue pocket, while providing easy access to your phones or privacy items. This bag may serve as storage for diapers, food, small items, phones, keys and more."
+                      when /box/
+                        "Organize your workspace in style with this modern desktop storage box. Made from durable, premium impact-resistant plastic, it features multiple storage compartments of various sizes to keep pens, sticky notes, paperclips, and calculators neatly sorted. Its minimal silhouette and clean lines make it a perfect addition to any modern study or corporate office desk."
+                      when /glasses|leather/
+                        "Protect your eyewear with this exquisite leather glasses case. Styled with a gorgeous natural wood grain texture finish and crafted from premium reinforced vegan leather, it provides exceptional crush-proof protection. Inside, a plush microfiber lining prevents scratching, and the secure magnetic closure ensures your sunglasses or reading glasses remain safe on the go."
+                      when /hoodie|fleece/
+                        "Stay warm and brand-forward with our premium fleece pull-over hoodie. Crafted from an exceptionally soft cotton-poly blend with a cozy midweight brushed interior, it offers a relaxed, modern silhouette. Perfect for corporate swag or casual everyday wear, featuring double-needle stitching, a spacious kangaroo pocket, and a lined hood with drawstrings."
+                      when /fidget/
+                        "Bring instant stress relief and playful colors to your day. This premium sensory fidget ball keychain changes color dynamically under pressure. Made of ultra-durable, food-grade non-toxic silicone, it stands up to endless squeezing and squishing. Attached to a robust metal keychain, it is perfect for backpack zippers, keyrings, or desks."
+                      when /gift|journal/
+                        "Impress your clients and team members with this luxury corporate gift trio. Features our top-rated executive leather journal with 160 pages of lined cream paper, a precision stylus rollerball pen, and a 20 oz double-wall insulated tumbler. All beautifully presented in a matte-finished magnetic-closure presentation gift box ready for gifting."
+                      else
+                        "Enhance your brand visibility with this premium custom promotional product. Meticulously designed for everyday utility, it offers high durability and is fully customizable with your company logo. The perfect giveaway for corporate events, tradeshows, client appreciation gifts, and team promotional swag packages."
+                      end
+
+  # Parse base price for tiered wholesale calculations
+  base_price_str = price.to_s.strip
+  currency_sym = base_price_str[/[^\d.]+/] || "£"
+  base_num = base_price_str[/\d+(\.\d+)?/].to_f
+  base_num = 14.00 if base_num <= 0
+
+  # Tier wholesale calculations (50, 100, 250, 500, 1000)
+  p50 = base_num
+  p100 = base_num * 0.966
+  p250 = base_num * 0.932
+  p500 = base_num * 0.908
+  p1000 = base_num * 0.828
+
+  # Dynamic parameters for Accordion Sections
+  accordion_category = case cat_down
+                       when /apparel/ then "APPAREL & FASHION; CORPORATE UNIFORMS"
+                       when /drinkware/ then "DRINKWARE & BARWARE; INSULATED TUMBLERS"
+                       when /fidget|novelty/ then "NOVELTIES & SENSORY TOYS; KEYCHAINS"
+                       when /gift|desk/ then "DESK ACCESSORIES; CORPORATE GIFTS"
+                       when /bag/ then "BAGS & TOTES; TRAVEL ACCESSORIES"
+                       else "PROMOTIONAL PRODUCTS & GIVEAWAYS"
+                       end
+
+  accordion_colors = product_specs["Colors"] || "Black, Blue, White, Red"
+  accordion_material = product_specs["Material"] || "Premium Quality Materials"
+  accordion_size = product_specs["Size"] || "Standard Size"
+  
+  accordion_weight = case cat_down
+                     when /apparel/ then "0.22 kg"
+                     when /drinkware/ then "0.34 kg"
+                     when /fidget|novelty/ then "0.05 kg"
+                     when /gift|desk/ then "0.85 kg"
+                     when /bag/ then "0.15 kg"
+                     else "0.12 kg"
+                     end
+
+  accordion_ship_dims = case cat_down
+                        when /apparel/ then "24\" x 18\" x 14\""
+                        when /drinkware/ then "22\" x 16\" x 12\""
+                        when /fidget|novelty/ then "20\" x 15\" x 10\""
+                        when /gift|desk/ then "18\" x 14\" x 12\""
+                        when /bag/ then "23\" x 17\" x 15\""
+                        else "22\" x 16\" x 14\""
+                        end
+
+  accordion_ship_est = case cat_down
+                       when /apparel/ then "72 per Carton"
+                       when /drinkware/ then "36 per Carton"
+                       when /fidget|novelty/ then "200 per Carton"
+                       when /gift|desk/ then "24 per Carton"
+                       when /bag/ then "120 per Carton"
+                       else "100 per Carton"
+                       end
+
+  accordion_imprint_method = case cat_down
+                             when /apparel/ then "Screen Print, Embroidery"
+                             when /drinkware/ then "Laser Engraving, Silkscreen"
+                             when /fidget|novelty/ then "Pad Print, Silkscreen"
+                             when /gift|desk/ then "Foil Debossing, Laser Engraving"
+                             when /bag/ then "Screen Print, Heat Transfer"
+                             else "Silkscreen, Unimprinted"
+                             end
+
+  accordion_imprint_size = case cat_down
+                           when /apparel/ then "4.00\" x 4.00\""
+                           when /drinkware/ then "3.00\" x 3.00\""
+                           when /fidget|novelty/ then "1.18\" x 0.59\""
+                           when /gift|desk/ then "2.50\" x 2.00\""
+                           when /bag/ then "5.00\" x 5.00\""
+                           else "3.00\" x 2.00\""
+                           end
+
+  accordion_prod_time = product_specs["Production Time"] || "7 Business Days"
+  accordion_packaging = case cat_down
+                        when /gift|desk/ then "Gift Box Presentation"
+                        else "Individual Poly Bag"
+                        end
+
+  accordion_safety = case cat_down
+                     when /fidget|novelty/ then "Choking Hazard - Small Parts. Not for children under 3 years."
+                     else "No safety warnings for this product"
+                     end
+
+  images = @product.images.to_a
+  main_image = images.first
+%>
+
+<!-- Breadcrumb wrapper -->
+<div class="breadcrumb-wrap">
+  <div class="container-custom">
+    <div style="margin-bottom: 24px; font-size: 14px; font-weight: 500; color: var(--text-muted);">
+      <a href="/" style="color: var(--text-muted); text-decoration: none; hover: color: var(--primary);">Home</a>
+      <span style="margin: 0 8px;">/</span>
+      <a href="/products" style="color: var(--text-muted); text-decoration: none;">Catalog</a>
+      <span style="margin: 0 8px;">/</span>
+      <a href="/products?category=<%= u(category) %>" style="color: var(--text-muted); text-decoration: none;"><%= category %></a>
+      <span style="margin: 0 8px;">/</span>
+      <span id="breadcrumbName" style="color: var(--text-dark); font-weight: 600;"><%= title %></span>
+    </div>
+  </div>
+</div>
+
+<section class="product-section">
+  <div class="container-custom">
+    <div class="row">
+      <!-- Gallery Left Column -->
+      <div class="col-lg-6">
+        <div class="main-img">
+          <% if main_image %>
+            <img id="mainImage" src="<%= url_for(main_image) %>" alt="<%= title %>">
+          <% else %>
+            <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #f3f4f6; color: #9ca3af; font-weight: 500;">No Image</div>
+          <% end %>
+        </div>
+        <div class="thumb-list" id="thumbList">
+          <% images.each_with_index do |img, index| %>
+            <div class="thumb <%= 'active' if index == 0 %>" onclick="changeImage(this)" data-large-src="<%= url_for(img) %>">
+              <img src="<%= url_for(img) %>" alt="Thumbnail <%= index + 1 %>">
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Related Products Ribbon -->
+        <div class="related-products" style="margin-top:40px;">
+          <h6 style="color:#666;margin-bottom:10px;">Related Products</h6>
+          <div class="row g-2" id="relatedProducts">
+            <% @related_products[0..2].each do |related| %>
+              <%
+                related_link = "/products/#{related.slug}"
+                related_title = related.title
+                related_price = related.price
+                related_img = related.images.first
+                related_img_url = related_img ? url_for(related_img) : nil
+              %>
+              <div class="col-4">
+                <div class="related-card" onclick="location.href='<%= related_link %>'">
+                  <% if related_img_url %>
+                    <img src="<%= related_img_url %>" alt="<%= related_title %>">
+                  <% else %>
+                    <div style="width: 100%; height: 100px; display: flex; align-items: center; justify-content: center; background: #f1f5f9; color: #94a3b8; font-size: 11px;">No Image</div>
+                  <% end %>
+                  <div class="related-name" style="color: var(--primary); font-weight: 600; margin-bottom: 4px;"><%= related_title %></div>
+                  <div class="related-meta-details" style="font-size: 11px; color: var(--text-muted); line-height: 1.4; font-family: var(--font-body); margin-top: auto; padding-top: 4px; text-align: center;">
+                    <div style="color: var(--text-dark); font-weight: 500;">
+                      <%= related.min_qty %> @ <%= related_price %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Info Right Column -->
+      <div class="col-lg-6">
+        <span class="product-cat" id="productCategory"><%= category %></span>
+        <h1 class="product-title" id="productName"><%= title %></h1>
+        <div class="product-sku">SKU: <span id="productSku"><%= style_number %></span></div>
+        
+        <p class="product-desc" id="productDesc"><%= product_desc_text %></p>
+        
+        <!-- Pricing & Specifications Accordion Stack (Right Column) -->
+        <div class="product-accordion" style="margin-bottom: 24px;">
+          <!-- 1. Pricing Accordion (Static - Never Collapses) -->
+          <div class="attributesContainerStatic" style="margin-bottom: 12px;">
+            <div class="btnSection">
+              <span class="sectionHeader">Pricing</span>
+            </div>
+            <div class="contentContainer">
+              <div class="price-box">
+                <table class="price-table">
+                  <thead>
+                    <tr>
+                      <th>50</th>
+                      <th>100</th>
+                      <th>250</th>
+                      <th>500</th>
+                      <th>1000</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><%= currency_sym %><span id="price1"><%= sprintf("%.2f", p50) %></span></td>
+                      <td><%= currency_sym %><span id="price2"><%= sprintf("%.2f", p100) %></span></td>
+                      <td><%= currency_sym %><span id="price3"><%= sprintf("%.2f", p250) %></span></td>
+                      <td><%= currency_sym %><span id="price4"><%= sprintf("%.2f", p500) %></span></td>
+                      <td><%= currency_sym %><span id="price5"><%= sprintf("%.2f", p1000) %></span></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; flex-wrap: wrap; gap: 12px;">
+                  <div style="font-size: 12.5px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; font-family: var(--font-body); font-weight: 500;">
+                    <span class="material-symbols-outlined" style="font-size: 16px; color: var(--primary);">info</span>
+                    <span>Price Includes: 1 side 1 color 1 location</span>
+                  </div>
+                  <div>
+                    <button type="button" id="pricing-request-btn" class="btn-quote" style="height: 34px; padding: 0 16px; font-size: 13px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; border-radius: var(--radius-sm); border: none; background-color: var(--primary); color: #ffffff; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: var(--transition); width: auto;">
+                      <span>Request Info</span>
+                      <span class="material-symbols-outlined" style="font-size: 16px;">expand_more</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- 3-Step Stepper Request Form (Inline) -->
+                <div id="inline-stepper-container">
+                  <!-- Stepper Progress Breadcrumbs -->
+                  <div class="stepper-indicator">
+                    <span class="step-dot active" data-step="1">Contact</span>
+                    <span class="step-separator">&gt;</span>
+                    <span class="step-dot" data-step="2">Details & Artwork</span>
+                  </div>
+
+                  <!-- Main Stepper Form -->
+                  <form id="inline-quote-form" onsubmit="event.preventDefault(); window.submitZeviStepper(this);">
+                    <input type="hidden" name="product_id" value="<%= @product.id %>">
+                    <!-- STEP 1: Contact (Required Fields) -->
+                    <div class="stepper-step active" data-step="1">
+                      <!-- First Name -->
+                      <div class="fieldrow">
+                        <div class="_30">
+                          <label class="required side">First name</label>
+                        </div>
+                        <div>
+                          <input type="text" required class="form-control" name="first_name" oninvalid="this.setCustomValidity('Please fill out this field')" oninput="this.setCustomValidity('')">
+                        </div>
+                      </div>
+
+                      <!-- Last Name -->
+                      <div class="fieldrow">
+                        <div class="_30">
+                          <label class="required side">Last name</label>
+                        </div>
+                        <div>
+                          <input type="text" required class="form-control" name="last_name" oninvalid="this.setCustomValidity('Please fill out this field')" oninput="this.setCustomValidity('')">
+                        </div>
+                      </div>
+
+                      <!-- Company Name -->
+                      <div class="fieldrow">
+                        <div class="_30">
+                          <label class="required side">Company name</label>
+                        </div>
+                        <div>
+                          <input type="text" required class="form-control" name="company_name" oninvalid="this.setCustomValidity('Please fill out this field')" oninput="this.setCustomValidity('')">
+                        </div>
+                      </div>
+
+                      <!-- Email Address -->
+                      <div class="fieldrow">
+                        <div class="_30">
+                          <label class="required side">Email</label>
+                        </div>
+                        <div>
+                          <input type="email" required class="form-control" name="email" oninvalid="this.setCustomValidity('Please enter a valid email address')" oninput="this.setCustomValidity('')">
+                        </div>
+                      </div>
+
+                      <!-- Phone Number -->
+                      <div class="fieldrow">
+                        <div class="_30">
+                          <label class="side">Phone number</label>
+                        </div>
+                        <div style="display: flex; gap: 8px; width: 100%; box-sizing: border-box;">
+                          <select class="form-control" name="phone_country" style="flex: 0 0 42%; max-width: 140px;" onchange="document.getElementById('phone-prefix').value = this.value === 'Canada' ? '+1' : (this.value === 'United Kingdom' ? '+44' : (this.value === 'Australia' ? '+61' : '+1'))">
+                            <option value="United States">United States</option>
+                            <option value="Canada">Canada</option>
+                            <option value="United Kingdom">United Kingdom</option>
+                            <option value="Australia">Australia</option>
+                          </select>
+                          <div style="position: relative; flex: 1; display: flex; box-sizing: border-box;">
+                            <input type="text" id="phone-prefix" value="+1" readonly style="width: 42px; text-align: center; border: 1px solid var(--light-border); border-right: none; border-radius: var(--radius-sm) 0 0 var(--radius-sm); font-size: 13px; background-color: var(--light-bg); color: var(--text-muted); outline: none; height: 34px; box-sizing: border-box; font-family: var(--font-body);">
+                            <input type="tel" class="form-control" name="phone" placeholder="Phone number" style="border-top-left-radius: 0 !important; border-bottom-left-radius: 0 !important; flex: 1; height: 34px !important;">
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Country/Region -->
+                      <div class="fieldrow">
+                        <div class="_30">
+                          <label class="side">Country/Region</label>
+                        </div>
+                        <div>
+                          <input type="text" class="form-control" name="country" placeholder="Enter country/region...">
+                        </div>
+                      </div>
+
+                      <!-- Step 1 Nav -->
+                      <div class="stepper-nav">
+                        <div></div> <!-- Spacer -->
+                        <button type="button" class="btn-next" onclick="window.nextStepperStep(1)">
+                          <span>Next Step</span>
+                          <span class="material-symbols-outlined" style="font-size: 16px;">arrow_forward</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    <!-- STEP 2: Details & Artwork (Optional Fields) -->
+                    <div class="stepper-step" data-step="2">
+                      <!-- Your Artwork -->
+                      <div class="fieldrow">
+                        <div class="_30">
+                          <label class="side">Your Artwork</label>
+                        </div>
+                        <div>
+                          <div style="display: flex; flex-direction: column; gap: 4px; width: 100%; box-sizing: border-box;">
+                            <input type="file" name="artwork" accept="image/*,.pdf,.ai,.eps,.cdr" style="padding: 4px 10px; border: 1px dashed var(--light-border); border-radius: var(--radius-sm); font-size: 13px; background-color: var(--light-bg); width: 100%; cursor: pointer; box-sizing: border-box;">
+                            <span style="font-size: 11px; color: var(--text-muted);">Supported: AI, CDR, EPS, PDF, PNG, JPG (Optional)</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Color -->
+                      <div class="fieldrow">
+                        <div class="_30">
+                          <label class="side">Color</label>
+                        </div>
+                        <div>
+                          <input type="text" class="form-control" name="color" placeholder="Preferred color(s)">
+                        </div>
+                      </div>
+
+                      <!-- Quantity -->
+                      <div class="fieldrow">
+                        <div class="_30">
+                          <label class="side">Quantity</label>
+                        </div>
+                        <div>
+                          <input type="number" class="form-control" name="quantity" min="1">
+                        </div>
+                      </div>
+
+                      <!-- Date Required -->
+                      <div class="fieldrow">
+                        <div class="_30">
+                          <label class="side">Date Required</label>
+                        </div>
+                        <div style="position: relative; flex-grow: 1;">
+                          <input type="date" class="form-control" name="date_required" style="padding-right: 12px; background-color: #ffffff;">
+                        </div>
+                      </div>
+
+                      <!-- Comments -->
+                      <div class="fieldrow">
+                        <div class="_30">
+                          <label class="side">Comments</label>
+                        </div>
+                        <div>
+                          <textarea class="form-control" rows="3" name="comments" placeholder="Any special requests or comments..."></textarea>
+                        </div>
+                      </div>
+
+                      <!-- Step 2 Nav -->
+                      <div class="stepper-nav">
+                        <button type="button" class="btn-back" onclick="window.prevStepperStep(2)">
+                          <span class="material-symbols-outlined" style="font-size: 16px;">arrow_back</span>
+                          <span>Back</span>
+                        </button>
+                        <button type="submit" class="btn-submit">
+                          <span>Send Request Info</span>
+                          <span class="material-symbols-outlined" style="font-size: 16px;">send</span>
+                        </button>
+                      </div>
+                    </div>
+
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Product Detail (Collapsed by Default) -->
+          <div class="attributesContainer" style="margin-bottom: 12px;">
+            <button type="button" class="btnSection" onclick="window.toggleZeviAccordion && window.toggleZeviAccordion(this)">
+              <span class="sectionHeader">Product Detail <span class="material-symbols-outlined accordion-icon">keyboard_arrow_down</span></span>
+            </button>
+            <div class="contentContainer">
+              <% if @product.product_detail.present? %>
+                <div class="custom-accordion-content" style="padding: 16px; font-size: 14px; line-height: 1.6; color: var(--text-dark);"><%= raw @product.product_detail %></div>
+              <% else %>
+                <div class="dataFieldBlock">
+                  <div class="data-row">
+                    <div class="data-label">Category</div>
+                    <div class="data-value"><%= accordion_category %></div>
+                  </div>
+                  <div class="data-row">
+                    <div class="data-label">Color</div>
+                    <div class="data-value"><%= accordion_colors %></div>
+                  </div>
+                  <div class="data-row">
+                    <div class="data-label">Material</div>
+                    <div class="data-value"><%= accordion_material %></div>
+                  </div>
+                  <div class="data-row">
+                    <div class="data-label">Size</div>
+                    <div class="data-value"><%= accordion_size %></div>
+                  </div>
+                  <div class="data-row">
+                    <div class="data-label">Item Weight</div>
+                    <div class="data-value"><%= accordion_weight %></div>
+                  </div>
+                  <div class="data-row">
+                    <div class="data-label">Samples</div>
+                    <div class="data-value">Product Sample (Free (Random Sample)), Spec Sample (setup charge: $30, Depending on the request)</div>
+                  </div>
+                  <div class="data-row">
+                    <div class="data-label">Shipping Dimensions</div>
+                    <div class="data-value"><%= accordion_ship_dims %></div>
+                  </div>
+                  <div class="data-row">
+                    <div class="data-label">Shipping Estimate</div>
+                    <div class="data-value"><%= accordion_ship_est %></div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+
+          <!-- 3. Imprint (Collapsed by Default) -->
+          <div class="attributesContainer" style="margin-bottom: 12px;">
+            <button type="button" class="btnSection" onclick="window.toggleZeviAccordion && window.toggleZeviAccordion(this)">
+              <span class="sectionHeader">Imprint <span class="material-symbols-outlined accordion-icon">keyboard_arrow_down</span></span>
+            </button>
+            <div class="contentContainer">
+              <% if @product.imprint.present? %>
+                <div class="custom-accordion-content" style="padding: 16px; font-size: 14px; line-height: 1.6; color: var(--text-dark);"><%= raw @product.imprint %></div>
+              <% else %>
+                <div class="dataFieldBlock">
+                  <div class="data-row">
+                    <div class="data-label">Imprint Method</div>
+                    <div class="data-value"><%= accordion_imprint_method %></div>
+                  </div>
+                  <div class="data-row">
+                    <div class="data-label">Imprint Color</div>
+                    <div class="data-value">Custom Colors, PMS Colors, Standard Colors</div>
+                  </div>
+                  <div class="data-row">
+                    <div class="data-label">Imprint Size</div>
+                    <div class="data-value"><%= accordion_imprint_size %></div>
+                  </div>
+                  <div class="data-row">
+                    <div class="data-label">Full Color Process</div>
+                    <div class="data-value">No</div>
+                  </div>
+                  <div class="data-row">
+                    <div class="data-label">Personalization</div>
+                    <div class="data-value">No</div>
+                  </div>
+                  <div class="data-row">
+                    <div class="data-label">Sold Unimprinted</div>
+                    <div class="data-value">Yes</div>
+                  </div>
+                  <div class="data-row">
+                    <div class="data-label">Artwork & Proofs</div>
+                    <div class="data-value">Virtual Proof (Free Virtual Proof with Different Possible Printing Size, Location and Color Options.), Art Services (Free), Pre-production Proof (Free)</div>
+                  </div>
+                  <div class="data-row">
+                    <div class="data-label">Imprint Location</div>
+                    <div class="data-value">Front or Suitable Workable Location</div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+
+          <!-- 4. Production and Shipping (Collapsed by Default) -->
+          <div class="attributesContainer" style="margin-bottom: 12px;">
+            <button type="button" class="btnSection" onclick="window.toggleZeviAccordion && window.toggleZeviAccordion(this)">
+              <span class="sectionHeader">Production and Shipping <span class="material-symbols-outlined accordion-icon">keyboard_arrow_down</span></span>
+            </button>
+            <div class="contentContainer">
+              <% if @product.production_shipping.present? %>
+                <div class="custom-accordion-content" style="padding: 16px; font-size: 14px; line-height: 1.6; color: var(--text-dark);"><%= raw @product.production_shipping %></div>
+              <% else %>
+                <div class="dataFieldBlock">
+                  <div class="data-row">
+                    <div class="data-label">Production Time</div>
+                    <div class="data-value"><%= accordion_prod_time %></div>
+                  </div>
+                  <div class="data-row">
+                    <div class="data-label">Rush Service</div>
+                    <div class="data-value">Yes (5 business days, setup charge: $30)</div>
+                  </div>
+                  <div class="data-row">
+                    <div class="data-label">Shipping Weight</div>
+                    <div class="data-value">33 lbs (Carton Weight)</div>
+                  </div>
+                  <div class="data-row">
+                    <div class="data-label">Packaging</div>
+                    <div class="data-value"><%= accordion_packaging %></div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%= render "shared/footer" %>
+
+<!-- Floating Email Widget -->
+<div id="floating-email-widget" class="floating-email-box minimized">
+  <a href="mailto:<%= email_address %>" class="widget-action-btn email-btn">
+    <span class="material-symbols-outlined">mail</span>
+    <span class="btn-label">Email</span>
+  </a>
+  <button type="button" id="widget-toggle-btn" class="widget-action-btn toggle-btn">
+    <span class="material-symbols-outlined toggle-icon">keyboard_arrow_down</span>
+    <span class="btn-label toggle-label">Hide</span>
+  </button>
+</div>
+
+<button type="button" id="floating-email-collapsed" class="floating-email-collapsed-btn" style="display: flex;">
+  <span class="material-symbols-outlined">mail</span>
+</button>

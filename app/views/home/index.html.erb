@@ -1,0 +1,371 @@
+<%= render "shared/top_contact_bar" %>
+<%= render "shared/main_header" %>
+
+<!-- Hero Layout Section -->
+<section class="hero-layout-section">
+  <div class="container-custom hero-grid">
+    <!-- Left Sidebar Categories -->
+    <aside class="categories-sidebar homepage-sidebar">
+      <div class="sidebar-title">
+        <span class="material-symbols-outlined" style="font-size: 20px; color: var(--primary);">grid_view</span>
+        <span>Categories</span>
+      </div>
+      <ul class="sidebar-menu-list">
+        <% @categories.each do |cat| %>
+          <li class="sidebar-menu-item">
+            <a href="/products?category=<%= u(cat) %>">
+              <span><%= cat %></span>
+              <span class="material-symbols-outlined" style="font-size: 16px;">chevron_right</span>
+            </a>
+          </li>
+        <% end %>
+      </ul>
+    </aside>
+
+    <!-- Right Hero Carousel -->
+    <div class="carousel-wrapper">
+      <div class="carousel-slides">
+        <!-- Slide 1: Apparel -->
+        <div class="carousel-slide active" id="slide-1">
+          <img class="slide-bg" src="<%= image_path('slide_apparel.jpg') %>" alt="Shop Apparel">
+          <div class="carousel-overlay">
+            <div class="carousel-content">
+              <h3>Polos, Workwear, T-Shirts, & More!</h3>
+              <h1>Shop Apparel</h1>
+              <p>Premium embroidered apparel and printed sportswear designed to make your brand stand out in any team event or corporate setting.</p>
+              <a href="/products" class="btn-primary">
+                <span>Shop Now</span>
+                <span class="material-symbols-outlined">arrow_forward</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 2: Spirit / Wristbands -->
+        <div class="carousel-slide" id="slide-2">
+          <img class="slide-bg" src="<%= image_path('slide_spirit.png') %>" alt="Shop Spirit">
+          <div class="carousel-overlay">
+            <div class="carousel-content">
+              <h3>Go Team!</h3>
+              <h1>Shop Spirit</h1>
+              <p>Support your team, event, or school with custom caps, wristbands, notebooks, custom-printed bags, and custom swag kits.</p>
+              <a href="/products" class="btn-primary">
+                <span>Shop Now</span>
+                <span class="material-symbols-outlined">arrow_forward</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Arrows -->
+      <button class="carousel-nav carousel-prev" id="prev-btn">
+        <span class="material-symbols-outlined">chevron_left</span>
+      </button>
+      <button class="carousel-nav carousel-next" id="next-btn">
+        <span class="material-symbols-outlined">chevron_right</span>
+      </button>
+
+      <!-- Carousel Dots -->
+      <div class="carousel-dots">
+        <div class="carousel-dot active" data-slide="1"></div>
+        <div class="carousel-dot" data-slide="2"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 1. Shop by Category Section -->
+<section class="section-padding categories-grid-section">
+  <div class="container-custom">
+    <div class="section-header">
+      <h2>Shop by Category</h2>
+    </div>
+    <div class="row-custom category-card-grid">
+      <div class="category-grid-item">
+        <a href="/products?category=Drinkware" class="cat-item-card">
+          <span class="material-symbols-outlined icon">coffee</span>
+          <h4>Drinkware</h4>
+        </a>
+      </div>
+      <div class="category-grid-item">
+        <a href="/products?category=Bags%20%26%20Totes" class="cat-item-card">
+          <span class="material-symbols-outlined icon">shopping_bag</span>
+          <h4>Bags</h4>
+        </a>
+      </div>
+      <div class="category-grid-item">
+        <a href="/products?category=Apparel" class="cat-item-card">
+          <span class="material-symbols-outlined icon">checkroom</span>
+          <h4>Apparel</h4>
+        </a>
+      </div>
+      <div class="category-grid-item">
+        <a href="/products?category=Technology" class="cat-item-card">
+          <span class="material-symbols-outlined icon">laptop_mac</span>
+          <h4>Tech</h4>
+        </a>
+      </div>
+      <div class="category-grid-item">
+        <a href="/products?category=Desk%20Accessories" class="cat-item-card">
+          <span class="material-symbols-outlined icon">edit_note</span>
+          <h4>Stationery</h4>
+        </a>
+      </div>
+      <div class="category-grid-item">
+        <a href="/products?category=Home%20%26%20Kitchen" class="cat-item-card">
+          <span class="material-symbols-outlined icon">kitchen</span>
+          <h4>Home &amp; Kitchen</h4>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. Trending Products Section -->
+<section class="section-padding trending-products-section" id="products">
+  <div class="container-custom">
+    <div style="text-align: center; margin-bottom: 24px;">
+      <h2 style="font-size: 26px; font-weight: 700; color: var(--text-dark); margin-bottom: 10px; font-family: var(--font-display);">Trending Products</h2>
+      <hr class="bottomBorder" style="border: 0; height: 3px; background: var(--primary); width: 60px; margin: 0 auto;">
+    </div>
+
+    <div class="product-slider-wrapper">
+      <!-- Left Navigation Arrow -->
+      <button class="slider-nav-btn prev-btn" onclick="slideProducts('prev')" aria-label="Slide left">
+        <span class="material-symbols-outlined">chevron_left</span>
+      </button>
+      
+      <div class="product-slider-container">
+        <div class="product-slider-track" id="productSliderTrack" style="transform: translateX(0px);">
+          <% if @trending_products.any? %>
+            <% @trending_products.each do |product| %>
+              <div class="slider-item">
+                <%= render "shared/product_card", product: product, hide_category: true %>
+              </div>
+            <% end %>
+          <% else %>
+            <div style="text-align: center; padding: 40px; color: var(--text-muted); font-size: 14px; width: 100%;">
+              No products available at the moment.
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Right Navigation Arrow -->
+      <button class="slider-nav-btn next-btn" onclick="slideProducts('next')" aria-label="Slide right">
+        <span class="material-symbols-outlined">chevron_right</span>
+      </button>
+    </div>
+
+    <!-- Product Slider Control Script -->
+    <script>
+      (function() {
+        function initProductSlider() {
+          const track = document.getElementById("productSliderTrack");
+          if (!track) return;
+
+          if (window.innerWidth <= 768) {
+            track.style.transform = "none";
+          } else {
+            track.style.transform = "translateX(0px)";
+          }
+          track.dataset.currentIndex = "0";
+
+          window.adjustProductSlidePosition = function() {
+            const track = document.getElementById("productSliderTrack");
+            if (!track) return;
+            if (window.innerWidth <= 768) {
+              track.style.transform = "none";
+              return;
+            }
+            const items = track.querySelectorAll(".slider-item");
+            if (items.length === 0) return;
+
+            const gap = 24;
+            const itemWidth = items[0].getBoundingClientRect().width + gap;
+            const currentIndex = parseInt(track.dataset.currentIndex || "0");
+            const offset = -currentIndex * itemWidth;
+            track.style.transform = `translateX(${offset}px)`;
+          };
+
+          window.slideProducts = function(direction) {
+            if (window.innerWidth <= 768) return; 
+            const track = document.getElementById("productSliderTrack");
+            if (!track) return;
+
+            const items = track.querySelectorAll(".slider-item");
+            if (items.length === 0) return;
+
+            const gap = 24;
+            const itemWidth = items[0].getBoundingClientRect().width + gap; 
+            const containerWidth = track.parentElement.getBoundingClientRect().width;
+            
+            let currentIndex = parseInt(track.dataset.currentIndex || "0");
+            const visibleCount = Math.round(containerWidth / itemWidth);
+            const maxIndex = Math.max(0, items.length - visibleCount);
+
+            if (direction === "next") {
+              if (currentIndex < maxIndex) {
+                currentIndex++;
+              } else {
+                currentIndex = 0; 
+              }
+            } else if (direction === "prev") {
+              if (currentIndex > 0) {
+                currentIndex--;
+              } else {
+                currentIndex = maxIndex; 
+              }
+            }
+
+            track.dataset.currentIndex = currentIndex.toString();
+            if (typeof window.adjustProductSlidePosition === "function") {
+              window.adjustProductSlidePosition();
+            }
+          };
+
+          const productWrapper = document.querySelector(".product-slider-wrapper");
+          if (productWrapper && !productWrapper.dataset.swipeRegistered) {
+            let startX = 0;
+            let endX = 0;
+            
+            productWrapper.addEventListener("touchstart", function(e) {
+              startX = e.touches[0].clientX;
+              endX = e.touches[0].clientX;
+            }, { passive: true });
+            
+            productWrapper.addEventListener("touchmove", function(e) {
+              endX = e.touches[0].clientX;
+            }, { passive: true });
+            
+            productWrapper.addEventListener("touchend", function() {
+              if (window.innerWidth <= 768) return; 
+              const threshold = 40;
+              const diff = startX - endX;
+              if (Math.abs(diff) > threshold) {
+                if (diff > 0) {
+                  if (typeof window.slideProducts === "function") {
+                    window.slideProducts("next");
+                  }
+                } else {
+                  if (typeof window.slideProducts === "function") {
+                    window.slideProducts("prev");
+                  }
+                }
+              }
+              startX = 0;
+              endX = 0;
+            });
+            
+            productWrapper.dataset.swipeRegistered = "true";
+          }
+        }
+
+        if (!window.productSliderResizeRegistered) {
+          window.addEventListener("resize", function() {
+            if (typeof window.adjustProductSlidePosition === "function") {
+              window.adjustProductSlidePosition();
+            }
+          });
+          window.productSliderResizeRegistered = true;
+        }
+
+        document.addEventListener("turbo:load", initProductSlider);
+        
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', initProductSlider);
+        } else {
+          initProductSlider();
+        }
+      })();
+    </script>
+
+    <div class="section-footer">
+      <a href="/products" class="btn-secondary">
+        <span>More Deals</span>
+        <span class="material-symbols-outlined" style="font-size: 16px;">chevron_right</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- 3. Why Choose Us Section -->
+<section class="section-padding why-us-section">
+  <div class="container-custom">
+    <div class="section-header">
+      <h2>Why Choose Zevi Promotion</h2>
+    </div>
+    <div class="row-custom why-us-grid">
+      <div class="why-us-col">
+        <div class="why-item-card">
+          <div class="why-icon-badge">
+            <span class="material-symbols-outlined">local_shipping</span>
+          </div>
+          <h4>Fast Delivery</h4>
+          <p>Quick turnaround times to meet your deadlines</p>
+        </div>
+      </div>
+      <div class="why-us-col">
+        <div class="why-item-card">
+          <div class="why-icon-badge">
+            <span class="material-symbols-outlined">verified</span>
+          </div>
+          <h4>Quality Guaranteed</h4>
+          <p>Premium products with excellent print quality</p>
+        </div>
+      </div>
+      <div class="why-us-col">
+        <div class="why-item-card">
+          <div class="why-icon-badge">
+            <span class="material-symbols-outlined">sell</span>
+          </div>
+          <h4>Competitive Pricing</h4>
+          <p>Best value for your promotional needs</p>
+        </div>
+      </div>
+      <div class="why-us-col">
+        <div class="why-item-card">
+          <div class="why-icon-badge">
+            <span class="material-symbols-outlined">support_agent</span>
+          </div>
+          <h4>24/7 Support</h4>
+          <p>Dedicated account managers for your needs</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. About Us Section -->
+<section class="section-padding about-section" id="about">
+  <div class="container-custom about-container">
+    <div class="about-content">
+      <h2>About Zevi Promotion</h2>
+      <p>Looking for the perfect promotional item or searching for fresh inspiration? Zevi Promotion is your ultimate one-stop destination for custom promotional products and corporate gifts, proudly serving clients worldwide.</p>
+      <p>Our process is simple, fast, and built around you. Zevi Promotion transforms your vision into impactful marketing solutions. Our design experts will prepare and format your artwork using industry-standard software such as Adobe Illustrator, CorelDRAW, and Photoshop, ensuring compatibility with all major production processes. We support popular file formats including AI, CDR, EPS, PDF, and PNG. We combine an extensive product inventory with premium branding and decoration techniques, all while prioritizing sustainable practices.</p>
+      <p style="font-weight: 700; color: var(--primary); font-family: var(--font-display); font-size: 16px;">Elevate your brand, make a lasting impression, and stand out from the competition with Zevi Promotion!</p>
+    </div>
+    <div class="about-image-wrapper">
+      <img src="<%= image_path('about_team.jpg') %>" alt="About Zevi Promotion Team">
+    </div>
+  </div>
+</section>
+
+<%= render "shared/footer" %>
+
+<!-- Floating Email Widget -->
+<div id="floating-email-widget" class="floating-email-box minimized">
+  <a href="mailto:info@zevipromotions.com" class="widget-action-btn email-btn">
+    <span class="material-symbols-outlined">mail</span>
+    <span class="btn-label">Email</span>
+  </a>
+  <button type="button" id="widget-toggle-btn" class="widget-action-btn toggle-btn">
+    <span class="material-symbols-outlined toggle-icon">keyboard_arrow_down</span>
+    <span class="btn-label toggle-label">Hide</span>
+  </button>
+</div>
+
+<button type="button" id="floating-email-collapsed" class="floating-email-collapsed-btn" style="display: flex;">
+  <span class="material-symbols-outlined">mail</span>
+</button>

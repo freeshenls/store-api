@@ -1,0 +1,281 @@
+<%
+  categories = [
+    "Apparel",
+    "Desk Accessories",
+    "Drinkware",
+    "Fidgets",
+    "Novelties",
+    "Gifts",
+    "Bags & Totes",
+    "Technology",
+    "Wristbands"
+  ]
+
+  phone_number = "(714) 857-0010"
+  email_address = "info@zevipromotions.com"
+%>
+
+<%= render "shared/top_contact_bar" %>
+<%= render "shared/main_header" %>
+
+<!-- Main Page Container -->
+<main id="mainContent" class="container-custom py-12" style="margin-top: 32px; margin-bottom: 32px;">
+  <div class="artwork-tips-layout">
+    <!-- Left Column (Main Content) -->
+    <div class="artwork-tips-main">
+      <div class="textGray text16">
+        
+
+        <!-- Navigation Section -->
+        <div class="nav-card">
+          <h2 id="pageNav" class="text20 font-bold" style="font-size: 18px; margin-bottom: 16px; font-weight: 700;">Navigate The Art Tips Page</h2>
+          <nav aria-labelledby="pageNav" class="flex-wrap-nav">
+            <a class="nav-pill" href="#artwork">How to Send Artwork</a>
+            <a class="nav-pill" href="#files">File Types</a>
+            <a class="nav-pill" href="#imprint">Imprint Types</a>
+            <a class="nav-pill" href="#outlines">Convert Text to Outlines</a>
+          </nav>
+        </div>
+
+        <!-- Section: How to Send Artwork -->
+        <section id="artwork" class="content-section" style="margin-top: 48px;">
+          <h2 class="section-title">How to Send your Artwork</h2>
+          <div class="section-grid-2">
+            <div class="content-card">
+              <h3 class="card-subtitle"><span class="material-symbols-outlined card-icon">cloud_upload</span>Digital Files</h3>
+              <p class="card-text">After you have placed your order, an option is provided to immediately upload your art files. If you don't have them handy, you can also reply directly to the confirmation email you receive and attach your art file, or use the convenient secure upload link inside the mail. This ensures we match your artwork perfectly to your specific order.</p>
+            </div>
+            <div class="content-card">
+              <h3 class="card-subtitle"><span class="material-symbols-outlined card-icon">mark_email_read</span>Forgot To Send Your File?</h3>
+              <p class="card-text">Do not worry! Simply wait for one of our friendly Customer Care Representatives to reach out to you promptly after your order is placed. You can easily email your files directly to them at that point.</p>
+              
+              <h3 class="card-subtitle" style="margin-top: 24px;"><span class="material-symbols-outlined card-icon">edit_note</span>Send Special Instructions</h3>
+              <p class="card-text">There is a box for special instructions on our checkout and info forms. Feel free to provide any information you think we need. Remember, artwork preparation is <span class="badge-success">FREE</span> and you'll receive a detailed digital mockup for your approval before production starts!</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section: Accepted File Types -->
+        <section id="files" class="content-section" style="margin-top: 48px;">
+          <h2 class="section-title">Accepted File Types</h2>
+          <div class="note-box" style="margin-bottom: 24px;">
+            <span class="material-symbols-outlined note-icon">info</span>
+            <p><strong>Note:</strong> Simply changing the file extension name to a vector format (e.g. renaming .jpg to .eps) will not convert it into a vector graphic. The source files must be built as vectors.</p>
+          </div>
+          <p class="section-desc">We can work with almost anything: emailed files, hard copies, or high-res images. To keep your order moving as fast as possible, we highly prefer vector file formats.</p>
+          <div class="section-grid-2" style="margin-top: 20px;">
+            <div class="content-card border-left-accent">
+              <h3 class="card-subtitle" style="color: var(--primary);">Preferred Vector Formats</h3>
+              <ul class="vector-list">
+                <li>
+                  <strong>PDF <span class="format-ext">(Adobe Acrobat)</span></strong>
+                  <p>Embed all fonts used or export layout as a generic high-res PDF/X.</p>
+                </li>
+                <li>
+                  <strong>AI or EPS <span class="format-ext">(Adobe Illustrator)</span></strong>
+                  <p>Convert all text/type to outlines and embed any linked images.</p>
+                </li>
+                <li>
+                  <strong>CDR <span class="format-ext">(Corel Draw)</span></strong>
+                  <p>Convert all text to curves before saving and sending.</p>
+                </li>
+              </ul>
+            </div>
+            <div class="content-card border-left-neutral">
+              <h3 class="card-subtitle" style="color: #64748b;">Other Accepted File Types</h3>
+              <ul class="vector-list">
+                <li>
+                  <strong>DOC, PPT or PUB <span class="format-ext">(Microsoft Office)</span></strong>
+                  <p>Embed or include the specific font family files with your documents.</p>
+                </li>
+                <li>
+                  <strong>Bitmaps & Images <span class="format-ext">(.jpg, .tif, .gif, .png, .bmp)</span></strong>
+                  <p>Provide the highest resolution image files available (300dpi+ preferred).</p>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section: Imprint Types (Grid) -->
+        <section id="imprint" class="content-section" style="margin-top: 48px;">
+          <h2 class="section-title">Premium Imprint Types</h2>
+          <p class="section-desc">Zevi Promotions uses state-of-the-art branding technologies to customize your items. Here are the 12 premium imprint methods we offer, complete with real production-grade Zevi product examples:</p>
+          
+          <div class="imprint-grid" style="margin-top: 24px;">
+            
+            <div class="imprint-card">
+              <div class="imprint-img-wrapper">
+                <img src="<%= image_path('arttips/embroidery.jpg') %>" alt="Embroidery Imprint Example" loading="lazy">
+              </div>
+              <div class="imprint-info">
+                <h4>Embroidery</h4>
+                <p>Computerized sewing machines stitch the imprint onto item.</p>
+              </div>
+            </div>
+
+            <div class="imprint-card">
+              <div class="imprint-img-wrapper">
+                <img src="<%= image_path('arttips/screenprint.jpg') %>" alt="Screenprint Imprint Example" loading="lazy">
+              </div>
+              <div class="imprint-info">
+                <h4>Screenprint</h4>
+                <p>Ink is pressed through a screen onto the item's surface.</p>
+              </div>
+            </div>
+
+            <div class="imprint-card">
+              <div class="imprint-img-wrapper">
+                <img src="<%= image_path('arttips/heattransfer.jpg') %>" alt="Heat Transfer Imprint Example" loading="lazy">
+              </div>
+              <div class="imprint-info">
+                <h4>Heat Transfer</h4>
+                <p>Heat is used to thermally bond imprint onto the item's surface.</p>
+              </div>
+            </div>
+
+            <div class="imprint-card">
+              <div class="imprint-img-wrapper">
+                <img src="<%= image_path('arttips/padprint.jpg') %>" alt="Pad Print Imprint Example" loading="lazy">
+              </div>
+              <div class="imprint-info">
+                <h4>Pad Print</h4>
+                <p>Imprint is transferred to the item via an inked flexible pad.</p>
+              </div>
+            </div>
+
+            <div class="imprint-card">
+              <div class="imprint-img-wrapper">
+                <img src="<%= image_path('arttips/deboss.jpg') %>" alt="Deboss Imprint Example" loading="lazy">
+              </div>
+              <div class="imprint-info">
+                <h4>Deboss</h4>
+                <p>Imprint is depressed into the item's surface.</p>
+              </div>
+            </div>
+
+            <div class="imprint-card">
+              <div class="imprint-img-wrapper">
+                <img src="<%= image_path('arttips/emboss.jpg') %>" alt="Emboss Imprint Example" loading="lazy">
+              </div>
+              <div class="imprint-info">
+                <h4>Emboss</h4>
+                <p>Imprint is raised onto the item's surface.</p>
+              </div>
+            </div>
+
+            <div class="imprint-card">
+              <div class="imprint-img-wrapper">
+                <img src="<%= image_path('arttips/laserengraved.jpg') %>" alt="Laser Engraved Imprint Example" loading="lazy">
+              </div>
+              <div class="imprint-info">
+                <h4>Laser Engraved</h4>
+                <p>Imprint is etched into the item via a laser.</p>
+              </div>
+            </div>
+
+            <div class="imprint-card">
+              <div class="imprint-img-wrapper">
+                <img src="<%= image_path('arttips/foilstamp.jpg') %>" alt="Foil Stamp Imprint Example" loading="lazy">
+              </div>
+              <div class="imprint-info">
+                <h4>Foil Stamp</h4>
+                <p>Metallic foil resins are applied to the item's surface.</p>
+              </div>
+            </div>
+
+            <div class="imprint-card">
+              <div class="imprint-img-wrapper">
+                <img src="<%= image_path('arttips/fullcolor.jpg') %>" alt="Full Color Imprint Example" loading="lazy">
+              </div>
+              <div class="imprint-info">
+                <h4>Full Color</h4>
+                <p>Imprint is printed in CMYK allowing for the use of photos.</p>
+              </div>
+            </div>
+
+            <div class="imprint-card">
+              <div class="imprint-img-wrapper">
+                <img src="<%= image_path('arttips/deepetch.jpg') %>" alt="Deep Etch Imprint Example" loading="lazy">
+              </div>
+              <div class="imprint-info">
+                <h4>Deep Etch</h4>
+                <p>Imprint is sandblasted, creating a deep frosted look.</p>
+              </div>
+            </div>
+
+            <div class="imprint-card">
+              <div class="imprint-img-wrapper">
+                <img src="<%= image_path('arttips/satinetch.jpg') %>" alt="Satin Etch Imprint Example" loading="lazy">
+              </div>
+              <div class="imprint-info">
+                <h4>Satin Etched</h4>
+                <p>With use of acid on glass, this gives the imprint a frosted look.</p>
+              </div>
+            </div>
+
+            <div class="imprint-card">
+              <div class="imprint-img-wrapper">
+                <img src="<%= image_path('arttips/colorimbue.jpg') %>" alt="Applique Imprint Example" loading="lazy">
+              </div>
+              <div class="imprint-info">
+                <h4>Applique</h4>
+                <p>Pieces of fabric are sewn into the item to form the imprint.</p>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- Section: Convert Text to Outlines -->
+        <section id="outlines" class="content-section" style="margin-top: 48px;">
+          <h2 class="section-title">How to Convert Text to Outlines</h2>
+          <p class="section-desc">If working in Adobe Illustrator or other vector graphics programs, you must convert all text and typography elements to outlines before submitting your artwork. This locks the design shapes so that the font does not get substituted on another computer, ensuring your brand elements render exactly as submitted.</p>
+          
+          <div class="instruction-box" style="margin: 24px 0;">
+            <p style="margin: 0; font-size: 14px; line-height: 1.6; color: var(--text-dark);"><strong>To do this in Adobe Illustrator:</strong> Go to the top menus, click on <strong>Type</strong>, and select <strong>Create Outlines</strong>. Alternatively, select the text block using the Selection Tool and press <kbd class="kbd-key">Ctrl</kbd> + <kbd class="kbd-key">Shift</kbd> + <kbd class="kbd-key">O</kbd> (<kbd class="kbd-key">⌘</kbd> + <kbd class="kbd-key">Shift</kbd> + <kbd class="kbd-key">O</kbd> on macOS). Save and send us the file.</p>
+          </div>
+
+          <div class="section-grid-2">
+            <div class="comparison-card">
+              <img src="<%= image_path('arttips/convertoutlines1.webp') %>" alt="Before Converting Text to Outlines" loading="lazy">
+              <p class="comp-label label-before">Before (Editable text block)</p>
+            </div>
+            <div class="comparison-card">
+              <img src="<%= image_path('arttips/convertoutlines2.webp') %>" alt="After Converting Text to Outlines" loading="lazy">
+              <p class="comp-label label-after">After (Converted to outlines/vector paths)</p>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <!-- Right Sidebar -->
+    <aside class="artwork-tips-sidebar">
+      <div class="sidebar-sticky">
+        
+        <!-- Sidebar Widget: Need Help? -->
+        <section class="need-help-panel" aria-labelledby="needHelpHdr">
+          <h2 id="needHelpHdr" class="panel-title">Need Help with Artwork?</h2>
+          <div class="panel-content">
+            <p class="panel-desc">Got questions about file types, curves, or formats? Our support team is here to guide you step-by-step!</p>
+            <div class="panel-options">
+              <a class="panel-link" href="tel:<%= phone_number %>">
+                <span class="material-symbols-outlined">phone_in_talk</span>
+                <span><%= phone_number %></span>
+              </a>
+              <a class="panel-link" href="mailto:<%= email_address %>">
+                <span class="material-symbols-outlined">mail_outline</span>
+                <span>Email Us</span>
+              </a>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </aside>
+  </div>
+</main>
+
+<%= render "shared/footer" %>

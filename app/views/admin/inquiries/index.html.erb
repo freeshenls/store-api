@@ -1,0 +1,168 @@
+<% content_for :admin_title, "Inquiries Manager" %>
+
+<div style="display: flex; flex-direction: column; gap: 24px;">
+
+  <!-- Alert Messages -->
+  <% if flash[:notice].present? %>
+    <div style="padding: 16px 20px; background-color: #ecfdf5; border: 1px solid #a7f3d0; border-radius: var(--radius-md); color: #065f46; font-size: 14px; display: flex; align-items: center; gap: 8px;">
+      <span class="material-symbols-outlined">check_circle</span>
+      <span><%= flash[:notice] %></span>
+    </div>
+  <% end %>
+
+  <!-- Dashboard Overview Cards -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px;">
+    <div class="content-card" style="display: flex; align-items: center; gap: 16px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+      <div style="width: 48px; height: 48px; border-radius: var(--radius-md); background-color: #eff6ff; display: flex; align-items: center; justify-content: center;">
+        <span class="material-symbols-outlined" style="color: var(--primary); font-size: 24px;">inbox</span>
+      </div>
+      <div>
+        <div style="font-size: 13px; color: var(--text-muted); font-weight: 600;">Total Inquiries</div>
+        <div style="font-size: 24px; font-weight: 800; color: var(--text-dark); margin-top: 4px;"><%= @total_inquiries %></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search & Filter Controls -->
+  <div class="content-card" style="padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+    <form action="/admin/inquiries" method="GET" style="display: flex; gap: 12px; align-items: center; width: 100%;">
+      <div style="position: relative; flex: 1;">
+        <span class="material-symbols-outlined" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 18px;">search</span>
+        <input type="text" name="q" value="<%= params[:q] %>" placeholder="Search by name, email, company, or product..." style="width: 100%; padding: 10px 16px 10px 42px; border: 1px solid var(--light-border); border-radius: var(--radius-sm); font-size: 13px; outline: none; font-family: var(--font-body); box-sizing: border-box;">
+      </div>
+      <button type="submit" class="btn-primary" style="padding: 10px 24px; font-size: 13px; height: 38px; border-radius: var(--radius-sm); flex-shrink: 0;">
+        Search
+      </button>
+      <% if params[:q].present? %>
+        <a href="/admin/inquiries" class="btn-secondary" style="padding: 9px 16px; font-size: 13px; height: 38px; border-radius: var(--radius-sm); flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; text-decoration: none;">
+          Clear
+        </a>
+      <% end %>
+    </form>
+  </div>
+
+  <!-- Inquiries Table Grid -->
+  <div class="content-card" style="padding: 0; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+    <div style="overflow-x: auto; width: 100%;">
+      <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px;">
+        <thead>
+          <tr style="background-color: var(--light-bg); border-bottom: 1px solid var(--light-border); color: var(--text-muted); font-weight: 700; font-family: var(--font-display);">
+            <th style="padding: 16px 24px;">Date</th>
+            <th style="padding: 16px 24px;">Client</th>
+            <th style="padding: 16px 24px;">Company</th>
+            <th style="padding: 16px 24px;">Product Inquired</th>
+            <th style="padding: 16px 24px; text-align: center;">Qty</th>
+            <th style="padding: 16px 24px;">Artwork</th>
+            <th style="padding: 16px 24px; text-align: right;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if @inquiries.any? %>
+            <% @inquiries.each do |inquiry| %>
+              <tr style="border-bottom: 1px solid var(--light-border); transition: background-color 0.2s;">
+                <td style="padding: 16px 24px; color: var(--text-muted); white-space: nowrap;">
+                  <%= inquiry.created_at.strftime("%b %d, %Y - %I:%M %p") %>
+                </td>
+                <td style="padding: 16px 24px;">
+                  <div style="font-weight: 700; color: var(--text-dark);"><%= inquiry.first_name %> <%= inquiry.last_name %></div>
+                  <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;"><%= inquiry.email %></div>
+                </td>
+                <td style="padding: 16px 24px; color: var(--text-dark); font-weight: 600;">
+                  <%= inquiry.company_name %>
+                </td>
+                <td style="padding: 16px 24px; max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                  <a href="<%= product_path(inquiry.product.slug) %>" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: 700;">
+                    <%= inquiry.product.title %>
+                  </a>
+                </td>
+                <td style="padding: 16px 24px; text-align: center; color: var(--text-dark); font-weight: 700;">
+                  <%= inquiry.quantity.present? ? number_with_delimiter(inquiry.quantity) : "-" %>
+                </td>
+                <td style="padding: 16px 24px; white-space: nowrap;">
+                  <% if inquiry.artwork.attached? %>
+                    <span style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; background-color: #ecfdf5; color: #059669; border-radius: 4px; font-size: 11px; font-weight: 700;">
+                      <span class="material-symbols-outlined" style="font-size: 14px;">attach_file</span>
+                      <span>Attached</span>
+                    </span>
+                  <% else %>
+                    <span style="color: var(--text-muted); font-size: 11px;">None</span>
+                  <% end %>
+                </td>
+                <td style="padding: 16px 24px; text-align: right; white-space: nowrap;">
+                  <div style="display: inline-flex; gap: 8px;">
+                    <a href="<%= admin_inquiry_path(inquiry) %>" class="btn-secondary" style="padding: 6px 12px; font-size: 11px; border-radius: 4px; display: inline-flex; align-items: center; gap: 4px; text-decoration: none;">
+                      <span class="material-symbols-outlined" style="font-size: 14px;">visibility</span>
+                      <span>View</span>
+                    </a>
+                    <%= button_to admin_inquiry_path(inquiry), method: :delete, data: { confirm: "Are you sure you want to delete this inquiry?" }, class: "admin-logout-btn", style: "padding: 6px 12px; font-size: 11px; border-radius: 4px; display: inline-flex; align-items: center; gap: 4px; border: 1px solid #fecaca; color: #dc2626; background: #fff;" do %>
+                      <span class="material-symbols-outlined" style="font-size: 14px;">delete</span>
+                      <span>Delete</span>
+                    <% end %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="7" style="padding: 40px; text-align: center; color: var(--text-muted);">
+                <span class="material-symbols-outlined" style="font-size: 48px; color: #cbd5e1; margin-bottom: 8px;">mail_outline</span>
+                <p style="margin: 0; font-size: 14px;">No inquiries found matching your query.</p>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Sliding Window Pagination -->
+    <% if @total_pages > 1 %>
+      <div style="padding: 20px 24px; border-top: 1px solid var(--light-border); display: flex; align-items: center; justify-content: space-between;">
+        <div style="font-size: 12px; color: var(--text-muted);">
+          Showing Page <strong><%= @current_page %></strong> of <strong><%= @total_pages %></strong>
+        </div>
+        
+        <div class="stepper-nav" style="gap: 4px;">
+          <% if @current_page > 1 %>
+            <a href="/admin/inquiries?page=<%= @current_page - 1 %><%= "&q=#{params[:q]}" if params[:q].present? %>" class="btn-back" style="padding: 6px 12px; font-size: 12px; height: auto; text-decoration: none; border-radius: 4px;">
+              <span class="material-symbols-outlined" style="font-size: 14px;">chevron_left</span>
+              <span>Prev</span>
+            </a>
+          <% end %>
+
+          <%
+            # Dynamic Sliding Window: show at most 3 page squares
+            page_window = 3
+            half_window = page_window / 2
+            
+            start_page = @current_page - half_window
+            end_page = @current_page + half_window
+            
+            if start_page < 1
+              end_page = [end_page + (1 - start_page), @total_pages].min
+              start_page = 1
+            elsif end_page > @total_pages
+              start_page = [start_page - (end_page - @total_pages), 1].max
+              end_page = @total_pages
+            end
+          %>
+          
+          <% (start_page..end_page).each do |p| %>
+            <% is_current = p == @current_page %>
+            <a href="/admin/inquiries?page=<%= p %><%= "&q=#{params[:q]}" if params[:q].present? %>" style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border: 1px solid <%= is_current ? 'var(--primary)' : 'var(--light-border)' %>; border-radius: 4px; font-size: 12px; font-weight: 700; text-decoration: none; background-color: <%= is_current ? 'var(--primary)' : '#ffffff' %>; color: <%= is_current ? '#ffffff' : 'var(--text-dark)' %>;">
+              <%= p %>
+            </a>
+          <% end %>
+
+          <% if @current_page < @total_pages %>
+            <a href="/admin/inquiries?page=<%= @current_page + 1 %><%= "&q=#{params[:q]}" if params[:q].present? %>" class="btn-next" style="padding: 6px 12px; font-size: 12px; height: auto; text-decoration: none; border-radius: 4px;">
+              <span>Next</span>
+              <span class="material-symbols-outlined" style="font-size: 14px;">chevron_right</span>
+            </a>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+  </div>
+
+</div>

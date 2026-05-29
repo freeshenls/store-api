@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Zevi Promotions - Admin Panel</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    
+    <% # Re-use the beautifully digested fonts and core variables %>
+    <%= stylesheet_link_tag "fonts", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "digital_monkey", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+
+    <style>
+      /* Clean Dashboard Specific Styles */
+      body {
+        background-color: #f8fafc;
+        margin: 0;
+        padding: 0;
+        font-family: var(--font-body);
+        color: var(--text-dark);
+      }
+      .admin-layout-wrapper {
+        display: flex;
+        min-height: 100vh;
+      }
+      .admin-sidebar {
+        width: 260px;
+        background-color: #0f172a;
+        color: #f8fafc;
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 24px;
+        border-right: 1px solid #1e293b;
+      }
+      .admin-logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-family: var(--font-display);
+        font-weight: 800;
+        font-size: 20px;
+        color: #ffffff;
+        margin-bottom: 32px;
+      }
+      .admin-menu-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .admin-menu-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        color: #94a3b8;
+        text-decoration: none;
+        border-radius: var(--radius-sm);
+        font-weight: 600;
+        font-size: 14px;
+        transition: var(--transition);
+      }
+      .admin-menu-link:hover, .admin-menu-link.active {
+        background-color: #1e293b;
+        color: #ffffff;
+      }
+      .admin-menu-link span.icon {
+        font-size: 20px;
+      }
+      .admin-main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+      }
+      .admin-header {
+        background-color: #ffffff;
+        height: 70px;
+        border-bottom: 1px solid var(--light-border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 40px;
+      }
+      .admin-content-container {
+        padding: 40px;
+        flex: 1;
+        overflow-y: auto;
+      }
+      .admin-user-badge {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 14px;
+      }
+      .admin-logout-btn {
+        background: none;
+        border: 1px solid #334155;
+        color: #94a3b8;
+        padding: 8px 16px;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 13px;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .admin-logout-btn:hover {
+        background-color: #ef4444;
+        border-color: #ef4444;
+        color: #ffffff;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="admin-layout-wrapper">
+      
+      <!-- Left Admin Sidebar -->
+      <aside class="admin-sidebar">
+        <div>
+          <div class="admin-logo">
+            <span class="material-symbols-outlined" style="color: var(--highlight-red); font-size: 28px;">admin_panel_settings</span>
+            <span>Zevi <span style="color: var(--highlight-red);">Admin</span></span>
+          </div>
+          <nav>
+            <ul class="admin-menu-list">
+              <li>
+                <a href="/admin/imports" class="admin-menu-link <%= 'active' if request.path.start_with?('/admin/imports') %>">
+                  <span class="material-symbols-outlined icon">upload_file</span>
+                  <span>Product Importer</span>
+                </a>
+              </li>
+              <li>
+                <a href="/admin/inquiries" class="admin-menu-link <%= 'active' if request.path.start_with?('/admin/inquiries') %>">
+                  <span class="material-symbols-outlined icon">mail</span>
+                  <span>Inquiries Manager</span>
+                </a>
+              </li>
+              <li>
+                <a href="/products" class="admin-menu-link" target="_blank">
+                  <span class="material-symbols-outlined icon">storefront</span>
+                  <span>View Storefront</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+
+        <!-- Sidebar footer / user session -->
+        <div style="border-top: 1px solid #1e293b; padding-top: 16px;">
+          <div style="font-size: 12px; color: #64748b; margin-bottom: 12px;">Logged in as:</div>
+          <div style="font-size: 13px; font-weight: bold; color: #ffffff; margin-bottom: 16px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+            <%= Current.session&.user&.email_address %>
+          </div>
+          <%= button_to session_path, method: :delete, class: "admin-logout-btn", style: "width: 100%; justify-content: center;" do %>
+            <span class="material-symbols-outlined" style="font-size: 16px;">logout</span>
+            <span>Logout</span>
+          <% end %>
+        </div>
+      </aside>
+
+      <!-- Right Main content panel -->
+      <div class="admin-main">
+        
+        <!-- Header -->
+        <header class="admin-header">
+          <div style="font-weight: 700; font-size: 16px; color: var(--text-dark);">
+            <%= content_for?(:admin_title) ? yield(:admin_title) : "Dashboard" %>
+          </div>
+          <div class="admin-user-badge">
+            <span class="material-symbols-outlined" style="color: var(--primary);">account_circle</span>
+            <span style="font-weight: 600;"><%= Current.session&.user&.email_address %></span>
+          </div>
+        </header>
+
+        <!-- Content -->
+        <div class="admin-content-container">
+          <%= yield %>
+        </div>
+
+      </div>
+
+    </div>
+  </body>
+</html>

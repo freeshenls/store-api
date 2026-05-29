@@ -18,7 +18,7 @@ default: &default
   # For details on connection pooling, see Rails configuration guide
   # https://guides.rubyonrails.org/configuring.html#database-pooling
   max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  schema_search_path: store_api2
+  schema_search_path: store_api
   url: <%= ENV["DATABASE_URL"] || "postgresql://postgres:123456@postgis:5432/practice" %>
 
 development:
