@@ -82,7 +82,8 @@ class ProductsController < ApplicationController
   private
 
   def get_enriched_categories
-    [
+    cats = Product.select(:category).distinct.order(:category).pluck(:category).compact
+    cats.any? ? cats : [
       "Apparel",
       "Desk Accessories",
       "Drinkware",

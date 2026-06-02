@@ -1,4 +1,5 @@
 <%
+  header_categories = Product.select(:category).distinct.order(:category).pluck(:category).compact
   header_categories = [
     "Apparel",
     "Desk Accessories",
@@ -9,7 +10,7 @@
     "Bags & Totes",
     "Technology",
     "Wristbands"
-  ]
+  ] if header_categories.empty?
 %>
 
 <!-- Main Header & Navbar -->

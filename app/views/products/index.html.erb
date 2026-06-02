@@ -14,6 +14,18 @@
 
   phone_number = "(714) 857-0010"
   email_address = "info@zevipromotions.com"
+
+  # Dynamic Catalog SEO Meta Tags
+  if params[:category].present?
+    content_for :title, "Custom #{params[:category]} & Branded Promotional Products | Zevi Promotion"
+    content_for :description, "Explore our high-quality collection of custom #{params[:category].downcase} and branded merchandise. Add your corporate logo with premium imprinting at Zevi Promotion."
+  elsif params[:q].present?
+    content_for :title, "Search Results for '#{params[:q]}' | Custom Branded Swag | Zevi Promotion"
+    content_for :description, "Browse all search results for '#{params[:q]}' at Zevi Promotion. Discover premium custom-printed promotional gifts, apparel, and corporate giveaways."
+  else
+    content_for :title, "Corporate Gifts & Custom Branded Promotional Products Catalog | Zevi Promotion"
+    content_for :description, "Browse our extensive catalog of premium custom promotional products, branded corporate gifts, personalized drinkware, custom apparel, and school spirit swag."
+  end
 %>
 
 <%= render "shared/top_contact_bar" %>
