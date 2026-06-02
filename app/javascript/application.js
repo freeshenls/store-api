@@ -1,6 +1,7 @@
 // Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
 import "@hotwired/turbo-rails"
 import "controllers"
+import "air-datepicker"
 
 // Global Image Swapping method for product detail thumbnails
 window.changeImage = function(element) {

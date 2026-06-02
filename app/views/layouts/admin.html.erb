@@ -17,6 +17,13 @@
     <%= javascript_importmap_tags %>
 
     <style>
+      /* Prevent flash of unstyled text (FOUT) for Google Material Symbols */
+      .material-symbols-outlined {
+        font-family: 'Material Symbols Outlined';
+        display: inline-block;
+        opacity: 0;
+      }
+
       /* Clean Dashboard Specific Styles */
       body {
         background-color: #f8fafc;
