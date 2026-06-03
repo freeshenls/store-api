@@ -22,6 +22,14 @@ class InquiriesController < ApplicationController
       inquiry_attrs[:phone] = "#{phone_prefix} #{permitted[:phone]}"
     end
 
+    if inquiry_attrs[:date_required].present?
+      begin
+        inquiry_attrs[:date_required] = Date.strptime(inquiry_attrs[:date_required], "%m/%d/%Y")
+      rescue ArgumentError, Date::Error
+        inquiry_attrs[:date_required] = Date.parse(inquiry_attrs[:date_required]) rescue nil
+      end
+    end
+
     @inquiry = @product.inquiries.new(inquiry_attrs)
 
     # Attach optional artwork file
