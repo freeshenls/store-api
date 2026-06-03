@@ -30,11 +30,7 @@ class InquiriesController < ApplicationController
     end
 
     if @inquiry.save
-      begin
-        InquiryMailer.new_inquiry_notification(@inquiry).deliver_now
-      rescue => e
-        Rails.logger.error "Failed to send inquiry email notification: #{e.message}"
-      end
+      InquiryMailer.new_inquiry_notification(@inquiry).deliver_later
 
       render json: { success: true, message: "Thank you! Your inquiry has been submitted successfully. Our team will contact you shortly." }
     else

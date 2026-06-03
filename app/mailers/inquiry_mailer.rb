@@ -1,5 +1,5 @@
 class InquiryMailer < ApplicationMailer
-  default from: -> { %("New Request Info" <#{ENV['MAIL_USERNAME']}>) }
+  self.delivery_method = :resend
 
   def new_inquiry_notification(inquiry)
     @inquiry = inquiry
@@ -15,8 +15,13 @@ class InquiryMailer < ApplicationMailer
       end
     end
 
+    Resend.api_key = ENV.fetch('RESEND_API_KEY')
+    from_email = 'onboarding@resend.dev'
+    recipient = ENV.fetch('MAIL_TO')
+
     mail(
-      to: '1240222852@qq.com',
+      from: %("New Request Info" <#{from_email}>),
+      to: recipient,
       subject: "Request Info From #{@inquiry.email}"
     )
   end
