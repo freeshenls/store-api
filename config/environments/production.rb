@@ -19,16 +19,7 @@ Rails.application.configure do
   config.public_file_server.headers = { "cache-control" => "public, max-age=#{1.year.to_i}" }
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
-  if ENV["R2_PUBLIC_URL"].present?
-    config.asset_host = Proc.new do |source|
-      if source.to_s.include?("rails/active_storage")
-        nil
-      else
-        ENV["R2_PUBLIC_URL"]
-      end
-    end
-  end
-
+  # config.asset_host = "http://assets.example.com"
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
