@@ -56,3 +56,6 @@ group :test do
 end
 gem "web-console"
 gem "foreman"
+
+gem "aws-sdk-s3", "~> 1.225"
+gem "resend", "~> 1.3"
