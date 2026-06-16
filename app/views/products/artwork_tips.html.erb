@@ -1,0 +1,272 @@
+<%
+  phone_number = "(714) 857-0010"
+  email_address = "info@zevipromotions.com"
+
+  content_for :title, "Artwork Guidelines & Custom Imprint Options | Zevi Promotion"
+  content_for :description, "Read Zevi Promotion's artwork tips and imprint specifications. Learn how to convert text to outlines, send curves/vectors, and discover screenprint, embroidery, deboss and laser imprint types."
+%>
+
+
+<%= render TopContactBarComponent.new %>
+<%= render MainHeaderComponent.new %>
+
+<!-- Main Page Container -->
+<main id="mainContent" class="<%= container_custom %> py-12 mt-8 mb-8" data-controller="artwork-tips">
+  <div class="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-[30px] lg:gap-10">
+    <!-- Left Column (Main Content) -->
+    <div class="min-w-0">
+      <div class="text-[#64748b] text-base">
+        
+        <!-- Navigation Section -->
+        <div class="bg-white border border-[#e2e8f0] rounded-[20px] p-6 shadow-sm">
+          <h2 id="pageNav" class="font-bold text-[18px] mb-4 text-[#0f172a]">Navigate The Art Tips Page</h2>
+          <nav aria-labelledby="pageNav" class="flex flex-wrap gap-2.5">
+            <a class="inline-block py-2 px-4 bg-[#f8fafc] border border-[#e2e8f0] rounded-[20px] text-sm font-semibold text-[#0f172a] transition-all duration-300 no-underline hover:bg-[#074277] hover:text-[#f8fafc] hover:border-[#074277]" href="#artwork">How to Send Artwork</a>
+            <a class="inline-block py-2 px-4 bg-[#f8fafc] border border-[#e2e8f0] rounded-[20px] text-sm font-semibold text-[#0f172a] transition-all duration-300 no-underline hover:bg-[#074277] hover:text-[#f8fafc] hover:border-[#074277]" href="#files">File Types</a>
+            <a class="inline-block py-2 px-4 bg-[#f8fafc] border border-[#e2e8f0] rounded-[20px] text-sm font-semibold text-[#0f172a] transition-all duration-300 no-underline hover:bg-[#074277] hover:text-[#f8fafc] hover:border-[#074277]" href="#imprint">Imprint Types</a>
+            <a class="inline-block py-2 px-4 bg-[#f8fafc] border border-[#e2e8f0] rounded-[20px] text-sm font-semibold text-[#0f172a] transition-all duration-300 no-underline hover:bg-[#074277] hover:text-[#f8fafc] hover:border-[#074277]" href="#outlines">Convert Text to Outlines</a>
+          </nav>
+        </div>
+
+        <!-- Section: How to Send Artwork -->
+        <section id="artwork" class="bg-white border border-[#e2e8f0] rounded-[20px] p-6 md:p-10 shadow-sm mt-8 md:mt-12">
+          <h2 class="font-['Outfit'] text-2xl font-extrabold text-[#0f172a] mb-6 border-b-2 border-[#e2e8f0] pb-3">How to Send your Artwork</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-[#f8fafc] border border-[#e2e8f0] rounded-[12px] p-6">
+              <h3 class="font-['Outfit'] text-base font-bold text-[#0f172a] mb-3 flex items-center gap-2"><%= heroicon "cloud-arrow-up", options: { class: "size-5 text-[#074277]" } %>Digital Files</h3>
+              <p class="text-sm text-[#64748b] leading-relaxed">After you have placed your order, an option is provided to immediately upload your art files. If you don't have them handy, you can also reply directly to the confirmation email you receive and attach your art file, or use the convenient secure upload link inside the mail. This ensures we match your artwork perfectly to your specific order.</p>
+            </div>
+            <div class="bg-[#f8fafc] border border-[#e2e8f0] rounded-[12px] p-6">
+              <h3 class="font-['Outfit'] text-base font-bold text-[#0f172a] mb-3 flex items-center gap-2"><%= heroicon "envelope-open", options: { class: "size-5 text-[#074277]" } %>Forgot To Send Your File?</h3>
+              <p class="text-sm text-[#64748b] leading-relaxed">Do not worry! Simply wait for one of our friendly Customer Care Representatives to reach out to you promptly after your order is placed. You can easily email your files directly to them at that point.</p>
+              
+              <h3 class="font-['Outfit'] text-base font-bold text-[#0f172a] mb-3 flex items-center gap-2 mt-6"><%= heroicon "document-text", options: { class: "size-5 text-[#074277]" } %>Send Special Instructions</h3>
+              <p class="text-sm text-[#64748b] leading-relaxed">There is a box for special instructions on our checkout and info forms. Feel free to provide any information you think we need. Remember, artwork preparation is <span class="bg-[#d1fae5] text-[#065f46] py-0.5 px-2 rounded font-bold">FREE</span> and you'll receive a detailed digital mockup for your approval before production starts!</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section: Accepted File Types -->
+        <section id="files" class="bg-white border border-[#e2e8f0] rounded-[20px] p-6 md:p-10 shadow-sm mt-8 md:mt-12">
+          <h2 class="font-['Outfit'] text-2xl font-extrabold text-[#0f172a] mb-6 border-b-2 border-[#e2e8f0] pb-3">Accepted File Types</h2>
+          <div class="bg-[#eff6ff] border-l-4 border-[#3b82f6] rounded-[6px] py-4 px-5 flex gap-3 items-start mb-6">
+            <%= heroicon "information-circle", options: { class: "text-[#3b82f6]" } %>
+            <p class="text-sm text-[#1e3a8a] leading-normal m-0"><strong>Note:</strong> Simply changing the file extension name to a vector format (e.g. renaming .jpg to .eps) will not convert it into a vector graphic. The source files must be built as vectors.</p>
+          </div>
+          <p class="text-[15px] text-[#64748b] leading-relaxed mb-6">We can work with almost anything: emailed files, hard copies, or high-res images. To keep your order moving as fast as possible, we highly prefer vector file formats.</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-5">
+            <div class="bg-[#f8fafc] border border-[#e2e8f0] rounded-[12px] p-6 border-l-4 border-l-[#074277]">
+              <h3 class="font-['Outfit'] text-base font-bold text-[#074277] mb-3 flex items-center gap-2">Preferred Vector Formats</h3>
+              <ul class="list-none p-0 m-0 flex flex-col gap-4">
+                <li>
+                  <strong class="text-[15px] text-[#0f172a]">PDF <span class="text-xs text-[#64748b] font-normal">(Adobe Acrobat)</span></strong>
+                  <p class="text-[13.5px] text-[#64748b] mt-1">Embed all fonts used or export layout as a generic high-res PDF/X.</p>
+                </li>
+                <li>
+                  <strong class="text-[15px] text-[#0f172a]">AI or EPS <span class="text-xs text-[#64748b] font-normal">(Adobe Illustrator)</span></strong>
+                  <p class="text-[13.5px] text-[#64748b] mt-1">Convert all text/type to outlines and embed any linked images.</p>
+                </li>
+                <li>
+                  <strong class="text-[15px] text-[#0f172a]">CDR <span class="text-xs text-[#64748b] font-normal">(Corel Draw)</span></strong>
+                  <p class="text-[13.5px] text-[#64748b] mt-1">Convert all text to curves before saving and sending.</p>
+                </li>
+              </ul>
+            </div>
+            <div class="bg-[#f8fafc] border border-[#e2e8f0] rounded-[12px] p-6 border-l-4 border-l-[#64748b]">
+              <h3 class="font-['Outfit'] text-base font-bold text-[#64748b] mb-3 flex items-center gap-2">Other Accepted File Types</h3>
+              <ul class="list-none p-0 m-0 flex flex-col gap-4">
+                <li>
+                  <strong class="text-[15px] text-[#0f172a]">DOC, PPT or PUB <span class="text-xs text-[#64748b] font-normal">(Microsoft Office)</span></strong>
+                  <p class="text-[13.5px] text-[#64748b] mt-1">Embed or include the specific font family files with your documents.</p>
+                </li>
+                <li>
+                  <strong class="text-[15px] text-[#0f172a]">Bitmaps & Images <span class="text-xs text-[#64748b] font-normal">(.jpg, .tif, .gif, .png, .bmp)</span></strong>
+                  <p class="text-[13.5px] text-[#64748b] mt-1">Provide the highest resolution image files available (300dpi+ preferred).</p>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section: Imprint Types (Grid) -->
+        <section id="imprint" class="bg-white border border-[#e2e8f0] rounded-[20px] p-6 md:p-10 shadow-sm mt-8 md:mt-12">
+          <h2 class="font-['Outfit'] text-2xl font-extrabold text-[#0f172a] mb-6 border-b-2 border-[#e2e8f0] pb-3">Premium Imprint Types</h2>
+          <p class="text-[15px] text-[#64748b] leading-relaxed mb-6">Zevi Promotions uses state-of-the-art branding technologies to customize your items. Here are the 12 premium imprint methods we offer, complete with real production-grade Zevi product examples:</p>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 mt-4 md:mt-6">
+            
+            <div class="bg-white border border-[#e2e8f0] rounded-[12px] overflow-hidden shadow-sm flex flex-col transition-all duration-300">
+              <div class="aspect-[3/2] bg-[#f1f5f9] overflow-hidden">
+                <img src="<%= image_path('arttips/embroidery.jpg') %>" alt="Embroidery Imprint Example" class="w-full h-full object-cover" loading="lazy">
+              </div>
+              <div class="p-4">
+                <h4 class="font-['Outfit'] text-[15px] font-bold text-[#0f172a] mb-1.5">Embroidery</h4>
+                <p class="text-xs text-[#64748b] leading-relaxed">Computerized sewing machines stitch the imprint onto item.</p>
+              </div>
+            </div>
+
+            <div class="bg-white border border-[#e2e8f0] rounded-[12px] overflow-hidden shadow-sm flex flex-col transition-all duration-300">
+              <div class="aspect-[3/2] bg-[#f1f5f9] overflow-hidden">
+                <img src="<%= image_path('arttips/screenprint.jpg') %>" alt="Screenprint Imprint Example" class="w-full h-full object-cover" loading="lazy">
+              </div>
+              <div class="p-4">
+                <h4 class="font-['Outfit'] text-[15px] font-bold text-[#0f172a] mb-1.5">Screenprint</h4>
+                <p class="text-xs text-[#64748b] leading-relaxed">Ink is pressed through a screen onto the item's surface.</p>
+              </div>
+            </div>
+
+            <div class="bg-white border border-[#e2e8f0] rounded-[12px] overflow-hidden shadow-sm flex flex-col transition-all duration-300">
+              <div class="aspect-[3/2] bg-[#f1f5f9] overflow-hidden">
+                <img src="<%= image_path('arttips/heattransfer.jpg') %>" alt="Heat Transfer Imprint Example" class="w-full h-full object-cover" loading="lazy">
+              </div>
+              <div class="p-4">
+                <h4 class="font-['Outfit'] text-[15px] font-bold text-[#0f172a] mb-1.5">Heat Transfer</h4>
+                <p class="text-xs text-[#64748b] leading-relaxed">Heat is used to thermally bond imprint onto the item's surface.</p>
+              </div>
+            </div>
+
+            <div class="bg-white border border-[#e2e8f0] rounded-[12px] overflow-hidden shadow-sm flex flex-col transition-all duration-300">
+              <div class="aspect-[3/2] bg-[#f1f5f9] overflow-hidden">
+                <img src="<%= image_path('arttips/padprint.jpg') %>" alt="Pad Print Imprint Example" class="w-full h-full object-cover" loading="lazy">
+              </div>
+              <div class="p-4">
+                <h4 class="font-['Outfit'] text-[15px] font-bold text-[#0f172a] mb-1.5">Pad Print</h4>
+                <p class="text-xs text-[#64748b] leading-relaxed">Imprint is transferred to the item via an inked flexible pad.</p>
+              </div>
+            </div>
+
+            <div class="bg-white border border-[#e2e8f0] rounded-[12px] overflow-hidden shadow-sm flex flex-col transition-all duration-300">
+              <div class="aspect-[3/2] bg-[#f1f5f9] overflow-hidden">
+                <img src="<%= image_path('arttips/deboss.jpg') %>" alt="Deboss Imprint Example" class="w-full h-full object-cover" loading="lazy">
+              </div>
+              <div class="p-4">
+                <h4 class="font-['Outfit'] text-[15px] font-bold text-[#0f172a] mb-1.5">Deboss</h4>
+                <p class="text-xs text-[#64748b] leading-relaxed">Imprint is depressed into the item's surface.</p>
+              </div>
+            </div>
+
+            <div class="bg-white border border-[#e2e8f0] rounded-[12px] overflow-hidden shadow-sm flex flex-col transition-all duration-300">
+              <div class="aspect-[3/2] bg-[#f1f5f9] overflow-hidden">
+                <img src="<%= image_path('arttips/emboss.jpg') %>" alt="Emboss Imprint Example" class="w-full h-full object-cover" loading="lazy">
+              </div>
+              <div class="p-4">
+                <h4 class="font-['Outfit'] text-[15px] font-bold text-[#0f172a] mb-1.5">Emboss</h4>
+                <p class="text-xs text-[#64748b] leading-relaxed">Imprint is raised onto the item's surface.</p>
+              </div>
+            </div>
+
+            <div class="bg-white border border-[#e2e8f0] rounded-[12px] overflow-hidden shadow-sm flex flex-col transition-all duration-300">
+              <div class="aspect-[3/2] bg-[#f1f5f9] overflow-hidden">
+                <img src="<%= image_path('arttips/laserengraved.jpg') %>" alt="Laser Engraved Imprint Example" class="w-full h-full object-cover" loading="lazy">
+              </div>
+              <div class="p-4">
+                <h4 class="font-['Outfit'] text-[15px] font-bold text-[#0f172a] mb-1.5">Laser Engraved</h4>
+                <p class="text-xs text-[#64748b] leading-relaxed">Imprint is etched into the item via a laser.</p>
+              </div>
+            </div>
+
+            <div class="bg-white border border-[#e2e8f0] rounded-[12px] overflow-hidden shadow-sm flex flex-col transition-all duration-300">
+              <div class="aspect-[3/2] bg-[#f1f5f9] overflow-hidden">
+                <img src="<%= image_path('arttips/foilstamp.jpg') %>" alt="Foil Stamp Imprint Example" class="w-full h-full object-cover" loading="lazy">
+              </div>
+              <div class="p-4">
+                <h4 class="font-['Outfit'] text-[15px] font-bold text-[#0f172a] mb-1.5">Foil Stamp</h4>
+                <p class="text-xs text-[#64748b] leading-relaxed">Metallic foil resins are applied to the item's surface.</p>
+              </div>
+            </div>
+
+            <div class="bg-white border border-[#e2e8f0] rounded-[12px] overflow-hidden shadow-sm flex flex-col transition-all duration-300">
+              <div class="aspect-[3/2] bg-[#f1f5f9] overflow-hidden">
+                <img src="<%= image_path('arttips/fullcolor.jpg') %>" alt="Full Color Imprint Example" class="w-full h-full object-cover" loading="lazy">
+              </div>
+              <div class="p-4">
+                <h4 class="font-['Outfit'] text-[15px] font-bold text-[#0f172a] mb-1.5">Full Color</h4>
+                <p class="text-xs text-[#64748b] leading-relaxed">Imprint is printed in CMYK allowing for the use of photos.</p>
+              </div>
+            </div>
+
+            <div class="bg-white border border-[#e2e8f0] rounded-[12px] overflow-hidden shadow-sm flex flex-col transition-all duration-300">
+              <div class="aspect-[3/2] bg-[#f1f5f9] overflow-hidden">
+                <img src="<%= image_path('arttips/deepetch.jpg') %>" alt="Deep Etch Imprint Example" class="w-full h-full object-cover" loading="lazy">
+              </div>
+              <div class="p-4">
+                <h4 class="font-['Outfit'] text-[15px] font-bold text-[#0f172a] mb-1.5">Deep Etch</h4>
+                <p class="text-xs text-[#64748b] leading-relaxed">Imprint is sandblasted, creating a deep frosted look.</p>
+              </div>
+            </div>
+
+            <div class="bg-white border border-[#e2e8f0] rounded-[12px] overflow-hidden shadow-sm flex flex-col transition-all duration-300">
+              <div class="aspect-[3/2] bg-[#f1f5f9] overflow-hidden">
+                <img src="<%= image_path('arttips/satinetch.jpg') %>" alt="Satin Etch Imprint Example" class="w-full h-full object-cover" loading="lazy">
+              </div>
+              <div class="p-4">
+                <h4 class="font-['Outfit'] text-[15px] font-bold text-[#0f172a] mb-1.5">Satin Etched</h4>
+                <p class="text-xs text-[#64748b] leading-relaxed">With use of acid on glass, this gives the imprint a frosted look.</p>
+              </div>
+            </div>
+
+            <div class="bg-white border border-[#e2e8f0] rounded-[12px] overflow-hidden shadow-sm flex flex-col transition-all duration-300">
+              <div class="aspect-[3/2] bg-[#f1f5f9] overflow-hidden">
+                <img src="<%= image_path('arttips/colorimbue.jpg') %>" alt="Applique Imprint Example" class="w-full h-full object-cover" loading="lazy">
+              </div>
+              <div class="p-4">
+                <h4 class="font-['Outfit'] text-[15px] font-bold text-[#0f172a] mb-1.5">Applique</h4>
+                <p class="text-xs text-[#64748b] leading-relaxed">Pieces of fabric are sewn into the item to form the imprint.</p>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- Section: Convert Text to Outlines -->
+        <section id="outlines" class="bg-white border border-[#e2e8f0] rounded-[20px] p-6 md:p-10 shadow-sm mt-8 md:mt-12">
+          <h2 class="font-['Outfit'] text-2xl font-extrabold text-[#0f172a] mb-6 border-b-2 border-[#e2e8f0] pb-3">How to Convert Text to Outlines</h2>
+          <p class="text-[15px] text-[#64748b] leading-relaxed mb-6">If working in Adobe Illustrator or other vector graphics programs, you must convert all text and typography elements to outlines before submitting your artwork. This locks the design shapes so that the font does not get substituted on another computer, ensuring your brand elements render exactly as submitted.</p>
+          
+          <div class="bg-[#fffbeb] border-l-4 border-[#f59e0b] rounded-[6px] py-4 px-5 my-6">
+            <p class="m-0 text-sm leading-relaxed text-[#0f172a]"><strong>To do this in Adobe Illustrator:</strong> Go to the top menus, click on <strong>Type</strong>, and select <strong>Create Outlines</strong>. Alternatively, select the text block using the Selection Tool and press <kbd class="bg-[#f1f5f9] border border-[#cbd5e1] rounded px-1.5 py-0.5 font-mono text-xs shadow-[0_1px_0_rgba(0,0,0,0.1)]">Ctrl</kbd> + <kbd class="bg-[#f1f5f9] border border-[#cbd5e1] rounded px-1.5 py-0.5 font-mono text-xs shadow-[0_1px_0_rgba(0,0,0,0.1)]">Shift</kbd> + <kbd class="bg-[#f1f5f9] border border-[#cbd5e1] rounded px-1.5 py-0.5 font-mono text-xs shadow-[0_1px_0_rgba(0,0,0,0.1)]">O</kbd> (<kbd class="bg-[#f1f5f9] border border-[#cbd5e1] rounded px-1.5 py-0.5 font-mono text-xs shadow-[0_1px_0_rgba(0,0,0,0.1)]">⌘</kbd> + <kbd class="bg-[#f1f5f9] border border-[#cbd5e1] rounded px-1.5 py-0.5 font-mono text-xs shadow-[0_1px_0_rgba(0,0,0,0.1)]">Shift</kbd> + <kbd class="bg-[#f1f5f9] border border-[#cbd5e1] rounded px-1.5 py-0.5 font-mono text-xs shadow-[0_1px_0_rgba(0,0,0,0.1)]">O</kbd> on macOS). Save and send us the file.</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-[#f8fafc] border border-[#e2e8f0] rounded-[12px] p-4 text-center">
+              <img src="<%= image_path('arttips/convertoutlines1.webp') %>" alt="Before Converting Text to Outlines" class="w-full rounded-[6px] mb-3" loading="lazy">
+              <p class="text-[13.5px] font-bold text-[#0f172a]">Before (Editable text block)</p>
+            </div>
+            <div class="bg-[#f8fafc] border border-[#e2e8f0] rounded-[12px] p-4 text-center">
+              <img src="<%= image_path('arttips/convertoutlines2.webp') %>" alt="After Converting Text to Outlines" class="w-full rounded-[6px] mb-3" loading="lazy">
+              <p class="text-[13.5px] font-bold text-[#10b981]">After (Converted to outlines/vector paths)</p>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <!-- Right Sidebar -->
+    <aside class="self-start hidden lg:block">
+      <div class="sticky top-[100px]">
+        
+        <!-- Sidebar Widget: Need Help? -->
+        <section class="bg-white border border-[#e2e8f0] rounded-[20px] p-6 shadow-sm" aria-labelledby="needHelpHdr">
+          <h2 id="needHelpHdr" class="font-['Outfit'] text-base font-extrabold text-[#0f172a] mb-4 pb-2 border-b-2 border-[#074277] uppercase tracking-wider">Need Help with Artwork?</h2>
+          <div class="panel-content">
+            <p class="text-sm text-[#64748b] leading-relaxed mb-5">Got questions about file types, curves, or formats? Our support team is here to guide you step-by-step!</p>
+            <div class="flex flex-col gap-3">
+              <a class="flex items-center gap-2.5 p-3 bg-[#f8fafc] border border-[#e2e8f0] rounded-[6px] text-sm font-semibold text-[#0f172a] transition-all duration-300 no-underline hover:bg-[#074277] hover:text-[#f8fafc] hover:border-[#074277]" href="tel:<%= phone_number %>">
+                <%= heroicon "phone", variant: :outline %>
+                <span><%= phone_number %></span>
+              </a>
+              <a class="flex items-center gap-2.5 p-3 bg-[#f8fafc] border border-[#e2e8f0] rounded-[6px] text-sm font-semibold text-[#0f172a] transition-all duration-300 no-underline hover:bg-[#074277] hover:text-[#f8fafc] hover:border-[#074277]" href="mailto:<%= email_address %>">
+                <%= heroicon "envelope", variant: :outline %>
+                <span>Email Us</span>
+              </a>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </aside>
+  </div>
+</main>
+
+<%= render FooterComponent.new %>

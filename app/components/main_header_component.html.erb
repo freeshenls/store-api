@@ -1,0 +1,78 @@
+<header class="main-header bg-white/85 backdrop-blur-md border-b border-[#e2e8f0] z-[100] shadow-sm relative" data-controller="header" data-action="click@document->header#clickOutside">
+  <div class="<%= container_custom %> flex justify-between items-center h-20">
+    <!-- Brand Logo -->
+    <a href="/" class="brand-logo group flex items-center gap-3 font-['Outfit'] font-extrabold text-[22px] !text-[#074277] no-underline">
+      <img src="<%= image_path('logo_zevi.png') %>" alt="Zevi Promotion Logo" class="h-14 w-14 rounded-full bg-white p-1 border border-[#e2e8f0] shadow-[0_0_10px_rgba(7,66,119,0.08)] transition-all duration-300 object-contain group-hover:rotate-5 group-hover:scale-105">
+      <span>Zevi <span class="text-[#b93530]">Promotion</span></span>
+    </a>
+
+    <!-- Search Form -->
+    <form class="navbar-search hidden lg:flex flex-1 max-w-[420px] mx-8 relative" action="/products" method="GET">
+      <%= heroicon "magnifying-glass", options: { class: "absolute left-4 top-1/2 -translate-y-1/2 text-[#64748b] size-5 pointer-events-none" } %>
+      <input type="text" name="q" value="<%= @query %>" placeholder="Search products..." class="w-full h-11 bg-[#f8fafc] border border-[#e2e8f0] rounded-[12px] pl-12 pr-4 font-['Inter'] text-sm text-[#0f172a] outline-none transition-all duration-300 focus:border-[#074277] focus:bg-white focus:ring-3 focus:ring-[#074277]/[0.08]">
+      <button type="submit" class="absolute right-1.5 top-1/2 -translate-y-1/2 h-8 px-3 bg-[#074277] text-[#f8fafc] border-none rounded-lg text-xs font-semibold cursor-pointer transition-all duration-300 hover:bg-[#052e54]">Search</button>
+    </form>
+
+    <!-- Desktop Navigation Menu -->
+    <nav class="navbar-menu hidden lg:flex items-center gap-7">
+      <div class="dropdown-trigger group relative flex items-center gap-1 cursor-pointer font-['Outfit'] text-[15px] font-semibold text-[#1e293b] py-2" data-header-target="dropdown" data-action="click->header#toggleDropdown">
+        <span>Categories</span>
+        <%= heroicon "chevron-down", variant: :mini %>
+        <div class="dropdown-menu-list absolute top-full left-1/2 -translate-x-1/2 translate-y-2.5 bg-white border border-[#e2e8f0] rounded-[12px] shadow-xl min-w-[220px] opacity-0 invisible transition-all duration-300 py-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-[.active]:opacity-100 group-[.active]:visible group-[.active]:translate-y-0">
+          <% @header_categories.each do |cat| %>
+            <% is_active = params[:category].to_s.downcase == cat.downcase %>
+            <a href="/products?category=<%= ERB::Util.u(cat) %>" class="dropdown-item <%= 'active' if is_active %> block py-2.5 px-5 text-sm font-medium text-[#0f172a] no-underline transition-all duration-300 hover:bg-[#074277]/[0.08] hover:text-[#074277] [&.active]:bg-[#074277]/[0.08] [&.active]:text-[#074277]"><%= cat %></a>
+          <% end %>
+        </div>
+      </div>
+      <%
+        def nav_link_classes(path)
+          active = request.path == path
+          "navbar-link font-['Outfit'] text-[15px] font-semibold relative py-2 no-underline transition-all duration-300 after:content-[''] after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-[#074277] after:transition-all after:duration-300 " +
+          (active ? "text-[#074277] after:w-full" : "text-[#1e293b] hover:text-[#074277] after:w-0 hover:after:w-full")
+        end
+      %>
+      <a href="/" class="<%= nav_link_classes('/') %>">Home</a>
+      <a href="/products" class="<%= nav_link_classes('/products') %>">Shop Now</a>
+      <a href="/#about" class="navbar-link font-['Outfit'] text-[15px] font-semibold text-[#1e293b] hover:text-[#074277] relative py-2 no-underline transition-all duration-300 after:content-[''] after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-[#074277] after:w-0 hover:after:w-full after:transition-all after:duration-300">About</a>
+      <a href="#footer" class="navbar-link font-['Outfit'] text-[15px] font-semibold text-[#1e293b] hover:text-[#074277] relative py-2 no-underline transition-all duration-300 after:content-[''] after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-[#074277] after:w-0 hover:after:w-full after:transition-all after:duration-300">Contact</a>
+    </nav>
+
+    <!-- Mobile menu toggle -->
+    <button class="mobile-menu-toggle bg-none border-none cursor-pointer text-[#1e293b] flex lg:hidden items-center justify-center" id="mobile-menu-btn" data-action="click->header#toggleMobileMenu">
+      <%= heroicon "bars-3", options: { class: "size-7", style: "display: block;", "data-header-target" => "menuIconOpen" } %>
+      <%= heroicon "x-mark", options: { class: "size-7", style: "display: none;", "data-header-target" => "menuIconClose" } %>
+    </button>
+  </div>
+
+  <!-- Mobile Navigation Accordion Menu -->
+  <div id="mobile-dropdown-menu" class="mobile-accordion-menu !block max-h-0 overflow-hidden transition-[max-height] duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] w-full bg-white border-b border-[#e2e8f0] [&.open]:max-h-[600px]" data-header-target="mobileMenu">
+    <div class="p-4 flex flex-col gap-3">
+      <!-- Mobile Search Form inside Menu -->
+      <form class="mobile-search-form relative mb-2 w-full" action="/products" method="GET">
+        <%= heroicon "magnifying-glass", options: { class: "absolute left-4 top-1/2 -translate-y-1/2 text-[#64748b] size-5 pointer-events-none opacity-100" } %>
+        <input type="text" name="q" value="<%= @query %>" placeholder="Search products..." class="w-full h-11 bg-[#f8fafc] border border-[#e2e8f0] rounded-[12px] pl-12 pr-4 font-['Inter'] text-sm text-[#0f172a] outline-none transition-all duration-300 box-border focus:border-[#074277] focus:bg-white focus:ring-3 focus:ring-[#074277]/[0.08]">
+        <button type="submit" class="absolute right-1.5 top-1/2 -translate-y-1/2 h-8 px-3 bg-[#074277] text-[#f8fafc] border-none rounded-lg text-xs font-semibold cursor-pointer transition-all duration-300 hover:bg-[#052e54]">Search</button>
+      </form>
+
+      <a href="/" class="mobile-menu-link font-['Outfit'] text-[15px] font-semibold no-underline py-2 border-b border-[#e2e8f0] transition-all duration-300 hover:text-[#074277] <%= request.path == '/' ? 'text-[#074277]' : 'text-[#1e293b]' %>">Home</a>
+      <!-- Collapsible Mobile Categories Dropdown -->
+      <% is_any_category_active = @header_categories.any? { |cat| params[:category].to_s.downcase == cat.downcase } %>
+      <div class="border-b border-[#e2e8f0] flex flex-col">
+        <button type="button" class="mobile-menu-link w-full flex justify-between items-center font-['Outfit'] text-[15px] font-semibold text-[#1e293b] hover:text-[#074277] no-underline py-2 bg-none border-none cursor-pointer text-left box-border outline-none transition-all duration-300" data-action="click->header#toggleMobileCategories">
+          <span>Categories</span>
+          <%= heroicon "chevron-down", variant: :mini, options: { class: "transition-transform duration-200 pointer-events-none #{is_any_category_active ? 'rotate-180' : ''}", "data-header-target" => "mobileCategoriesIcon" } %>
+        </button>
+        <div id="mobile-categories-list" data-header-target="mobileCategoriesList" style="<%= is_any_category_active ? 'display: flex;' : 'display: none;' %>" class="flex-col gap-2 pt-1 pb-3 pl-4 box-border">
+          <% @header_categories.each do |cat| %>
+            <% is_active = params[:category].to_s.downcase == cat.downcase %>
+            <a href="/products?category=<%= ERB::Util.u(cat) %>" class="mobile-category-sublink <%= 'text-[#074277]' if is_active %> text-[13.5px] font-medium text-[#64748b] hover:text-[#074277] no-underline block py-1 transition-all duration-300"><%= cat %></a>
+          <% end %>
+        </div>
+      </div>
+      <a href="/#about" class="mobile-menu-link font-['Outfit'] text-[15px] font-semibold text-[#1e293b] hover:text-[#074277] no-underline py-2 border-b border-[#e2e8f0] transition-all duration-300">About</a>
+      <a href="#footer" class="mobile-menu-link font-['Outfit'] text-[15px] font-semibold text-[#1e293b] hover:text-[#074277] no-underline py-2 transition-all duration-300">Contact</a>
+    </div>
+  </div>
+</header>
+

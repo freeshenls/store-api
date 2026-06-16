@@ -1,0 +1,56 @@
+<div class="hidden md:block mt-10 mb-[30px]">
+  <h6 class="text-[#666] mb-3 font-bold text-[15px]">Related Products</h6>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4" id="related-products-grid">
+    <% @related_products[0..2].each do |related| %>
+      <%
+        related_link = "/products/#{related.guid}/#{related.slug}"
+        related_title = related.title
+        related_price = related.price
+        
+        # Robust image resolution for related products
+        related_images_list = []
+        if related.images.attached?
+          related.images.each do |img|
+            begin
+              if img.blob.present?
+                related_images_list << url_for(img)
+              end
+            rescue => e
+              # Ignore
+              end
+            end
+          end
+        if related_images_list.empty? && related.main_image_url.present?
+          related_images_list << related.main_image_url
+        end
+        if related.image_urls.is_a?(Array)
+          related.image_urls.each do |url|
+            related_images_list << url unless related_images_list.include?(url)
+          end
+        end
+        related_img_url = related_images_list.first || "/placeholder.png"
+      %>
+      <a class="cursor-pointer block no-underline text-inherit h-full" href="<%= related_link %>">
+        <div class="bg-white border border-[#e2e8f0] rounded-[12px] p-4 flex flex-col items-center text-center transition-all duration-300 h-full hover:shadow-md hover:border-[#074277]">
+          <% if related_img_url %>
+            <img src="<%= related_img_url %>" alt="<%= related_title %>" class="h-[100px] w-[100px] object-contain mb-3">
+          <% else %>
+            <div class="w-full h-[100px] flex items-center justify-center bg-[#f1f5f9] text-[#94a3b8] text-[11px] mb-3">No Image</div>
+          <% end %>
+          
+          <div class="text-[#074277] font-semibold mb-1 font-['Outfit'] text-[13px] leading-[1.35] line-clamp-2 overflow-hidden h-[35px]">
+            <%= related_title %>
+          </div>
+          
+          <div class="text-[11px] text-[#64748b] leading-normal font-['Inter'] mt-auto pt-1 text-center">
+            <div class="text-[#0f172a] font-medium">
+              <%= related.min_qty %> @ <%= related_price %>
+            </div>
+          </div>
+        </div>
+      </a>
+    <% end %>
+  </div>
+</div>
+
+

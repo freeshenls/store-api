@@ -1,0 +1,15 @@
+<div data-controller="top-contact-bar" class="bg-[#0b0f19] text-[#94a3b8] text-[11px] sm:text-[13px] py-2 border-b border-[#1e293b] font-medium">
+  <div class="<%= container_custom %> flex justify-between items-center flex-wrap gap-2">
+    <div class="flex items-center gap-3 sm:gap-5">
+      <a href="tel:<%= @phone_number %>" class="flex items-center gap-1.5 transition-all duration-300 text-inherit no-underline hover:text-[#f8fafc]">
+        <%= heroicon "phone", options: { class: "size-[13px] sm:size-4 align-middle" } %>
+        <span><%= @phone_number %></span>
+      </a>
+      <a href="mailto:<%= @email_address %>" class="flex items-center gap-1.5 transition-all duration-300 text-inherit no-underline hover:text-[#f8fafc]">
+        <%= heroicon "envelope", options: { class: "size-[13px] sm:size-4 align-middle" } %>
+        <span><%= @email_address %></span>
+      </a>
+    </div>
+  </div>
+</div>
+

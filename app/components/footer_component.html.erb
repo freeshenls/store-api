@@ -1,0 +1,56 @@
+<footer class="dcFooter bg-[#0b0f19] text-[#94a3b8] pt-[60px] border-t border-[#1e293b] font-['Inter']" id="footer" data-controller="footer">
+  <div class="<%= container_custom %> grid grid-cols-1 md:grid-cols-[2fr_1fr_1.5fr] gap-[30px] md:gap-10 mb-10" id="footer-grid-container">
+    <!-- Brand Info -->
+    <div class="flex flex-col gap-4">
+      <div class="flex items-center gap-2.5 font-['Outfit'] font-extrabold text-[20px] text-[#f8fafc]">
+        <img src="<%= image_path('logo_zevi.png') %>" alt="Zevi Promotion Logo" class="h-10 w-10 object-contain bg-white rounded-full p-0.5">
+        <span><span class="text-[#074277]">Zevi</span> <span class="text-[#b93530]">Promotion</span></span>
+      </div>
+      <p class="text-sm leading-relaxed max-w-[320px]">Your one-stop source for elevated promotional apparel, bespoke corporate gifts, and identity-driven marketing essentials.</p>
+      <div class="text-xs text-[#64748b]">Powered by Rails 8.1 & SQLite</div>
+    </div>
+
+    <!-- Sitemap Navigation Links -->
+    <div>
+      <div class="font-['Outfit'] text-base font-bold text-[#f8fafc] mb-5 uppercase tracking-wider">Quick Links</div>
+      <ul class="footer-links-list list-none flex flex-col gap-3">
+        <li><a href="/" class="text-sm text-[#94a3b8] no-underline transition-all duration-200 hover:text-[#f8fafc]">Home</a></li>
+        <li><a href="/products" class="text-sm text-[#94a3b8] no-underline transition-all duration-200 hover:text-[#f8fafc]">Product Catalog</a></li>
+        <li><a href="/#about" class="text-sm text-[#94a3b8] no-underline transition-all duration-200 hover:text-[#f8fafc]">About Us</a></li>
+        <li><a href="#footer" class="text-sm text-[#94a3b8] no-underline transition-all duration-200 hover:text-[#f8fafc]">Contact Us</a></li>
+        <li><a href="/products/artwork_tips" class="text-sm text-[#94a3b8] no-underline transition-all duration-200 hover:text-[#f8fafc]">Artwork Tips</a></li>
+      </ul>
+    </div>
+
+    <!-- Contact address -->
+    <div>
+      <div class="font-['Outfit'] text-base font-bold text-[#f8fafc] mb-5 uppercase tracking-wider">Contact Us</div>
+      <address class="not-italic flex flex-col gap-4">
+        <div class="font-bold text-[#f8fafc] text-sm">
+          <span>Zevi Promotions Inc.</span>
+        </div>
+        <div class="flex items-start gap-2.5 text-sm leading-relaxed">
+          <%= heroicon "building-office", options: { class: "size-[18px] text-[#074277] mt-0.5" } %>
+          <span>1434 W Taft Ave, Suite 335<br>Orange, CA 92865</span>
+        </div>
+        <div class="flex items-start gap-2.5 text-sm leading-relaxed">
+          <%= heroicon "phone", options: { class: "size-[18px] text-[#074277] mt-0.5" } %>
+          <a href="tel:<%= @phone_number %>" class="text-sm text-[#94a3b8] no-underline transition-all duration-200 hover:text-[#f8fafc] inline"><%= @phone_number %></a>
+        </div>
+        <div class="flex items-start gap-2.5 text-sm leading-relaxed">
+          <%= heroicon "envelope", options: { class: "size-[18px] text-[#074277] mt-0.5" } %>
+          <a href="mailto:<%= @email_address %>" class="text-sm text-[#94a3b8] no-underline transition-all duration-200 hover:text-[#f8fafc] inline"><%= @email_address %></a>
+        </div>
+      </address>
+    </div>
+  </div>
+
+  <!-- Bottom Copyright Bar -->
+  <div class="border-t border-[#1e293b] py-6 text-[13px] text-[#64748b]">
+    <div class="<%= container_custom %> flex justify-between items-center flex-wrap gap-3">
+      <div>&copy; <%= Time.current.year %> Zevi Promotion. All rights reserved.</div>
+    </div>
+  </div>
+</footer>
+
+

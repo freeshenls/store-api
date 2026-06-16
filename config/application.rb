@@ -36,7 +36,7 @@ module StoreApi
     config.active_record.dump_schema_after_migration = false
     # config.action_controller.allow_forgery_protection = false
     config.action_cable.disable_request_forgery_protection = true
-    config.active_record.schema_migrations_table_name = "schema_migrations"
-    config.active_record.internal_metadata_table_name = "ar_internal_metadata"
+    # config.active_record.schema_migrations_table_name = "store_api.schema_migrations"
+    # config.active_record.internal_metadata_table_name = "store_api.ar_internal_metadata"
   end
 end

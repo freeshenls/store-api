@@ -4,5 +4,50 @@
 
 import { application } from "./application"
 
+import AdminController from "./admin_controller"
+application.register("admin", AdminController)
+
+import ArtworkTipsController from "./artwork_tips_controller"
+application.register("artwork-tips", ArtworkTipsController)
+
+import CarouselController from "./carousel_controller"
+application.register("carousel", CarouselController)
+
+import DatepickerController from "./datepicker_controller"
+application.register("datepicker", DatepickerController)
+
+import EmailWidgetController from "./email_widget_controller"
+application.register("email-widget", EmailWidgetController)
+
+import FooterController from "./footer_controller"
+application.register("footer", FooterController)
+
+import GalleryController from "./gallery_controller"
+application.register("gallery", GalleryController)
+
+import HeaderController from "./header_controller"
+application.register("header", HeaderController)
+
 import HelloController from "./hello_controller"
 application.register("hello", HelloController)
+
+import InquiryController from "./inquiry_controller"
+application.register("inquiry", InquiryController)
+
+import NavigationController from "./navigation_controller"
+application.register("navigation", NavigationController)
+
+import ProductCardController from "./product_card_controller"
+application.register("product-card", ProductCardController)
+
+import ProductSliderController from "./product_slider_controller"
+application.register("product-slider", ProductSliderController)
+
+import SidebarController from "./sidebar_controller"
+application.register("sidebar", SidebarController)
+
+import TabsController from "./tabs_controller"
+application.register("tabs", TabsController)
+
+import TopContactBarController from "./top_contact_bar_controller"
+application.register("top-contact-bar", TopContactBarController)

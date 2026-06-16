@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+/* Local Font declarations for Zevi Promotions */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url('inter.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Outfit';
+  font-style: normal;
+  font-weight: 300 800;
+  font-display: swap;
+  src: url('outfit.woff2') format('woff2');
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+

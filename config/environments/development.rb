@@ -31,7 +31,7 @@ Rails.application.configure do
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
 
-  # Don't care if the mailer can't send.
+  # Care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
 
   # Make template changes take effect immediately.
@@ -72,4 +72,16 @@ Rails.application.configure do
 
   # Raise error when a before_action's only/except options reference missing actions.
   config.action_controller.raise_on_missing_callback_actions = true
+
+  # Configure asset host to serve compiled static assets from Cloudflare R2 if R2_PUBLIC_URL is defined
+  if ENV["R2_PUBLIC_URL"].present?
+    config.action_controller.asset_host = Proc.new do |source|
+      if source.to_s.include?("rails/active_storage")
+        nil
+      else
+        ENV["R2_PUBLIC_URL"]
+      end
+    end
+  end
 end
+

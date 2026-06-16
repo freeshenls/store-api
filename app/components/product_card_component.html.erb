@@ -1,0 +1,44 @@
+<%
+  image = @product.images.first rescue nil
+%>
+<div class="product-card bg-white border border-[#e2e8f0] rounded-[12px] overflow-hidden shadow-sm transition-all duration-300 flex flex-col h-full" data-controller="product-card">
+  <div class="product-image-wrapper aspect-square bg-[#f1f5f9] relative overflow-hidden flex items-center justify-center w-full">
+    <a href="<%= product_link %>" class="product-image-link block w-full h-full">
+      <% if image %>
+        <img src="<%= url_for(image) %>" alt="<%= @product.title %>" class="w-full h-full object-contain">
+      <% elsif @product.main_image_url.present? %>
+        <img src="<%= @product.main_image_url %>" alt="<%= @product.title %>" class="w-full h-full object-contain">
+      <% else %>
+        <div class="w-full h-full flex items-center justify-center bg-[#f3f4f6] text-[#9ca3af] font-medium text-sm">No Image</div>
+      <% end %>
+    </a>
+
+    <% if @product.badge.present? %>
+      <span class="absolute top-3 left-3 bg-[#074277] text-[#f8fafc] py-1 px-2.5 text-[11px] font-bold rounded uppercase"><%= @product.badge %></span>
+    <% end %>
+  </div>
+  
+  <div class="py-2.5 px-3 flex flex-col flex-1">
+    <div class="flex justify-between items-center mb-0.5">
+      <% unless @hide_category %>
+        <span class="m-0 text-[10px] text-[#64748b] uppercase font-semibold tracking-wider"><%= @product.category %></span>
+      <% else %>
+        <span></span>
+      <% end %>
+    </div>
+    
+    <h3 class="mt-0.5 mb-1 text-[13px] font-semibold leading-[1.35] h-[35px] overflow-hidden line-clamp-2 font-['Outfit']">
+      <a href="<%= product_link %>" class="product-card-title-link text-[#074277] hover:text-[#052e54] no-underline transition-colors duration-200" title="<%= @product.title %>">
+        <%= @product.title %>
+      </a>
+    </h3>
+    
+    <div class="text-xs text-[#64748b] leading-normal font-['Inter'] mt-auto pt-1">
+      <div class="text-[#0f172a] font-medium">
+        <%= @product.min_qty %> @ <%= @product.price %>
+      </div>
+    </div>
+  </div>
+</div>
+
+

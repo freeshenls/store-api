@@ -1,0 +1,239 @@
+<%
+  # Set up category fallbacks in case the database is in an empty state
+  categories = @categories.any? ? @categories : [
+    "Apparel",
+    "Desk Accessories",
+    "Drinkware",
+    "Fidgets",
+    "Novelties",
+    "Gifts",
+    "Bags & Totes",
+    "Technology",
+    "Wristbands"
+  ]
+
+  phone_number = "(714) 857-0010"
+  email_address = "info@zevipromotions.com"
+
+  # Dynamic Catalog SEO Meta Tags
+  if params[:category].present?
+    content_for :title, "Custom #{params[:category]} & Branded Promotional Products | Zevi Promotion"
+    content_for :description, "Explore our high-quality collection of custom #{params[:category].downcase} and branded merchandise. Add your corporate logo with premium imprinting at Zevi Promotion."
+  elsif params[:q].present?
+    content_for :title, "Search Results for '#{params[:q]}' | Custom Branded Swag | Zevi Promotion"
+    content_for :description, "Browse all search results for '#{params[:q]}' at Zevi Promotion. Discover premium custom-printed promotional gifts, apparel, and corporate giveaways."
+  else
+    content_for :title, "Corporate Gifts & Custom Branded Promotional Products Catalog | Zevi Promotion"
+    content_for :description, "Browse our extensive catalog of premium custom promotional products, branded corporate gifts, personalized drinkware, custom apparel, and school spirit swag."
+  end
+%>
+
+
+<%= render TopContactBarComponent.new %>
+<%= render MainHeaderComponent.new(query: params[:q]) %>
+
+<!-- Main Products Content Grid -->
+<section class="py-10">
+  <div class="<%= container_custom %> grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-[30px]">
+    <!-- Left Sidebar Category Filters -->
+    <%
+      # Helper to build category links that preserve other active query filters (search, price, page limits)
+      def category_filter_url(cat = nil)
+        url_parts = []
+        url_parts << "category=#{u(cat)}" if cat.present?
+        url_parts << "q=#{u(params[:q])}" if params[:q].present?
+        url_parts << "min_price=#{params[:min_price]}" if params[:min_price].present?
+        url_parts << "max_price=#{params[:max_price]}" if params[:max_price].present?
+        url_parts << "per_page=#{params[:per_page]}" if params[:per_page].present?
+        "/products" + (url_parts.any? ? "?" + url_parts.join("&") : "")
+      end
+    %>
+    <aside class="hidden lg:block <%= panel_card %> self-start">
+      <div class="flex justify-between items-center w-full pb-3 border-b border-[#e2e8f0]">
+        <div class="flex items-center gap-2">
+          <%= heroicon "squares-2x2", options: { class: "size-5 text-[#074277]" } %>
+          <span class="font-['Outfit'] text-[18px] font-extrabold text-[#0f172a]">Categories</span>
+        </div>
+      </div>
+      <ul class="list-none p-0 m-0 flex flex-col gap-1 mt-3">
+        <li class="group/item <%= 'active' unless params[:category].present? %>">
+          <a class="flex items-center justify-between py-2.5 px-3.5 text-sm font-medium rounded-[6px] transition-all duration-300 no-underline <%= !params[:category].present? ? 'bg-[#074277] text-[#f8fafc]' : 'text-[#0f172a] hover:bg-[#074277]/[0.08] hover:text-[#074277]' %>" href="<%= category_filter_url(nil) %>">
+            <span>All Products</span>
+            <%= heroicon "chevron-right", options: { class: "size-4" } %>
+          </a>
+        </li>
+        <% categories.each do |cat| %>
+          <% is_active = params[:category].to_s.downcase == cat.downcase %>
+          <li class="group/item <%= 'active' if is_active %>">
+            <a class="flex items-center justify-between py-2.5 px-3.5 text-sm font-medium rounded-[6px] transition-all duration-300 no-underline <%= is_active ? 'bg-[#074277] text-[#f8fafc]' : 'text-[#0f172a] hover:bg-[#074277]/[0.08] hover:text-[#074277]' %>" href="<%= category_filter_url(cat) %>">
+              <span><%= cat %></span>
+              <%= heroicon "chevron-right", options: { class: "size-4" } %>
+            </a>
+          </li>
+        <% end %>
+      </ul>
+
+      <!-- Price Range Filter Form -->
+      <div class="mt-6 pt-5 border-t border-[#e2e8f0]">
+        <h4 class="font-['Outfit'] text-[15px] font-extrabold text-[#0f172a] mb-3 flex items-center gap-1.5">
+          <%= heroicon "banknotes", options: { class: "size-[18px] text-[#074277]" } %>
+          <span>Price Range</span>
+        </h4>
+        <form action="/products" method="GET" class="flex flex-col gap-3">
+          <!-- Retain existing filters as hidden inputs -->
+          <% if params[:category].present? %>
+            <input type="hidden" name="category" value="<%= params[:category] %>">
+          <% end %>
+          <% if params[:q].present? %>
+            <input type="hidden" name="q" value="<%= params[:q] %>">
+          <% end %>
+          <% if params[:per_page].present? %>
+            <input type="hidden" name="per_page" value="<%= params[:per_page] %>">
+          <% end %>
+
+          <div class="flex items-center gap-2">
+            <input type="number" name="min_price" step="any" min="0" placeholder="Min" value="<%= params[:min_price] %>" class="w-full h-9 py-1.5 px-2.5 border border-[#e2e8f0] rounded-[6px] text-[13px] font-['Inter'] outline-none bg-[#f8fafc] transition-colors duration-200 focus:border-[#074277]">
+            <span class="text-[#64748b] text-[13px]">to</span>
+            <input type="number" name="max_price" step="any" min="0" placeholder="Max" value="<%= params[:max_price] %>" class="w-full h-9 py-1.5 px-2.5 border border-[#e2e8f0] rounded-[6px] text-[13px] font-['Inter'] outline-none bg-[#f8fafc] transition-colors duration-200 focus:border-[#074277]">
+          </div>
+
+          <div class="flex gap-2">
+            <button type="submit" class="flex-1 h-9 bg-[#074277] text-white border-none rounded-[6px] text-[13px] font-['Outfit'] font-bold cursor-pointer transition-all duration-300 hover:bg-[#052e54]">Apply</button>
+            <% if params[:min_price].present? || params[:max_price].present? %>
+              <%
+                # Clear url helper preserving other parameters
+                url_clear_parts = []
+                url_clear_parts << "category=#{u(params[:category])}" if params[:category].present?
+                url_clear_parts << "q=#{u(params[:q])}" if params[:q].present?
+                url_clear_parts << "per_page=#{params[:per_page]}" if params[:per_page].present?
+                clear_price_url = "/products" + (url_clear_parts.any? ? "?" + url_clear_parts.join("&") : "")
+              %>
+              <a href="<%= clear_price_url %>" class="flex items-center justify-center w-9 h-9 border border-[#e2e8f0] rounded-[6px] text-[#64748b] transition-all duration-300 hover:text-[#b93530] hover:border-[#b93530]" title="Clear Price Filter">
+                <%= heroicon "backspace", options: { class: "size-[18px]" } %>
+              </a>
+            <% end %>
+          </div>
+        </form>
+      </div>
+    </aside>
+
+    <!-- Right Products List Grid -->
+    <div>
+      <!-- Page Header & Search Feedback -->
+      <div class="mb-[30px] flex justify-between items-end flex-wrap gap-4 border-b border-[#e2e8f0] pb-4">
+        <div>
+          <h1 class="font-['Outfit'] text-[28px] font-extrabold text-[#0f172a]">
+            <%= @category_filter.present? ? @category_filter : "Product Search" %>
+          </h1>
+          <% if @query.present? %>
+            <p class="text-sm text-[#64748b] mt-1">
+              Showing results for "<strong class="text-[#0f172a]"><%= @query %></strong>"
+            </p>
+          <% end %>
+        </div>
+        <div class="flex items-center gap-4 text-sm text-[#64748b] font-medium flex-wrap">
+          <div>
+            Found <strong class="text-[#0f172a] font-['Outfit']"><%= @all_product_cards.any? ? @total_products : (params[:q].blank? && params[:category].blank? ? 12 : 0) %></strong> products
+          </div>
+          <div class="flex items-center gap-2">
+            <span>Show:</span>
+            <%
+              def page_size_url(size)
+                "/products?per_page=#{size}" +
+                (params[:category].present? ? "&category=#{u(params[:category])}" : "") +
+                (params[:q].present? ? "&q=#{u(params[:q])}" : "")
+              end
+            %>
+            <select class="py-1.5 px-3 border border-[#e2e8f0] rounded-[6px] text-[13px] font-semibold text-[#0f172a] bg-white outline-none cursor-pointer transition-all duration-300 focus:border-[#074277] focus:shadow-[0_0_0_3px_rgba(7,66,119,0.08)]" onchange="window.location.href=this.value;">
+              <option value="<%= page_size_url(15) %>" <%= 'selected' if @per_page == 15 %>>15 / Page</option>
+              <option value="<%= page_size_url(30) %>" <%= 'selected' if @per_page == 30 %>>30 / Page</option>
+              <option value="<%= page_size_url(60) %>" <%= 'selected' if @per_page == 60 %>>60 / Page</option>
+              <option value="<%= page_size_url(120) %>" <%= 'selected' if @per_page == 120 %>>120 / Page</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Products Grid -->
+      <% if @product_cards.any? %>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-[30px]">
+          <% @product_cards.each do |product| %>
+            <%= render ProductCardComponent.new(product: product) %>
+          <% end %>
+        </div>
+      <% else %>
+        <!-- No Products Found State -->
+        <div class="text-center py-20 px-5 bg-white border border-[#e2e8f0] rounded-[20px] shadow-sm max-w-[600px] my-10 mx-auto">
+          <%= heroicon "archive-box-x-mark", options: { class: "text-[72px] text-slate-300 mb-4" } %>
+          <h2 class="font-['Outfit'] font-extrabold text-[22px] text-[#0f172a] mb-2">No Products Found</h2>
+          <p class="text-sm text-[#64748b] max-w-[320px] my-0 mx-auto mb-6 leading-relaxed">
+            We couldn't find any products matching your filters. Try selecting another category or resetting your query.
+          </p>
+          <a href="/products" class="<%= btn_primary %> inline-flex items-center gap-2 no-underline border-none">Reset Filters</a>
+        </div>
+      <% end %>
+
+      <!-- Pagination Controls (Always displayed by default) -->
+      <div class="flex justify-center items-center gap-2 mt-10 pt-6 border-t border-[#e2e8f0]">
+        <!-- Previous Page Link -->
+        <% if @current_page > 1 %>
+          <a href="/products?page=<%= @current_page - 1 %>&per_page=<%= @per_page %><%= "&category=#{u(params[:category])}" if params[:category].present? %><%= "&q=#{u(params[:q])}" if params[:q].present? %>" class="flex items-center justify-center w-10 h-10 border border-[#e2e8f0] rounded-[6px] text-[#0f172a] bg-white transition-all duration-300 hover:bg-[#074277]/[0.08] hover:text-[#074277] hover:border-[#074277]">
+            <%= heroicon "chevron-left", options: { class: "size-5" } %>
+          </a>
+        <% else %>
+          <div class="flex items-center justify-center w-10 h-10 border border-[#e2e8f0] rounded-[6px] text-slate-300 bg-slate-100 cursor-not-allowed opacity-60">
+            <%= heroicon "chevron-left", options: { class: "size-5" } %>
+          </div>
+        <% end %>
+
+        <!-- Page Numbers: Windowed to show at most 3 numbers to prevent overflow and clutter -->
+        <%
+          start_page = [@current_page - 1, 1].max
+          end_page = [start_page + 2, @total_pages].min
+          if end_page - start_page < 2
+            start_page = [end_page - 2, 1].max
+          end
+        %>
+        <% (start_page..end_page).each do |num| %>
+          <% is_active = num == @current_page %>
+          <% if is_active %>
+            <div class="flex items-center justify-center w-10 h-10 border border-[#074277] rounded-[6px] text-[#f8fafc] bg-[#074277] font-bold font-['Outfit']"><%= num %></div>
+          <% else %>
+            <a href="/products?page=<%= num %>&per_page=<%= @per_page %><%= "&category=#{u(params[:category])}" if params[:category].present? %><%= "&q=#{u(params[:q])}" if params[:q].present? %>" class="flex items-center justify-center w-10 h-10 border border-[#e2e8f0] rounded-[6px] text-[#0f172a] bg-white font-semibold font-['Outfit'] transition-all duration-300 hover:bg-[#074277]/[0.08] hover:text-[#074277] hover:border-[#074277]"><%= num %></a>
+          <% end %>
+        <% end %>
+
+        <!-- Next Page Link -->
+        <% if @current_page < @total_pages %>
+          <a href="/products?page=<%= @current_page + 1 %>&per_page=<%= @per_page %><%= "&category=#{u(params[:category])}" if params[:category].present? %><%= "&q=#{u(params[:q])}" if params[:q].present? %>" class="flex items-center justify-center w-10 h-10 border border-[#e2e8f0] rounded-[6px] text-[#0f172a] bg-white transition-all duration-300 hover:bg-[#074277]/[0.08] hover:text-[#074277] hover:border-[#074277]">
+            <%= heroicon "chevron-right", options: { class: "size-5" } %>
+          </a>
+        <% else %>
+          <div class="flex items-center justify-center w-10 h-10 border border-[#e2e8f0] rounded-[6px] text-slate-300 bg-slate-100 cursor-not-allowed opacity-60">
+            <%= heroicon "chevron-right", options: { class: "size-5" } %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%= render FooterComponent.new %>
+
+<div data-controller="email-widget">
+  <!-- Floating Email Widget -->
+  <div id="floating-email-widget" class="fixed bottom-6 right-6 flex flex-col gap-2 z-[999] transition-all duration-300 [&.minimized]:translate-y-[80px] [&.minimized]:opacity-0 [&.minimized]:pointer-events-none minimized" data-email-widget-target="widget">
+    <a href="mailto:<%= email_address %>" class="flex items-center justify-center gap-2 h-12 rounded-[24px] border-none font-['Outfit'] font-bold text-sm cursor-pointer shadow-lg px-5 transition-all duration-300 bg-[#074277] text-[#f8fafc] hover:bg-[#052e54]">
+      <%= heroicon "envelope" %>
+      <span class="btn-label">Email</span>
+    </a>
+    <button type="button" id="widget-toggle-btn" class="flex items-center justify-center gap-2 h-12 rounded-[24px] border border-[#e2e8f0] font-['Outfit'] font-bold text-sm cursor-pointer shadow-lg px-5 transition-all duration-300 bg-white text-[#64748b] hover:text-[#0f172a]" data-action="click->email-widget#minimize">
+      <%= heroicon "chevron-down", options: { class: "toggle-icon" } %>
+      <span class="btn-label toggle-label">Hide</span>
+    </button>
+  </div>
+
+  <button type="button" id="floating-email-collapsed" class="fixed bottom-6 right-6 w-12 h-12 rounded-full bg-[#074277] text-[#f8fafc] border-none flex items-center justify-center shadow-lg cursor-pointer z-[998] transition-all duration-300 hover:bg-[#052e54] hover:scale-105" data-email-widget-target="collapsed" data-action="click->email-widget#expand">
+    <%= heroicon "envelope" %>
+  </button>
+</div>

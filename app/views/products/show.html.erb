@@ -1,0 +1,196 @@
+<%
+  # Set up category fallbacks in case the database is in an empty state
+  categories = @categories.any? ? @categories : [
+    "Apparel",
+    "Desk Accessories",
+    "Drinkware",
+    "Fidgets",
+    "Novelties",
+    "Gifts",
+    "Bags & Totes",
+    "Technology",
+    "Wristbands"
+  ]
+
+  # Resolve product info from native database model
+  title = @product.title
+  category = @product.category
+  price = @product.price
+  old_price = @product.old_price
+  badge = @product.badge
+  min_qty = @product.min_qty
+  
+  phone_number = "(714) 857-0010"
+  email_address = "info@zevipromotions.com"
+
+  # Load setup charges from database (populated by import script)
+  setup_prices = @product.setup_prices.is_a?(Array) ? @product.setup_prices : []
+  product_shipping_html = ""
+
+  # Fallback: Parse from HTML sales flyer if database is empty
+  if setup_prices.empty? && @product.guid.present?
+    sales_path = Rails.root.join("public/sales/#{@product.guid.upcase}.html")
+    if File.exist?(sales_path)
+      begin
+        html_content = File.read(sales_path)
+        matches = html_content.scan(/<table id="setupPricing".*?<\/table>/m)
+        if matches.any?
+          rows = matches.first.scan(/<tr.*?>(.*?)<\/tr>/m)
+          rows.each do |row_content|
+            cells = row_content.first.scan(/<td.*?>(.*?)<\/td>/m).flatten
+            if cells.length >= 2
+              qty = cells[0].strip.gsub(/<[^>]*>/, "")
+              price_str = cells[1].strip.gsub(/<[^>]*>/, "")
+              if qty.match?(/^\d+$/) && price_str.match?(/[\d.]+/)
+                setup_prices << {
+                  "qty" => qty,
+                  "retailPrice" => price_str.gsub(/[^\d.]/, ""),
+                  "unitsOfMeasureName" => price_str.gsub(/[\d. \s]+/, "").strip.downcase
+                }
+              end
+            end
+          end
+        end
+      rescue => e
+        # Ignore
+      end
+    end
+  end
+  setup_prices = setup_prices.uniq { |sp| [sp["qty"], sp["retailPrice"]] }.sort_by { |sp| sp["qty"].to_i }
+%>
+
+<%
+  cat_down = category.to_s.downcase
+
+  # Generate a dynamic SKU matching the style of "#XXX" based on the SKU code
+  clean_sku = @product.sku.to_s.gsub(/^CPN-/, '')
+  style_number = "##{clean_sku}"
+
+  # Parse base price for tiered wholesale calculations
+  base_price_str = price.to_s.strip
+  currency_sym = base_price_str[/[^\d.]+/] || "$"
+
+  # Resolve product images
+  images_list = []
+  if @product.images.attached?
+    @product.images.each do |img|
+      begin
+        if img.blob.present?
+          images_list << url_for(img)
+        end
+      rescue => e
+        # Ignore and proceed
+      end
+    end
+  end
+  if images_list.empty? && @product.main_image_url.present?
+    images_list << @product.main_image_url
+  end
+  if @product.image_urls.is_a?(Array)
+    @product.image_urls.each do |url|
+      images_list << url unless images_list.include?(url)
+    end
+  end
+  main_image_src = images_list.first || "/placeholder.png"
+
+  # Dynamic SEO Meta Tags
+  content_for :title, "#{@product.title} | #{style_number} | Zevi Promotion"
+  content_for :description, @product.description.to_s.truncate(155)
+
+  # Social Media Open Graph (OG) & Twitter Card Social SEO Headers
+  content_for :head do
+    raw(%(
+      <meta property="og:title" content="#{@product.title} | #{style_number} | Zevi Promotion">
+      <meta property="og:description" content="#{@product.description.to_s.truncate(155)}">
+      <meta property="og:type" content="product">
+      <meta property="og:url" content="#{request.original_url}">
+      <meta property="og:image" content="#{main_image_src}">
+      <meta property="og:site_name" content="Zevi Promotion">
+      <meta name="twitter:card" content="summary_large_image">
+      <meta name="twitter:title" content="#{@product.title} | #{style_number} | Zevi Promotion">
+      <meta name="twitter:description" content="#{@product.description.to_s.truncate(155)}">
+      <meta name="twitter:image" content="#{main_image_src}">
+    ))
+  end
+
+  sales_flyer_guid = @product.guid.to_s.upcase
+  sales_flyer_url = if ENV["R2_PUBLIC_URL"].present?
+                      "#{ENV['R2_PUBLIC_URL'].delete_suffix('/')}/sales/#{sales_flyer_guid}.html"
+                    else
+                      "/sales/#{sales_flyer_guid}.html"
+                    end
+%>
+
+<%= render TopContactBarComponent.new %>
+<%= render MainHeaderComponent.new(query: params[:q]) %>
+
+
+<section class="py-10">
+  <div class="<%= container_custom %>">
+    
+    <div class="mb-6 border-b-[1.5px] border-[#e2e8f0] pb-4">
+      <h1 class="font-['Outfit'] font-extrabold text-[#0f172a] m-0 mb-1.5 text-2xl lg:text-3xl"><%= title %></h1>
+      <div class="text-sm text-[#64748b] font-semibold"><span id="productSku"><%= style_number %></span></div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-[30px] lg:gap-10 items-start">
+      
+      <div class="flex flex-col gap-[30px]">
+        <%= render ProductGalleryComponent.new(images_list: images_list, title: title) %>
+        <%= render ProductTabsComponent.new(description: @product.description, product_shipping_html: product_shipping_html, sales_flyer_url: sales_flyer_url) %>
+        <%= render RelatedProductsComponent.new(related_products: @related_products) %>
+      </div>
+
+      <div class="flex flex-col gap-[30px]" data-controller="inquiry">
+        <%
+          # Parse bullet points and key feature lists from product detail
+          bullet_items = []
+          if @product.product_detail.present?
+            begin
+              doc = Nokogiri::HTML::DocumentFragment.parse(@product.product_detail)
+              doc.css('ul li').each { |li| bullet_items << li.text.strip }
+            rescue => e
+              # Ignore
+            end
+          end
+        %>
+        <div class="bg-white border border-[#e2e8f0] rounded-[20px] p-[30px] shadow-sm mb-6">
+          <% if bullet_items.any? %>
+            <h4 class="font-['Outfit'] text-base font-bold text-[#0f172a] m-0 mb-3">Key Features</h4>
+            <ul class="pl-5 mb-5 list-disc">
+              <% bullet_items.each do |bullet| %>
+                <li class="mb-2 text-[13.5px] text-[#0f172a] leading-relaxed"><%= bullet %></li>
+              <% end %>
+            </ul>
+            <div class="border-t border-[#e2e8f0] my-4"></div>
+          <% end %>
+          
+          <%= render ProductPriceTableComponent.new(price_grid: @product.price_grid, setup_prices: setup_prices, currency_sym: currency_sym) %>
+        </div>
+
+        <%= render InquiryModalComponent.new(product: @product) %>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<%= render FooterComponent.new %>
+
+<div data-controller="email-widget">
+  <!-- Floating Email Widget -->
+  <div id="floating-email-widget" class="fixed bottom-6 right-6 flex flex-col gap-2 z-[999] transition-all duration-300 [&.minimized]:translate-y-[80px] [&.minimized]:opacity-0 [&.minimized]:pointer-events-none minimized" data-email-widget-target="widget">
+    <a href="mailto:<%= email_address %>" class="flex items-center justify-center gap-2 h-12 rounded-[24px] border-none font-['Outfit'] font-bold text-sm cursor-pointer shadow-lg px-5 transition-all duration-300 bg-[#074277] text-[#f8fafc] hover:bg-[#052e54]">
+      <%= heroicon "envelope" %>
+      <span class="btn-label">Email</span>
+    </a>
+    <button type="button" id="widget-toggle-btn" class="flex items-center justify-center gap-2 h-12 rounded-[24px] border border-[#e2e8f0] font-['Outfit'] font-bold text-sm cursor-pointer shadow-lg px-5 transition-all duration-300 bg-white text-[#64748b] hover:text-[#0f172a]" data-action="click->email-widget#minimize">
+      <%= heroicon "chevron-down", options: { class: "toggle-icon" } %>
+      <span class="btn-label toggle-label">Hide</span>
+    </button>
+  </div>
+
+  <button type="button" id="floating-email-collapsed" class="fixed bottom-6 right-6 w-12 h-12 rounded-full bg-[#074277] text-[#f8fafc] border-none flex items-center justify-center shadow-lg cursor-pointer z-[998] transition-all duration-300 hover:bg-[#052e54] hover:scale-105" data-email-widget-target="collapsed" data-action="click->email-widget#expand">
+    <%= heroicon "envelope" %>
+  </button>
+</div>

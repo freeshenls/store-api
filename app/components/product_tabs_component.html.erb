@@ -1,0 +1,80 @@
+<div class="product-tabs-wrapper mt-[30px]" data-controller="tabs">
+  <!-- Desktop Tabs -->
+  <div class="product-tabs-container desktop-only hidden md:block bg-white border border-[#e2e8f0] rounded-[20px] overflow-hidden shadow-sm">
+    <div class="nav-tabs flex bg-[#f8fafc] border-b border-[#e2e8f0]">
+      <div class="nav-item active flex-1 text-center border-r border-[#e2e8f0] cursor-pointer transition-all duration-300 hover:bg-[rgba(7,66,119,0.04)] [&.active]:bg-white group" data-tab="desc" data-tabs-target="tab" data-action="click->tabs#switch">
+        <a class="nav-link block py-4 px-5 font-['Outfit'] text-[15px] font-bold no-underline text-[#64748b] group-[.active]:text-[#074277]">Description</a>
+      </div>
+      <% if @product_shipping_html.present? %>
+        <div class="nav-item flex-1 text-center border-r border-[#e2e8f0] cursor-pointer transition-all duration-300 hover:bg-[rgba(7,66,119,0.04)] [&.active]:bg-white group" data-tab="opts" data-tabs-target="tab" data-action="click->tabs#switch">
+          <a class="nav-link block py-4 px-5 font-['Outfit'] text-[15px] font-bold no-underline text-[#64748b] group-[.active]:text-[#074277]">Production & Shipping</a>
+        </div>
+      <% end %>
+      <div class="nav-item flex-1 text-center cursor-pointer transition-all duration-300 hover:bg-[rgba(7,66,119,0.04)] [&.active]:bg-white group" data-tab="tools" data-tabs-target="tab" data-action="click->tabs#switch">
+        <a class="nav-link block py-4 px-5 font-['Outfit'] text-[15px] font-bold no-underline text-[#64748b] group-[.active]:text-[#074277]">Sales Tools</a>
+      </div>
+    </div>
+    
+    <div class="tab-content p-[30px]">
+      <div id="tab-desc" class="tab-pane active [&.active]:block hidden" data-tabs-target="pane">
+        <div class="tab-body">
+          <div class="text-[14.5px] leading-relaxed text-[#0f172a]"><%= raw @description %></div>
+        </div>
+      </div>
+      
+      <% if @product_shipping_html.present? %>
+        <div id="tab-opts" class="tab-pane [&.active]:block hidden" data-tabs-target="pane">
+          <div class="tab-body">
+            <div class="text-sm leading-relaxed text-[#0f172a]"><%= raw @product_shipping_html %></div>
+          </div>
+        </div>
+      <% end %>
+      
+      <div id="tab-tools" class="tab-pane [&.active]:block hidden" data-tabs-target="pane">
+        <div class="tab-body">
+          <h5 class="font-bold text-[15px] mb-2.5 text-[#0f172a]">Sales Flyer</h5>
+          <p class="text-sm"><a href="<%= @sales_flyer_url %>" target="_blank" class="text-[#074277] underline font-semibold">Printer-friendly PDF sales sheet flyer.</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Accordion -->
+  <div class="product-accordion-mobile mobile-only flex md:hidden flex-col gap-3">
+    <div class="accordion-item open group bg-white border border-[#e2e8f0] rounded-[12px] overflow-hidden" data-tabs-target="accordion">
+      <div class="accordion-header flex justify-between items-center py-4 px-5 font-['Outfit'] text-[15px] font-bold text-[#0f172a] cursor-pointer bg-[#f8fafc]" data-action="click->tabs#toggleAccordion">
+        <span>Description</span>
+        <%= heroicon "chevron-down", variant: :mini, options: { class: "icon transition-transform duration-300 group-[.open]:rotate-180" } %>
+      </div>
+      <div class="accordion-content p-5 border-t border-[#e2e8f0] hidden group-[.open]:block">
+        <div class="text-[14.5px] leading-relaxed text-[#0f172a]"><%= raw @description %></div>
+      </div>
+    </div>
+
+    <% if @product_shipping_html.present? %>
+      <div class="accordion-item group bg-white border border-[#e2e8f0] rounded-[12px] overflow-hidden" data-tabs-target="accordion">
+        <div class="accordion-header flex justify-between items-center py-4 px-5 font-['Outfit'] text-[15px] font-bold text-[#0f172a] cursor-pointer bg-[#f8fafc]" data-action="click->tabs#toggleAccordion">
+          <span>Production & Shipping</span>
+          <%= heroicon "chevron-down", variant: :mini, options: { class: "icon transition-transform duration-300 group-[.open]:rotate-180" } %>
+        </div>
+        <div class="accordion-content p-5 border-t border-[#e2e8f0] hidden group-[.open]:block">
+          <div class="text-sm leading-relaxed text-[#0f172a]"><%= raw @product_shipping_html %></div>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="accordion-item group bg-white border border-[#e2e8f0] rounded-[12px] overflow-hidden" data-tabs-target="accordion">
+      <div class="accordion-header flex justify-between items-center py-4 px-5 font-['Outfit'] text-[15px] font-bold text-[#0f172a] cursor-pointer bg-[#f8fafc]" data-action="click->tabs#toggleAccordion">
+        <span>Sales Tools</span>
+        <%= heroicon "chevron-down", variant: :mini, options: { class: "icon transition-transform duration-300 group-[.open]:rotate-180" } %>
+      </div>
+      <div class="accordion-content p-5 border-t border-[#e2e8f0] hidden group-[.open]:block">
+        <h5 class="font-bold text-[15px] mb-2.5 text-[#0f172a]">Sales Flyer</h5>
+        <p class="text-sm"><a href="<%= @sales_flyer_url %>" target="_blank" class="text-[#074277] underline font-semibold">Printer-friendly PDF sales sheet flyer.</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+

@@ -8,14 +8,14 @@ gem "propshaft"
 gem "sqlite3", ">= 2.1"
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
-# Bundle and transpile JavaScript [https://github.com/rails/jsbundling-rails]
+# Use JavaScript with esbuild [https://github.com/rails/jsbundling-rails]
 gem "jsbundling-rails"
 # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
 gem "turbo-rails"
 # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
 gem "stimulus-rails"
-# Bundle and process CSS [https://github.com/rails/cssbundling-rails]
-gem "cssbundling-rails"
+# Use Tailwind CSS [https://github.com/rails/tailwindcss-rails]
+gem "tailwindcss-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
 # Use Redis adapter to run Action Cable in production
@@ -57,5 +57,13 @@ end
 gem "web-console"
 gem "foreman"
 
-gem "aws-sdk-s3", "~> 1.225"
-gem "resend", "~> 1.3"
+gem "aws-sdk-s3", "~> 1.224"
+gem "caxlsx"
+gem "roo"
+gem "resend"
+gem "view_component"
+
+
+gem "seed_dump", "~> 3.4"
+
+gem "heroicons", "~> 2.2"

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Zevi Promotions - Admin Panel</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    
+    <% # Re-use the beautifully digested fonts and core variables %>
+    <%= stylesheet_link_tag "fonts", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
+  </head>
+
+  <body>
+    <div class="flex min-h-screen" data-controller="admin">
+      
+      <!-- Left Admin Sidebar -->
+      <aside class="w-[260px] bg-[#0f172a] text-[#f8fafc] shrink-0 flex flex-col justify-between p-6 border-r border-[#1e293b]">
+        <div>
+          <div class="flex items-center gap-3 font-['Outfit'] font-extrabold text-xl text-white mb-8">
+            <%= heroicon "shield-check", options: { class: "text-[#b93530] size-7" } %>
+            <span>Zevi <span class="text-[#b93530]">Admin</span></span>
+          </div>
+          <nav>
+            <ul class="list-none p-0 m-0 flex flex-col gap-2">
+              <li>
+                <a href="/admin/imports" class="flex items-center gap-3 py-3 px-4 text-[#94a3b8] no-underline rounded-[6px] font-semibold text-sm transition-all duration-300 hover:bg-[#1e293b] hover:text-white [&.active]:bg-[#1e293b] [&.active]:text-white <%= 'active' if request.path.start_with?('/admin/imports') %>">
+                  <%= heroicon "arrow-up-tray", options: { class: "size-5" } %>
+                  <span>Product Importer</span>
+                </a>
+              </li>
+              <li>
+                <a href="/admin/inquiries" class="flex items-center gap-3 py-3 px-4 text-[#94a3b8] no-underline rounded-[6px] font-semibold text-sm transition-all duration-300 hover:bg-[#1e293b] hover:text-white [&.active]:bg-[#1e293b] [&.active]:text-white <%= 'active' if request.path.start_with?('/admin/inquiries') %>">
+                  <%= heroicon "envelope", options: { class: "size-5" } %>
+                  <span>Inquiries Manager</span>
+                </a>
+              </li>
+              <li>
+                <a href="/products" class="flex items-center gap-3 py-3 px-4 text-[#94a3b8] no-underline rounded-[6px] font-semibold text-sm transition-all duration-300 hover:bg-[#1e293b] hover:text-white" target="_blank">
+                  <%= heroicon "building-storefront", options: { class: "size-5" } %>
+                  <span>View Storefront</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+
+        <!-- Sidebar footer / user session -->
+        <div class="border-t border-[#1e293b] pt-4">
+          <div class="text-xs text-[#64748b] mb-3">Logged in as:</div>
+          <div class="text-[13px] font-bold text-white mb-4 overflow-hidden text-ellipsis whitespace-nowrap">
+            <%= Current.session&.user&.email_address %>
+          </div>
+          <%= button_to session_path, method: :delete, class: "w-full justify-center bg-none border border-[#334155] text-[#94a3b8] py-2 px-4 rounded-[6px] cursor-pointer font-semibold text-[13px] transition-all duration-300 flex items-center gap-2 hover:bg-[#ef4444] hover:border-[#ef4444] hover:text-white" do %>
+            <%= heroicon "arrow-left-on-rectangle", options: { class: "size-4" } %>
+            <span>Logout</span>
+          <% end %>
+        </div>
+      </aside>
+
+      <!-- Right Main content panel -->
+      <div class="flex-1 flex flex-col min-w-0">
+        
+        <!-- Header -->
+        <header class="bg-white h-[70px] border-b border-[#e2e8f0] flex items-center justify-between px-10">
+          <div class="font-bold text-base text-[#0f172a]">
+            <%= content_for?(:admin_title) ? yield(:admin_title) : "Dashboard" %>
+          </div>
+          <div class="flex items-center gap-3 text-sm">
+            <%= heroicon "user-circle", options: { class: "text-[#074277]" } %>
+            <span class="font-semibold"><%= Current.session&.user&.email_address %></span>
+          </div>
+        </header>
+
+        <!-- Content -->
+        <div class="p-10 flex-1 overflow-y-auto">
+          <%= yield %>
+        </div>
+
+      </div>
+
+    </div>
+  </body>
+</html>

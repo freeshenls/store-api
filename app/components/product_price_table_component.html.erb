@@ -1,0 +1,71 @@
+<div>
+  <h4 class="font-['Outfit'] text-base font-bold text-[#0f172a] m-0 mb-3">Pricing</h4>
+  <div class="border border-[#e2e8f0] rounded-[12px] bg-white overflow-hidden shadow-sm mb-5">
+    <table class="w-full border-collapse text-sm mb-0">
+      <thead>
+        <tr class="bg-[#f8fafc]">
+          <th class="w-2/5 py-3 px-4 text-left border-b border-r border-[#e2e8f0] font-['Outfit'] font-bold text-[#0f172a]">Quantity</th>
+          <th class="w-3/5 py-3 px-4 text-left border-b border-[#e2e8f0] font-['Outfit'] font-bold text-[#0f172a]">Price (USD)</th>
+        </tr>
+      </thead>
+      <tbody>
+      <% if @price_grid.any? %>
+        <% sorted_grid = @price_grid.sort_by { |t| t.dig("Quantity", "From").to_i } %>
+        <% sorted_grid.each do |tier| %>
+          <%
+            from_qty = tier.dig("Quantity", "From").to_i
+            price_val = tier["Price"]
+            is_qur = tier["IsQUR"] == true || tier["IsQUR"] == "true"
+          %>
+          <tr data-action="click->inquiry#applyQuantity" data-qty="<%= from_qty %>" class="cursor-pointer transition-colors duration-200 hover:bg-[#074277]/[0.08]" title="Click to apply quantity to form">
+            <td class="py-3 px-4 border-b border-r border-[#e2e8f0]"><%= from_qty %></td>
+            <td class="py-3 px-4 border-b border-[#e2e8f0]">
+              <% if is_qur %>
+                QUR
+              <% else %>
+                <%
+                  tier_price = price_val.to_f
+                  formatted_price = tier_price % 1 == 0 ? sprintf("%.2f", tier_price) : tier_price.to_s
+                %>
+                <%= @currency_sym %><%= formatted_price %> each
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      <% else %>
+        <tr data-action="click->inquiry#applyQuantity" data-qty="50" class="cursor-pointer transition-colors duration-200 hover:bg-[#074277]/[0.08]">
+          <td class="py-3 px-4 border-b border-r border-[#e2e8f0]">50</td>
+          <td class="py-3 px-4 border-b border-[#e2e8f0]"><%= @currency_sym %>2.50 each</td>
+        </tr>
+        <tr data-action="click->inquiry#applyQuantity" data-qty="100" class="cursor-pointer transition-colors duration-200 hover:bg-[#074277]/[0.08]">
+          <td class="py-3 px-4 border-b border-r border-[#e2e8f0]">100</td>
+          <td class="py-3 px-4 border-b border-[#e2e8f0]"><%= @currency_sym %>2.20 each</td>
+        </tr>
+        <tr data-action="click->inquiry#applyQuantity" data-qty="250" class="cursor-pointer transition-colors duration-200 hover:bg-[#074277]/[0.08]">
+          <td class="py-3 px-4 border-b border-r border-[#e2e8f0]">250</td>
+          <td class="py-3 px-4 border-b border-[#e2e8f0]"><%= @currency_sym %>1.95 each</td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <% if @setup_prices.any? %>
+    <h4 class="font-['Outfit'] text-base font-bold text-[#0f172a] mt-6 mb-3">Setup Charges</h4>
+    <div class="border border-[#dddddd] rounded-[12px] py-3 px-4 bg-white mb-5 shadow-sm">
+      <% @setup_prices.each do |tier| %>
+        <%
+          qty = tier["qty"] || 1
+          raw_price = tier["retailPrice"].to_f
+          formatted_price = raw_price % 1 == 0 ? sprintf("%.2f", raw_price) : raw_price.to_s
+          unit = (tier["unitsOfMeasureName"] || "each").to_s.capitalize
+        %>
+        <div class="text-[14.5px] text-[#0f172a] <%= 'mb-2' if tier != @setup_prices.last %>">
+          <%= @currency_sym %><%= formatted_price %> <%= unit %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+

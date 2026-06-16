@@ -1,0 +1,48 @@
+<div class="min-h-[380px] md:min-h-[480px] p-5 md:p-10 relative bg-white border border-[#e2e8f0] rounded-[20px] flex flex-col items-center justify-center shadow-sm" id="product-gallery" data-controller="gallery" data-title="<%= @title %>" data-action="touchstart->gallery#touchStart touchmove->gallery#touchMove touchend->gallery#touchEnd keydown@window->gallery#handleKeydown">
+  <% if @images_list.any? %>
+    <img src="<%= @images_list.first %>" alt="<%= @title %>" class="max-h-[400px] object-contain w-full cursor-pointer" id="mainImage" data-gallery-target="mainImage" data-action="click->gallery#openLightbox">
+  <% else %>
+    <div class="w-full h-full flex items-center justify-center bg-[#f3f4f6] text-[#9ca3af] font-medium">No Image</div>
+  <% end %>
+
+  <% if @images_list.size > 1 %>
+    <!-- Desktop Thumbnails -->
+    <div class="hidden md:flex gap-2 mt-4 absolute bottom-4 left-4 right-4 overflow-x-auto whitespace-nowrap pb-2">
+      <% @images_list.each_with_index do |url, index| %>
+        <div data-action="click->gallery#selectImage" data-gallery-target="thumb" class="thumb-item <%= 'active' if index == 0 %> border border-[#e2e8f0] [&.active]:border-[#074277] [&.active]:shadow-[0_0_0_1px_#074277] rounded p-1 bg-white cursor-pointer w-10 h-10 flex items-center justify-center transition-colors duration-200 shrink-0" data-index="<%= index %>">
+          <img src="<%= url %>" class="max-h-8 object-contain max-w-full">
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Mobile Dots -->
+    <div class="flex md:hidden justify-center gap-2 absolute bottom-4 left-0 right-0">
+      <% @images_list.each_with_index do |_, index| %>
+        <span data-action="click->gallery#selectImage" data-gallery-target="dot" class="gallery-dot <%= 'active' if index == 0 %> [&.active]:bg-[#074277] w-2 h-2 rounded-full bg-slate-300 cursor-pointer transition-colors duration-200" data-index="<%= index %>"></span>
+      <% end %>
+    </div>
+  <% end %>
+
+  <!-- Fullscreen Lightbox Modal -->
+  <div data-gallery-target="lightboxModal" class="fixed inset-0 w-screen h-screen bg-white/98 backdrop-blur-md z-[10000] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 [&.open]:opacity-100 [&.open]:pointer-events-auto" data-action="click->gallery#closeLightboxOnOutsideClick touchstart->gallery#lightboxTouchStart touchmove->gallery#lightboxTouchMove touchend->gallery#lightboxTouchEnd">
+    <button type="button" class="absolute top-4 right-4 md:top-6 md:right-6 bg-slate-100 border border-slate-200 text-slate-800 rounded-full w-10 h-10 md:w-12 md:h-12 flex items-center justify-center cursor-pointer transition-all duration-300 z-[10002] hover:bg-slate-200 hover:scale-105" data-action="click->gallery#closeLightbox" aria-label="Close Lightbox">
+      <%= heroicon "x-mark", options: { class: "!opacity-100 size-5" } %>
+    </button>
+    
+    <button type="button" class="absolute top-1/2 -translate-y-1/2 left-6 bg-slate-100 border border-slate-200 text-slate-800 rounded-full w-12 h-12 hidden md:flex items-center justify-center cursor-pointer transition-all duration-300 z-[10002] hover:bg-slate-200 hover:scale-105" data-action="click->gallery#prevLightbox" aria-label="Previous image">
+      <%= heroicon "chevron-left", options: { class: "!opacity-100 size-6" } %>
+    </button>
+    
+    <div class="max-w-[95%] max-h-[92%] flex items-center justify-center">
+      <img data-gallery-target="lightboxImage" class="max-w-[95vw] md:max-w-full max-h-[85vh] md:max-h-[90vh] object-contain rounded-[12px] shadow-md" src="" alt="Fullscreen view">
+    </div>
+    
+    <div data-gallery-target="lightboxCaption" class="hidden"></div>
+    <div data-gallery-target="lightboxCounter" class="hidden"></div>
+    
+    <button type="button" class="absolute top-1/2 -translate-y-1/2 right-6 bg-slate-100 border border-slate-200 text-slate-800 rounded-full w-12 h-12 hidden md:flex items-center justify-center cursor-pointer transition-all duration-300 z-[10002] hover:bg-slate-200 hover:scale-105" data-action="click->gallery#nextLightbox" aria-label="Next image">
+      <%= heroicon "chevron-right", options: { class: "!opacity-100 size-6" } %>
+    </button>
+  </div>
+</div>
+
